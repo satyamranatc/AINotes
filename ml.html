@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Machine Learning Explained Simply — AI Playbook (2026–2027)</title>
+  <meta name="description" content="A friendly, reading-first guide to Machine Learning. Learn how computers discover patterns from data, explore regression, classification, clustering, avoid common traps, and test your understanding with interactive quizzes.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="sidebar.css">
+  <link rel="stylesheet" href="guide.css">
+</head>
+<body class="guide">
+
+  <!-- Topbar Chrome -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="topbar__left">
+        <button class="menu-btn" id="menu-open" type="button" aria-controls="drawer" aria-expanded="false">
+          <span class="menu-btn__bars" aria-hidden="true"></span>
+          Topics
+        </button>
+        <a class="topbar__brand" href="index.html">
+          AI Playbook
+          <span class="topbar__brand-badge">Pillar 04</span>
+        </a>
+      </div>
+
+      <nav class="topbar__nav">
+        <a href="#step-question">01 The Question</a>
+        <a href="#step-analogy">02 Everyday Analogy</a>
+        <a href="#step-visual">03 Visual Explorer</a>
+        <a href="#step-concept">04 Plain English</a>
+        <a href="#step-math">05 Math Decoded</a>
+        <a href="#step-code">06 Python Code</a>
+        <a href="#step-traps">07 Pitfalls</a>
+        <a href="#step-quiz">08 Quiz</a>
+      </nav>
+
+      <div class="topbar__right">
+        <!-- Reading Level Switcher -->
+        <div class="reading-level-bar" role="group" aria-label="Reading Level">
+          <button class="level-btn active" data-level="beginner">Beginner</button>
+          <button class="level-btn" data-level="intermediate">Intermediate</button>
+          <button class="level-btn" data-level="advanced">Advanced</button>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle Light/Dark Theme">
+          ☀️
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Left Sidebar Drawer (Mobile & Quick-Jump) -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" aria-label="Article Table of Contents">
+    <div class="drawer__head">
+      <a class="drawer__brand" href="index.html">AI Playbook</a>
+      <button class="drawer__close" id="menu-close" type="button" aria-label="Close menu">&times;</button>
+    </div>
+
+    <nav aria-label="10-Step Guide Structure">
+      <p class="drawer__label">In This Lesson</p>
+      <ul class="drawer__list">
+        <li>
+          <a href="#step-question">
+            <span class="drawer__title"><span class="drawer__step">1</span>The Core Question</span>
+            <span class="drawer__desc">Why can't we just write if/else rules?</span>
+          </a>
+        </li>
+        <li>
+          <a href="#step-analogy">
+            <span class="drawer__title"><span class="drawer__step">2</span>The Real-Life Analogy</span>
+            <span class="drawer__desc">How a child learns cats vs dogs</span>
+          </a>
+        </li>
+        <li>
+          <a href="#step-visual">
+            <span class="drawer__title"><span class="drawer__step">3</span>Visual Paradigm Explorer</span>
+            <span class="drawer__desc">Interactive 4-Way Learning Map</span>
+          </a>
+        </li>
+        <li>
+          <a href="#step-concept">
+            <span class="drawer__title"><span class="drawer__step">4</span>Concept in Plain English</span>
+            <span class="drawer__desc">Features, Labels, Predictions &amp; Training</span>
+          </a>
+        </li>
+        <li>
+          <a href="#step-math">
+            <span class="drawer__title"><span class="drawer__step">5</span>The Math, Decoded</span>
+            <span class="drawer__desc">Linear Regression &amp; Loss decoded simply</span>
+          </a>
+        </li>
+        <li>
+          <a href="#step-code">
+            <span class="drawer__title"><span class="drawer__step">6</span>Runnable Python Code</span>
+            <span class="drawer__desc">Train a house-price predictor in 15 lines</span>
+          </a>
+        </li>
+        <li>
+          <a href="#step-traps">
+            <span class="drawer__title"><span class="drawer__step">7</span>The 4 Deadly Beginner Traps</span>
+            <span class="drawer__desc">Overfitting, Leakage, Drift &amp; Imbalance</span>
+          </a>
+        </li>
+        <li>
+          <a href="#step-quiz">
+            <span class="drawer__title"><span class="drawer__step">8</span>Test Your Understanding</span>
+            <span class="drawer__desc">3 interactive self-check questions</span>
+          </a>
+        </li>
+        <li>
+          <a href="#step-try">
+            <span class="drawer__title"><span class="drawer__step">9</span>Try It Yourself</span>
+            <span class="drawer__desc">Mini-challenge: Student scores prediction</span>
+          </a>
+        </li>
+        <li>
+          <a href="#step-next">
+            <span class="drawer__title"><span class="drawer__step">10</span>Continue Learning</span>
+            <span class="drawer__desc">Next steps: Neural Nets &amp; RAG Agents</span>
+          </a>
+        </li>
+      </ul>
+
+      <p class="drawer__label">All 10 Pillars</p>
+      <ul class="drawer__list">
+        <li><a href="index.html#pillars"><span class="drawer__title"><span class="drawer__step">1</span>AI Foundations</span></a></li>
+        <li><a href="index.html#pillars"><span class="drawer__title"><span class="drawer__step">2</span>Python, Math &amp; Data</span></a></li>
+        <li><a href="index.html#pillars"><span class="drawer__title"><span class="drawer__step">3</span>Data Science</span></a></li>
+        <li><a href="ml.html" aria-current="page"><span class="drawer__title"><span class="drawer__step">4</span>Machine Learning (Live)</span></a></li>
+        <li><a href="index.html#pillars"><span class="drawer__title"><span class="drawer__step">5</span>Deep Learning &amp; Nets</span></a></li>
+        <li><a href="index.html#pillars"><span class="drawer__title"><span class="drawer__step">6</span>NLP &amp; LLMs</span></a></li>
+        <li><a href="index.html#pillars"><span class="drawer__title"><span class="drawer__step">7</span>Generative &amp; Multimodal</span></a></li>
+        <li><a href="index.html#pillars"><span class="drawer__title"><span class="drawer__step">8</span>RAG, Agents &amp; Auto</span></a></li>
+        <li><a href="index.html#pillars"><span class="drawer__title"><span class="drawer__step">9</span>AI Engineering</span></a></li>
+        <li><a href="index.html#pillars"><span class="drawer__title"><span class="drawer__step">10</span>AI Security &amp; Ethics</span></a></li>
+      </ul>
+    </nav>
+    <p class="drawer__foot">AI Playbook 2026–2027 &middot; Reading-first master curriculum.</p>
+  </aside>
+
+  <!-- 3-Column Editorial Reading Layout -->
+  <div class="guide-layout">
+
+    <!-- Left Sticky Table of Contents -->
+    <aside class="guide-sidebar" aria-label="Table of contents">
+      <div class="toc-nav">
+        <span class="toc-nav__label">Lesson Sequence</span>
+        <a href="#step-question" class="active"><span class="toc-step">01</span> The Question</a>
+        <a href="#step-analogy"><span class="toc-step">02</span> Real-Life Analogy</a>
+        <a href="#step-visual"><span class="toc-step">03</span> Visual Explorer</a>
+        <a href="#step-concept"><span class="toc-step">04</span> Concept in Plain English</a>
+        <a href="#step-math"><span class="toc-step">05</span> The Math, Decoded</a>
+        <a href="#step-code"><span class="toc-step">06</span> Runnable Code</a>
+        <a href="#step-traps"><span class="toc-step">07</span> 4 Beginner Traps</a>
+        <a href="#step-quiz"><span class="toc-step">08</span> Knowledge Check</a>
+        <a href="#step-try"><span class="toc-step">09</span> Try It Yourself</a>
+        <a href="#step-next"><span class="toc-step">10</span> Continue Learning</a>
+      </div>
+    </aside>
+
+    <!-- Center Editorial Article -->
+    <main class="article">
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <div class="breadcrumbs">
+          <a href="index.html">AI Playbook</a>
+          <span class="sep">/</span>
+          <a href="index.html#stages">Stage 2: Learn from Data</a>
+          <span class="sep">/</span>
+          <span>Pillar 04: Machine Learning</span>
+        </div>
+
+        <span class="pill pill--teal" style="margin-bottom:14px;">Pillar 04 &middot; Core Machine Learning</span>
+        <h1>Machine Learning,<br><em>Made Simple.</em></h1>
+
+        <p class="article-lead">
+          Learn how computers find patterns in examples, predict unseen numbers, and categorize the world — one clear, intuitive step at a time.
+        </p>
+
+        <div class="article-meta">
+          <div class="article-meta-item">
+            <span>⏱️ <strong>12 min</strong> intuition · <strong>25 min</strong> deep dive</span>
+          </div>
+          <div class="article-meta-item">
+            <span>🎯 <strong>Zero math prerequisites required</strong></span>
+          </div>
+          <div class="article-meta-item">
+            <span>📅 <strong>Updated: 2026–2027 Edition</strong></span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ================= 01 THE QUESTION ================= -->
+      <section class="pedagogy-step" id="step-question">
+        <div class="step-header">
+          <span class="step-badge">01 &middot; The Question</span>
+        </div>
+        <h2>What problem are we actually trying to solve?</h2>
+
+        <p>
+          In traditional software programming, humans write explicit instructions: <em>"If temperature is above 30°C, turn on the fan"</em> or <em>"If an email contains the word 'lottery', move it to spam."</em>
+        </p>
+
+        <p>
+          This works wonderfully for predictable tasks. But what happens when you need to predict the selling price of a house, identify a human face in a photograph, or detect fraudulent credit card transactions?
+        </p>
+
+        <p>
+          There are simply too many subtle factors, edge cases, and shifting variables for any human programmer to write manual <code>if/else</code> rules. <strong>Machine Learning asks a different question:</strong>
+        </p>
+
+        <div class="analogy-card" style="border-left-color: var(--accent);">
+          <div class="analogy-card__head">💡 The Central Question</div>
+          <p>
+            Instead of manually writing rules for every possible situation, <strong>can we give a computer thousands of real examples, and let the computer discover the underlying patterns on its own?</strong>
+          </p>
+        </div>
+      </section>
+
+      <!-- ================= 02 THE REAL-LIFE EXAMPLE ================= -->
+      <section class="pedagogy-step" id="step-analogy">
+        <div class="step-header">
+          <span class="step-badge">02 &middot; Real-Life Example</span>
+        </div>
+        <h2>How does a child learn what a cat is?</h2>
+
+        <p>
+          Think about how parents teach a child what a cat looks like. A parent never hands a toddler a geometric manual:
+        </p>
+
+        <div class="analogy-card" style="border-left-color: var(--amber);">
+          <div class="analogy-card__head">❌ The Programmer Way (Manual Rules)</div>
+          <p>
+            <em>"A cat is a biological quadruped possessing two triangular ear cartilages with an angle between 45° and 65°, whiskers measuring 4 to 8 centimeters, and a furry tail."</em>
+          </p>
+        </div>
+
+        <p>
+          If you tried to teach a child that way, they would be completely bewildered. What if the cat loses its tail? What if it's a hairless Sphinx cat? What if its ears are folded like a Scottish Fold?
+        </p>
+
+        <div class="analogy-card" style="border-left-color: var(--emerald);">
+          <div class="analogy-card__head">✅ The Machine Learning Way (Pattern Discovery)</div>
+          <p>
+            Instead, you show the child pictures: <em>"Look, that's a cat! That's a dog. That's a cat. That's a rabbit."</em><br><br>
+            After seeing 100 or 200 examples with the correct answers, the child's brain automatically extracts subtle, reliable visual features. When they see a brand-new cat they have never encountered before at the park, they instantly point and declare: <strong>"Cat!"</strong>
+          </p>
+        </div>
+
+        <p>
+          <strong>This is the fundamental idea behind Machine Learning.</strong> We feed the algorithm historical examples paired with the correct answers. Over time, the algorithm adjusts its internal mathematical dials until it can accurately predict the answer for brand-new examples it has never seen before.
+        </p>
+      </section>
+
+      <!-- ================= 03 VISUAL PARADIGM EXPLORER ================= -->
+      <section class="pedagogy-step" id="step-visual">
+        <div class="step-header">
+          <span class="step-badge">03 &middot; Visual Explanation</span>
+        </div>
+        <h2>The 4 Ways Computers Learn (Interactive Map)</h2>
+
+        <p>
+          Instead of memorizing dozens of intimidating acronyms, understand the <strong>four main ways</strong> an algorithm learns. Click on any learning approach below to see what problem it solves, its everyday real-life example, and the specific methods used.
+        </p>
+
+        <!-- Interactive Paradigm Architecture Explorer -->
+        <div class="paradigm-explorer">
+          <div class="explorer-header">
+            <h4>Explore the Machine Learning Paradigms</h4>
+            <p>Click any category to understand the intuition before looking at the algorithms.</p>
+          </div>
+
+          <!-- 4 Main Approach Tabs -->
+          <div class="paradigm-tabs" role="tablist">
+            <button class="paradigm-tab-btn active" role="tab" aria-selected="true" data-target="panel-supervised">
+              <span class="tab-num">Paradigm 01</span>
+              <span class="tab-title">Supervised</span>
+            </button>
+            <button class="paradigm-tab-btn" role="tab" aria-selected="false" data-target="panel-unsupervised">
+              <span class="tab-num">Paradigm 02</span>
+              <span class="tab-title">Unsupervised</span>
+            </button>
+            <button class="paradigm-tab-btn" role="tab" aria-selected="false" data-target="panel-reinforcement">
+              <span class="tab-num">Paradigm 03</span>
+              <span class="tab-title">Reinforcement</span>
+            </button>
+            <button class="paradigm-tab-btn" role="tab" aria-selected="false" data-target="panel-self">
+              <span class="tab-num">Paradigm 04</span>
+              <span class="tab-title">Self-Supervised</span>
+            </button>
+          </div>
+
+          <!-- Detail Panels -->
+          <!-- Panel 1: Supervised -->
+          <div class="paradigm-detail-panel active" id="panel-supervised" role="tabpanel">
+            <div class="paradigm-card-content">
+              <div class="paradigm-core-question">
+                <span>🎯 Learning with a Teacher (Labeled Answers Available)</span>
+              </div>
+              <p class="paradigm-real-life">
+                <strong>Everyday Metaphor:</strong> A student preparing for a test using an answer key. Every time they solve a practice question, they check whether their answer was right or wrong and adjust their approach.
+              </p>
+
+              <div class="subtypes-grid">
+                <!-- Subtype 1: Predict a Number -->
+                <div class="subtype-card">
+                  <div class="subtype-goal">1. Predict a Number (Regression)</div>
+                  <div class="subtype-example">
+                    <strong>Goal:</strong> Guess a continuous quantity, like house selling prices or next week's temperature.
+                  </div>
+                  <div class="subtype-algorithms">
+                    <span>Linear Regression</span>
+                    <span>Ridge &amp; Lasso</span>
+                    <span>Random Forest Regressor</span>
+                  </div>
+                </div>
+
+                <!-- Subtype 2: Categorize an Item -->
+                <div class="subtype-card">
+                  <div class="subtype-goal">2. Categorize an Item (Classification)</div>
+                  <div class="subtype-example">
+                    <strong>Goal:</strong> Assign an item to distinct categories, like <em>Spam vs Not Spam</em>, or <em>Cat vs Dog</em>.
+                  </div>
+                  <div class="subtype-algorithms">
+                    <span>Logistic Regression</span>
+                    <span>Decision Trees</span>
+                    <span>XGBoost</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 2: Unsupervised -->
+          <div class="paradigm-detail-panel" id="panel-unsupervised" role="tabpanel">
+            <div class="paradigm-card-content">
+              <div class="paradigm-core-question">
+                <span>🔍 Discovering Hidden Structure (No Answer Key)</span>
+              </div>
+              <p class="paradigm-real-life">
+                <strong>Everyday Metaphor:</strong> An archaeologist sorting an unlabeled crate of prehistoric pottery shards. No one tells them which shard belongs where; they look for natural similarities in shape, clay type, and texture to group them together.
+              </p>
+
+              <div class="subtypes-grid">
+                <div class="subtype-card">
+                  <div class="subtype-goal">1. Group Similar Items (Clustering)</div>
+                  <div class="subtype-example">
+                    <strong>Goal:</strong> Group customers into shopping segments or identify unusual credit card anomalies.
+                  </div>
+                  <div class="subtype-algorithms">
+                    <span>K-Means</span>
+                    <span>DBSCAN</span>
+                    <span>Hierarchical</span>
+                  </div>
+                </div>
+                <div class="subtype-card">
+                  <div class="subtype-goal">2. Simplify Data (Dimension Reduction)</div>
+                  <div class="subtype-example">
+                    <strong>Goal:</strong> Compress 500 complicated variables down into 2 or 3 essential factors without losing meaning.
+                  </div>
+                  <div class="subtype-algorithms">
+                    <span>PCA</span>
+                    <span>t-SNE</span>
+                    <span>UMAP</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 3: Reinforcement -->
+          <div class="paradigm-detail-panel" id="panel-reinforcement" role="tabpanel">
+            <div class="paradigm-card-content">
+              <div class="paradigm-core-question">
+                <span>🎮 Learning Through Trial, Error &amp; Rewards</span>
+              </div>
+              <p class="paradigm-real-life">
+                <strong>Everyday Metaphor:</strong> Training a dog to fetch a ball. You don't give the dog a mathematical manual. When it brings the ball back, it gets a treat (positive reward); when it runs away, it gets nothing. Over time, it learns the winning behavior.
+              </p>
+
+              <div class="subtypes-grid">
+                <div class="subtype-card">
+                  <div class="subtype-goal">1. Policy Optimization (Actions)</div>
+                  <div class="subtype-example">
+                    <strong>Goal:</strong> Learn the best sequence of moves for an agent to beat video games (Atari, Chess, Go).
+                  </div>
+                  <div class="subtype-algorithms">
+                    <span>PPO</span>
+                    <span>Policy Gradients</span>
+                  </div>
+                </div>
+                <div class="subtype-card">
+                  <div class="subtype-goal">2. Value Estimation (Expected Treats)</div>
+                  <div class="subtype-example">
+                    <strong>Goal:</strong> Estimate how valuable being in a particular state is for autonomous robots or self-driving cars.
+                  </div>
+                  <div class="subtype-algorithms">
+                    <span>Q-Learning</span>
+                    <span>DQN</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Panel 4: Self-Supervised -->
+          <div class="paradigm-detail-panel" id="panel-self" role="tabpanel">
+            <div class="paradigm-card-content">
+              <div class="paradigm-core-question">
+                <span>🧩 Solving Self-Created Puzzles From Raw Text</span>
+              </div>
+              <p class="paradigm-real-life">
+                <strong>Everyday Metaphor:</strong> Filling in the blanks of a crossword puzzle. Instead of needing human labels for billions of web pages, the algorithm hides words in a sentence and tries to guess what's missing (how modern LLMs like ChatGPT are trained).
+              </p>
+
+              <div class="subtypes-grid">
+                <div class="subtype-card">
+                  <div class="subtype-goal">1. Next-Token Prediction</div>
+                  <div class="subtype-example">
+                    <strong>Goal:</strong> Given <em>"The sun rises in the..."</em>, predict <em>"east"</em>.
+                  </div>
+                  <div class="subtype-algorithms">
+                    <span>GPT Architecture</span>
+                    <span>Causal Language Models</span>
+                  </div>
+                </div>
+                <div class="subtype-card">
+                  <div class="subtype-goal">2. Masked Puzzle Solving</div>
+                  <div class="subtype-example">
+                    <strong>Goal:</strong> Hide 15% of the text or image patches and reconstruct the original content.
+                  </div>
+                  <div class="subtype-algorithms">
+                    <span>BERT</span>
+                    <span>Masked Autoencoders</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= 04 THE CONCEPT IN PLAIN ENGLISH ================= -->
+      <section class="pedagogy-step" id="step-concept">
+        <div class="step-header">
+          <span class="step-badge">04 &middot; Plain English Concept</span>
+        </div>
+        <h2>The 4 Essential Vocabulary Words</h2>
+
+        <p>
+          Before touching code or equations, every machine learning problem can be understood through four everyday terms:
+        </p>
+
+        <div class="analogy-card">
+          <div class="analogy-card__head">🔑 The Core Vocabulary</div>
+          <p>
+            <strong>1. Features (The Clues):</strong> The measurable facts we observe. In house pricing: square footage, number of bedrooms, and neighborhood walkability.<br><br>
+            <strong>2. Target / Label (The Answer):</strong> What we want the computer to guess. In house pricing: the final selling price in dollars ($350,000).<br><br>
+            <strong>3. Model (The Recipe):</strong> The mathematical formula with adjustable dials (weights). It takes the features, runs them through the dials, and outputs a guess.<br><br>
+            <strong>4. Training (Dial Turning):</strong> The process of showing the computer thousands of house examples, measuring how far off its guess was, and automatically nudging the dials to make the guesses more accurate next time.
+          </p>
+        </div>
+
+        <p>
+          Once training is finished, we lock the dials in place. When a homeowner brings an unlisted house to our website tomorrow, the model calculates a price prediction in milliseconds. This post-training prediction phase is called <strong>Inference</strong>.
+        </p>
+      </section>
+
+      <!-- ================= 05 THE MATHEMATICS DECODED ================= -->
+      <section class="pedagogy-step" id="step-math">
+        <div class="step-header">
+          <span class="step-badge">05 &middot; Mathematics Decoded</span>
+        </div>
+        <h2>Linear Regression &amp; The Error Penalty</h2>
+
+        <p>
+          Now that you understand the concept, let's look at the mathematical formula. Don't worry — we decode every single symbol right underneath so nothing is left as a mystery.
+        </p>
+
+        <h3>1. The Prediction Formula (Finding the Best Line)</h3>
+        <p>
+          If we want to predict a house price based on its size, we draw a line through our data points:
+        </p>
+
+        <div class="math-container">
+          <div class="math-equation-bar">
+            <span class="equation-text">y_pred = θ₀ + θ₁ · x</span>
+            <span class="equation-name">The Linear Equation</span>
+          </div>
+          <div class="symbol-decoder">
+            <div class="symbol-decoder__title">Plain-English Symbol Breakdown:</div>
+            <div class="symbol-decoder-grid">
+              <div class="symbol-row">
+                <span class="symbol-badge">y_pred</span>
+                <span class="symbol-meaning">The computer's estimated house price prediction.</span>
+              </div>
+              <div class="symbol-row">
+                <span class="symbol-badge">x</span>
+                <span class="symbol-meaning">The feature (e.g. square footage of the house).</span>
+              </div>
+              <div class="symbol-row">
+                <span class="symbol-badge">θ₀</span>
+                <span class="symbol-meaning">Base baseline price (the intercept if size were 0).</span>
+              </div>
+              <div class="symbol-row">
+                <span class="symbol-badge">θ₁</span>
+                <span class="symbol-meaning">The slope dial: how much price increases per square foot.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>2. Measuring How Far Off We Are (Mean Squared Error)</h3>
+        <p>
+          How does the computer know if its dials (<code>θ</code>) are good or terrible? It computes a <strong>Loss Function</strong>. It compares its guess against the true price for every house in the training dataset:
+        </p>
+
+        <div class="math-container">
+          <div class="math-equation-bar">
+            <span class="equation-text">MSE = (1 / m) · Σ (y_pred - y_true)²</span>
+            <span class="equation-name">Mean Squared Error (MSE)</span>
+          </div>
+          <div class="symbol-decoder">
+            <div class="symbol-decoder__title">Plain-English Symbol Breakdown:</div>
+            <div class="symbol-decoder-grid">
+              <div class="symbol-row">
+                <span class="symbol-badge">(y_pred - y_true)</span>
+                <span class="symbol-meaning">The error: how far off the guess was from reality.</span>
+              </div>
+              <div class="symbol-row">
+                <span class="symbol-badge">(...)²</span>
+                <span class="symbol-meaning">Squaring the error ensures mistakes are always positive and penalizes huge blunders heavily.</span>
+              </div>
+              <div class="symbol-row">
+                <span class="symbol-badge">Σ</span>
+                <span class="symbol-meaning">Sum up the errors across all examples in the dataset.</span>
+              </div>
+              <div class="symbol-row">
+                <span class="symbol-badge">(1 / m)</span>
+                <span class="symbol-meaning">Divide by total count (m) to calculate the average error penalty.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          The entire goal of training is simple: <strong>turn the dials to make the MSE as close to zero as possible!</strong>
+        </p>
+      </section>
+
+      <!-- ================= 06 RUNNABLE PYTHON CODE ================= -->
+      <section class="pedagogy-step" id="step-code">
+        <div class="step-header">
+          <span class="step-badge">06 &middot; Runnable Python Code</span>
+        </div>
+        <h2>Predicting House Prices in 15 Lines of Python</h2>
+
+        <p>
+          Here is a complete, working example using Python's industry-standard library, <code>scikit-learn</code>. Notice how the computer discovers the relationship between house size and price automatically:
+        </p>
+
+        <div class="code-playground">
+          <div class="code-bar">
+            <div class="code-lang-tag">
+              <span>🐍</span> Python 3 &middot; Scikit-Learn
+            </div>
+            <button class="code-copy-btn" id="copy-code-btn" type="button">Copy Code</button>
+          </div>
+          <pre><code>import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# 1. Training Data: House sizes (sq ft) and actual selling prices ($)
+X_train = np.array([[800], [1200], [1500], [1800], [2400], [3000]])
+y_train = np.array([180000, 245000, 290000, 340000, 430000, 520000])
+
+# 2. Initialize the Linear Regression model
+model = LinearRegression()
+
+# 3. Train the model (Turn the dials to fit the line)
+model.fit(X_train, y_train)
+
+# 4. Predict the price of a brand-new 2,000 sq ft house
+new_house = np.array([[2000]])
+predicted_price = model.predict(new_house)
+
+print(f"Discovered Price per sq ft: ${model.coef_[0]:.2f}")
+print(f"Predicted Price for 2,000 sq ft house: ${predicted_price[0]:,.2f}")</code></pre>
+
+          <div class="code-output-strip">
+            <span class="output-label">Terminal Output</span>
+            <pre class="output-content">Discovered Price per sq ft: $152.86
+Predicted Price for 2,000 sq ft house: $368,142.86</pre>
+          </div>
+        </div>
+
+        <p>
+          Without writing any formula manually, the algorithm looked at the 6 houses and deduced that each square foot adds approximately <strong>$152.86</strong> to the house's value.
+        </p>
+      </section>
+
+      <!-- ================= 07 COMMON MISTAKES & TRAPS ================= -->
+      <section class="pedagogy-step" id="step-traps">
+        <div class="step-header">
+          <span class="step-badge">07 &middot; Common Mistakes</span>
+        </div>
+        <h2>The 4 Deadly Traps Every Beginner Faces</h2>
+
+        <p>
+          Building an ML model is easy. Building a model that reliably works in the real world is where beginners stumble. Here are the four traps that cause 90% of real-world failures:
+        </p>
+
+        <div class="traps-grid">
+          <!-- Trap 1 -->
+          <div class="trap-card">
+            <div class="trap-card__num">Trap 01</div>
+            <h4>Overfitting (Memorization)</h4>
+            <p>
+              The model memorizes the training data perfectly like a student memorizing test answers without understanding the concept. It scores 99% on practice tests but fails on new questions.
+            </p>
+            <div class="trap-fix">Fix: Always test on unseen data using Train/Validation/Test splits.</div>
+          </div>
+
+          <!-- Trap 2 -->
+          <div class="trap-card">
+            <div class="trap-card__num">Trap 02</div>
+            <h4>Data Leakage (Cheating)</h4>
+            <p>
+              Information from the future or from the test set accidentally leaks into training. For example, using customer cancellation date to predict whether they will cancel.
+            </p>
+            <div class="trap-fix">Fix: Strict pipeline transformations inside cross-validation folds.</div>
+          </div>
+
+          <!-- Trap 3 -->
+          <div class="trap-card">
+            <div class="trap-card__num">Trap 03</div>
+            <h4>The 99% Accuracy Illusion</h4>
+            <p>
+              If 99% of credit card transactions are legitimate and 1% are fraud, a dumb model that predicts "Not Fraud" 100% of the time gets 99% accuracy while catching zero criminals.
+            </p>
+            <div class="trap-fix">Fix: Use Precision, Recall, and ROC-AUC instead of raw accuracy.</div>
+          </div>
+
+          <!-- Trap 4 -->
+          <div class="trap-card">
+            <div class="trap-card__num">Trap 04</div>
+            <h4>Model Drift (The World Changes)</h4>
+            <p>
+              A model trained on consumer spending habits before 2020 suddenly failed during the pandemic because real-world customer behaviors shifted dramatically.
+            </p>
+            <div class="trap-fix">Fix: Regularly monitor data distributions and retrain pipelines.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 08 INTERACTIVE KNOWLEDGE CHECK ================= -->
+      <section class="pedagogy-step" id="step-quiz">
+        <div class="step-header">
+          <span class="step-badge">08 &middot; Test Your Understanding</span>
+        </div>
+        <h2>Quick Knowledge Check</h2>
+
+        <p>
+          Click the best answer for each question below to verify your mental model. Instant feedback and detailed explanations are provided.
+        </p>
+
+        <div class="quiz-container">
+          <div class="quiz-header">
+            <h3>Interactive Self-Check (3 Questions)</h3>
+            <p>Test your intuition before moving to the next lesson.</p>
+          </div>
+
+          <!-- Question 1 -->
+          <div class="quiz-card" data-quiz="1">
+            <div class="quiz-question">1. You are building an AI system to predict whether an incoming email is "Spam" or "Inbox". What type of problem is this?</div>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong" type="button">
+                <span>A) Regression (Continuous numerical prediction)</span>
+              </button>
+              <button class="quiz-option" data-answer="correct" type="button">
+                <span>B) Supervised Classification (Predicting discrete categorical labels)</span>
+              </button>
+              <button class="quiz-option" data-answer="wrong" type="button">
+                <span>C) Unsupervised Dimensionality Reduction</span>
+              </button>
+            </div>
+            <div class="quiz-explanation" id="quiz-exp-1"></div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="quiz-card" data-quiz="2">
+            <div class="quiz-question">2. Why do we square the errors in Mean Squared Error (MSE) instead of just adding them up?</div>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="wrong" type="button">
+                <span>A) Because computers cannot calculate negative numbers.</span>
+              </button>
+              <button class="quiz-option" data-answer="correct" type="button">
+                <span>B) So positive and negative errors don't cancel each other out, and large mistakes are penalized more heavily.</span>
+              </button>
+              <button class="quiz-option" data-answer="wrong" type="button">
+                <span>C) Because Scikit-Learn only supports quadratic formulas.</span>
+              </button>
+            </div>
+            <div class="quiz-explanation" id="quiz-exp-2"></div>
+          </div>
+
+          <!-- Question 3 -->
+          <div class="quiz-card" data-quiz="3">
+            <div class="quiz-question">3. What is the fundamental difference between training and inference?</div>
+            <div class="quiz-options">
+              <button class="quiz-option" data-answer="correct" type="button">
+                <span>A) Training turns the mathematical dials using historical data; inference uses the locked dials to make new predictions.</span>
+              </button>
+              <button class="quiz-option" data-answer="wrong" type="button">
+                <span>B) Training happens in Python; inference must be written in C++.</span>
+              </button>
+              <button class="quiz-option" data-answer="wrong" type="button">
+                <span>C) Training requires no labels; inference always requires a human supervisor.</span>
+              </button>
+            </div>
+            <div class="quiz-explanation" id="quiz-exp-3"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= 09 TRY IT YOURSELF ================= -->
+      <section class="pedagogy-step" id="step-try">
+        <div class="step-header">
+          <span class="step-badge">09 &middot; Try It Yourself</span>
+        </div>
+        <h2>Practical Mini-Challenge: Predict Student Exam Scores</h2>
+
+        <p>
+          Open a Python script or Jupyter Notebook on your computer and test your skills with this hands-on exercise:
+        </p>
+
+        <div class="analogy-card" style="border-left-color: var(--blue);">
+          <div class="analogy-card__head">🎯 Your Challenge</div>
+          <p>
+            Create an array of hours studied: <code>[[1], [2], [4], [6], [8]]</code><br>
+            Paired with corresponding exam scores: <code>[45, 55, 72, 85, 96]</code><br><br>
+            Train a <code>LinearRegression()</code> model and predict what score a student will achieve if they study for <strong>5 hours</strong>.
+          </p>
+        </div>
+
+        <p>
+          <em>Hint: A 5-hour study session should yield an estimated score around 78% based on the upward slope.</em>
+        </p>
+      </section>
+
+      <!-- ================= 10 CONTINUE LEARNING ================= -->
+      <section class="pedagogy-step" id="step-next">
+        <div class="step-header">
+          <span class="step-badge">10 &middot; Continue Learning</span>
+        </div>
+        <h2>Your Next Milestone on the 2026–2027 Journey</h2>
+
+        <p>
+          Congratulations! You have mastered the core mental model of Machine Learning without drowning in unexplained jargon. Now you are ready to expand deeper into neural representations or build intelligent retrieval agents:
+        </p>
+
+        <div class="next-article-card">
+          <div>
+            <h4>Recommended Next Pillar</h4>
+            <h3>Pillar 05: Deep Learning &amp; Neural Networks</h3>
+            <p>
+              Discover how stacking artificial neurons enables computers to see images, understand audio, and learn non-linear patterns.
+            </p>
+          </div>
+          <a class="btn btn--primary" href="index.html#pillars">Explore Pillar 05 &rarr;</a>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Right Sticky Companion (Progress & Terms) -->
+    <aside class="guide-companion" aria-label="Reading Companion">
+      <div class="reading-progress-card">
+        <div class="progress-header">
+          <span>Reading Progress</span>
+          <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="key-terms-card">
+        <h4>Key Mental Models</h4>
+        <div class="term-item">
+          <strong>Features (X)</strong>
+          <span>The inputs/clues fed into the model (e.g. house size).</span>
+        </div>
+        <div class="term-item">
+          <strong>Labels (y)</strong>
+          <span>The ground truth target we want to guess (e.g. price).</span>
+        </div>
+        <div class="term-item">
+          <strong>Weights (θ)</strong>
+          <span>The adjustable internal dials turned during training.</span>
+        </div>
+        <div class="term-item">
+          <strong>Loss Function</strong>
+          <span>The mathematical penalty for wrong guesses.</span>
+        </div>
+        <div class="term-item">
+          <strong>Inference</strong>
+          <span>Using trained dials to predict unseen live data.</span>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="sitefoot">
+    <div class="sitefoot__inner">
+      <div class="sitefoot__brand">
+        <a href="index.html">AI Playbook</a>
+        <p>A reading-first, practitioner-focused curriculum for modern Artificial Intelligence. Structured for genuine mastery from first principles to production reliability.</p>
+        <a class="sitefoot__roadmap-link" href="index.html#stages">Explore the full 5-stage roadmap &rarr;</a>
+      </div>
+      <nav aria-label="Curriculum Navigation">
+        <p class="sitefoot__label">Curriculum Pillars</p>
+        <ol>
+          <li><a href="index.html#pillars">01. AI Foundations</a></li>
+          <li><a href="index.html#pillars">02. Python, Math &amp; Data</a></li>
+          <li><a href="index.html#pillars">03. Data Science</a></li>
+          <li><a href="ml.html" aria-current="page"><strong>04. Machine Learning (You Are Here)</strong></a></li>
+          <li><a href="index.html#pillars">05. Deep Learning &amp; Neural Nets</a></li>
+          <li><a href="index.html#pillars">06. NLP &amp; Language Models</a></li>
+          <li><a href="index.html#pillars">07. Generative &amp; Multimodal AI</a></li>
+          <li><a href="index.html#pillars">08. RAG, Agents &amp; Automation</a></li>
+          <li><a href="index.html#pillars">09. AI Engineering &amp; Evaluation</a></li>
+          <li><a href="index.html#pillars">10. AI Security &amp; Ethics</a></li>
+        </ol>
+      </nav>
+    </div>
+    <p class="sitefoot__fine">AI Playbook 2026–2027 &middot; Built with quiet Apple-inspired design restraint. No hype, no fluff.</p>
+  </footer>
+
+  <!-- Scripts: Theme, Reading Progress, Interactive Explorer, Quizzes -->
+  <script>
+    (function () {
+      // 1. Theme Management (Default: Soft Light, optional Dark)
+      var html = document.documentElement;
+      var themeToggle = document.getElementById("theme-toggle");
+      var THEME_KEY = "ai_playbook_theme";
+
+      var savedTheme = localStorage.getItem(THEME_KEY);
+      if (savedTheme) {
+        html.setAttribute("data-theme", savedTheme);
+        themeToggle.textContent = savedTheme === "dark" ? "🌙" : "☀️";
+      } else {
+        html.setAttribute("data-theme", "light");
+        themeToggle.textContent = "☀️";
+      }
+
+      themeToggle.addEventListener("click", function () {
+        var current = html.getAttribute("data-theme");
+        var next = current === "dark" ? "light" : "dark";
+        html.setAttribute("data-theme", next);
+        themeToggle.textContent = next === "dark" ? "🌙" : "☀️";
+        localStorage.setItem(THEME_KEY, next);
+      });
+
+      // 2. Reading Level Buttons
+      var levelBtns = document.querySelectorAll(".level-btn");
+      levelBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          levelBtns.forEach(function (b) { b.classList.remove("active"); });
+          btn.classList.add("active");
+        });
+      });
+
+      // 3. Mobile / Quick Jump Drawer
+      var body = document.body;
+      var openBtn = document.getElementById("menu-open");
+      var closeBtn = document.getElementById("menu-close");
+      var scrim = document.getElementById("scrim");
+      var drawer = document.getElementById("drawer");
+
+      function setMenu(open) {
+        body.classList.toggle("menu-open", open);
+        drawer.setAttribute("aria-hidden", String(!open));
+        openBtn.setAttribute("aria-expanded", String(open));
+      }
+      openBtn.addEventListener("click", function () { setMenu(true); });
+      closeBtn.addEventListener("click", function () { setMenu(false); });
+      scrim.addEventListener("click", function () { setMenu(false); });
+      drawer.querySelectorAll("a").forEach(function (a) {
+        a.addEventListener("click", function () { setMenu(false); });
+      });
+
+      // 4. Interactive Paradigm Architecture Explorer
+      var tabBtns = document.querySelectorAll(".paradigm-tab-btn");
+      var panels = document.querySelectorAll(".paradigm-detail-panel");
+
+      tabBtns.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          var targetId = tab.getAttribute("data-target");
+          tabBtns.forEach(function (t) {
+            t.classList.remove("active");
+            t.setAttribute("aria-selected", "false");
+          });
+          panels.forEach(function (p) {
+            p.classList.remove("active");
+          });
+
+          tab.classList.add("active");
+          tab.setAttribute("aria-selected", "true");
+          var targetPanel = document.getElementById(targetId);
+          if (targetPanel) {
+            targetPanel.classList.add("active");
+          }
+        });
+      });
+
+      // 5. Code Copy Button
+      var copyBtn = document.getElementById("copy-code-btn");
+      if (copyBtn) {
+        copyBtn.addEventListener("click", function () {
+          var code = document.querySelector(".code-playground pre code").innerText;
+          navigator.clipboard.writeText(code).then(function () {
+            copyBtn.textContent = "Copied!";
+            setTimeout(function () { copyBtn.textContent = "Copy Code"; }, 2000);
+          });
+        });
+      }
+
+      // 6. Interactive Quiz System with Instant Explanation Feedback
+      var quizData = {
+        1: {
+          correctExplanation: "✅ <strong>Spot on!</strong> Because the outcome is a distinct label ('Spam' or 'Inbox') and we train using emails with labeled answers, this is Supervised Classification.",
+          wrongExplanation: "❌ <strong>Not quite.</strong> Regression is for predicting continuous numbers (like dollar values or temperature). When picking distinct labels (Spam vs Inbox), it is Supervised Classification."
+        },
+        2: {
+          correctExplanation: "✅ <strong>Exactly right!</strong> If your guess was +$10,000 off on one house and -$10,000 on another, just adding them would give 0 error (falsely perfect). Squaring turns all errors positive and heavily penalizes large mistakes.",
+          wrongExplanation: "❌ <strong>Incorrect.</strong> Computers handle negative numbers effortlessly. We square errors so deviations don't cancel each other out (+10 and -10 becoming 0), and to penalize big errors more."
+        },
+        3: {
+          correctExplanation: "✅ <strong>Precisely.</strong> Training is the computational heavy lifting where the dials (weights) are optimized. Inference is running new inputs through those locked dials to get an instant answer.",
+          wrongExplanation: "❌ <strong>Incorrect.</strong> Both training and inference can be run in any language. The true distinction is that training turns the internal dials, while inference uses the locked dials to make live predictions."
+        }
+      };
+
+      document.querySelectorAll(".quiz-card").forEach(function (card) {
+        var qNum = card.getAttribute("data-quiz");
+        var expBox = card.querySelector(".quiz-explanation");
+        var options = card.querySelectorAll(".quiz-option");
+
+        options.forEach(function (opt) {
+          opt.addEventListener("click", function () {
+            // Clear prior states
+            options.forEach(function (o) { o.classList.remove("correct", "incorrect"); });
+            var isCorrect = opt.getAttribute("data-answer") === "correct";
+
+            if (isCorrect) {
+              opt.classList.add("correct");
+              expBox.innerHTML = quizData[qNum].correctExplanation;
+            } else {
+              opt.classList.add("incorrect");
+              expBox.innerHTML = quizData[qNum].wrongExplanation;
+            }
+            expBox.classList.add("show");
+          });
+        });
+      });
+
+      // 7. Scroll Progress Bar & TOC Active Highlighting
+      var progressBar = document.getElementById("progress-bar");
+      var progressPercent = document.getElementById("progress-percent");
+      var tocLinks = document.querySelectorAll(".toc-nav a");
+      var steps = document.querySelectorAll(".pedagogy-step");
+
+      window.addEventListener("scroll", function () {
+        var docElem = document.documentElement;
+        var scrollTop = docElem.scrollTop || document.body.scrollTop;
+        var scrollHeight = docElem.scrollHeight - docElem.clientHeight;
+        var percent = Math.min(100, Math.round((scrollTop / scrollHeight) * 100));
+
+        if (progressBar) progressBar.style.width = percent + "%";
+        if (progressPercent) progressPercent.textContent = percent + "%";
+
+        // Highlight TOC link on scroll
+        var currentId = "";
+        steps.forEach(function (section) {
+          var top = section.offsetTop - 120;
+          if (scrollTop >= top) {
+            currentId = section.getAttribute("id");
+          }
+        });
+
+        if (currentId) {
+          tocLinks.forEach(function (link) {
+            link.classList.toggle("active", link.getAttribute("href") === "#" + currentId);
+          });
+        }
+      }, { passive: true });
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Playbook (2026–2027) — From Zero to AI Engineer</title>
+  <meta name="description" content="A reading-first AI curriculum combining technical depth, beginner-friendly textbooks, and practical engineering guides across 10 modern AI pillars.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="sidebar.css">
+  <style>
+    /* Hero & Landing specific styles */
+    .hero-home {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 88px 24px 48px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-home h1 {
+      font-size: clamp(38px, 5.8vw, 64px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin: 18px 0 20px;
+      color: var(--text);
+    }
+    .hero-home h1 em {
+      color: var(--accent);
+      font-style: normal;
+    }
+    .hero-home p.lead {
+      font-size: clamp(17px, 2.2vw, 20.5px);
+      color: var(--text-2);
+      max-width: 760px;
+      margin: 0 auto 32px;
+      line-height: 1.62;
+    }
+
+    /* Concrete Promise Box */
+    .promise-box {
+      max-width: 780px;
+      margin: 0 auto 36px;
+      background: var(--surface);
+      border: 1px solid var(--accent-border);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--r-md);
+      padding: 18px 24px;
+      text-align: left;
+      box-shadow: var(--shadow-sm);
+    }
+    .promise-box strong {
+      display: block;
+      color: var(--accent-ink);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+    .promise-box p {
+      margin: 0;
+      font-size: 15.5px;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    /* 3 Primary Choices CTA Group */
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .milestone-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-pill);
+      font-size: 13px;
+      color: var(--text-2);
+      margin-bottom: 48px;
+      box-shadow: var(--shadow-sm);
+    }
+    .milestone-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    /* 5 Stages Learning Journey */
+    .journey-section {
+      padding: 80px 0 60px;
+      border-top: 1px solid var(--line);
+    }
+    .section-eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-ink);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: clamp(26px, 3.5vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin: 0 0 12px;
+    }
+    .section-desc {
+      font-size: 16.5px;
+      color: var(--text-2);
+      max-width: 680px;
+      margin: 0 0 40px;
+      line-height: 1.6;
+    }
+
+    .stages-track {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 1040px) {
+      .stages-track {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    }
+    .stage-item {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 20px 18px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .stage-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow-md);
+    }
+    .stage-item.stage-active {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+    }
+    .stage-num {
+      font-size: 11px;
+      font-family: var(--mono);
+      font-weight: 700;
+      color: var(--accent-ink);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .stage-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .stage-sub {
+      font-size: 12.5px;
+      color: var(--text-3);
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    /* 10 Pillars Curriculum Grid */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+      margin-bottom: 80px;
+    }
+    .pillar-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.22s ease;
+      position: relative;
+    }
+    .pillar-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow-md);
+    }
+    .pillar-card.pillar-live {
+      border-color: var(--accent-border);
+      background: linear-gradient(145deg, var(--surface) 0%, var(--surface-2) 100%);
+    }
+    .pillar-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .pillar-num {
+      font-size: 11.5px;
+      font-family: var(--mono);
+      font-weight: 700;
+      color: var(--text-3);
+    }
+    .pillar-card h3 {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      margin: 0 0 8px;
+      color: var(--text);
+    }
+    .pillar-goal {
+      font-size: 14px;
+      color: var(--accent-ink);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .pillar-topics {
+      list-style: none;
+      margin: 0 0 20px;
+      padding: 0;
+      font-size: 13.5px;
+      color: var(--text-2);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-grow: 1;
+    }
+    .pillar-topics li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pillar-topics li::before {
+      content: "•";
+      color: var(--accent);
+      font-weight: bold;
+    }
+    .pillar-project {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      padding: 10px 14px;
+      font-size: 12.5px;
+      color: var(--text-2);
+      margin-bottom: 18px;
+    }
+    .pillar-project strong {
+      color: var(--text);
+    }
+
+    /* Pedagogy 10-Step Feature Strip */
+    .pedagogy-showcase {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 36px 32px;
+      margin-bottom: 80px;
+      box-shadow: var(--shadow-sm);
+    }
+    .pedagogy-showcase h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 10px;
+      color: var(--text);
+    }
+    .pedagogy-showcase p.lead-text {
+      color: var(--text-2);
+      font-size: 15.5px;
+      margin-bottom: 24px;
+      max-width: 720px;
+    }
+    .pedagogy-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .p-step-box {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      padding: 12px 14px;
+    }
+    .p-step-box .p-num {
+      font-size: 10.5px;
+      font-family: var(--mono);
+      font-weight: 700;
+      color: var(--accent-ink);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .p-step-box .p-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="topbar__left">
+        <button class="menu-btn" id="menu-open" type="button" aria-controls="drawer" aria-expanded="false">
+          <span class="menu-btn__bars" aria-hidden="true"></span>
+          Curriculum
+        </button>
+        <a class="topbar__brand" href="index.html">
+          AI Playbook
+          <span class="topbar__brand-badge">2026–2027</span>
+        </a>
+      </div>
+
+      <nav class="topbar__nav">
+        <a href="#stages">5 Stages</a>
+        <a href="#pillars">10 Pillars</a>
+        <a href="ml.html">Machine Learning Core</a>
+      </nav>
+
+      <div class="topbar__right">
+        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle Light/Dark Theme">
+          ☀️
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Left Sidebar Drawer -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" aria-label="Curriculum Navigation">
+    <div class="drawer__head">
+      <a class="drawer__brand" href="index.html">AI Playbook</a>
+      <button class="drawer__close" id="menu-close" type="button" aria-label="Close menu">&times;</button>
+    </div>
+
+    <nav aria-label="5 Stages of AI Learning">
+      <p class="drawer__label">The 5 Stages</p>
+      <ul class="drawer__list">
+        <li>
+          <a href="#stages">
+            <span class="drawer__title"><span class="drawer__step">1</span>Stage 1: Understand AI</span>
+            <span class="drawer__desc">Foundations &amp; Python Intuition</span>
+          </a>
+        </li>
+        <li>
+          <a href="#stages">
+            <span class="drawer__title"><span class="drawer__step">2</span>Stage 2: Learn from Data</span>
+            <span class="drawer__desc">Data Science &amp; Traditional ML</span>
+          </a>
+        </li>
+        <li>
+          <a href="#stages">
+            <span class="drawer__title"><span class="drawer__step">3</span>Stage 3: Intelligent Models</span>
+            <span class="drawer__desc">Deep Learning &amp; Language Models</span>
+          </a>
+        </li>
+        <li>
+          <a href="#stages">
+            <span class="drawer__title"><span class="drawer__step">4</span>Stage 4: Build AI Apps</span>
+            <span class="drawer__desc">RAG, Agents &amp; Multimodal AI</span>
+          </a>
+        </li>
+        <li>
+          <a href="#stages">
+            <span class="drawer__title"><span class="drawer__step">5</span>Stage 5: Ship Reliable AI</span>
+            <span class="drawer__desc">Evaluation, Security &amp; Deployment</span>
+          </a>
+        </li>
+      </ul>
+
+      <p class="drawer__label">Flagship Guide</p>
+      <ul class="drawer__list">
+        <li>
+          <a href="ml.html">
+            <span class="drawer__title"><span class="drawer__step">★</span>Pillar 04: Machine Learning</span>
+            <span class="drawer__desc">10-Step Pedagogy &middot; Interactive Diagram</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <p class="drawer__foot">Reading-first AI curriculum built for mastery without hype.</p>
+  </aside>
+
+  <!-- Main Hero Stage -->
+  <main>
+    <div class="stage-bg">
+      <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+      <section class="hero-home">
+        <span class="pill pill--teal reveal">2026–2027 Edition &middot; Reading-First Learning Platform</span>
+        <h1 class="reveal" data-d="1">From Raw Data to<br><em>Autonomous Intelligence.</em></h1>
+        
+        <p class="lead reveal" data-d="2">
+          A combination of a well-written technical blog, a beginner-friendly textbook, and an engineering handbook. Progress step-by-step from zero knowledge to building, evaluating, and deploying production AI systems.
+        </p>
+
+        <!-- Concrete Educational Promise -->
+        <div class="promise-box reveal" data-d="2">
+          <strong>The AI Playbook Promise</strong>
+          <p>
+            Learn AI from scratch through simple explanations, real-life visual analogies, hands-on Python projects, and step-by-step practice — even if you are new to mathematics and programming.
+          </p>
+        </div>
+
+        <!-- 3 Primary Choices -->
+        <div class="cta-group reveal" data-d="3">
+          <a class="btn btn--accent" href="ml.html">Start Reading Lesson 1 &rarr;</a>
+          <a class="btn btn--primary" href="#stages">Explore the 5-Stage Roadmap &darr;</a>
+          <a class="btn btn--ghost" href="#pillars">Browse 10 Pillars &darr;</a>
+        </div>
+
+        <div class="milestone-badge reveal" data-d="3">
+          <span class="dot"></span>
+          <span>Current Milestone: <strong>Pillar 04 — How computers learn from examples (Machine Learning Core)</strong></span>
+        </div>
+      </section>
+    </div>
+
+    <div class="wrap">
+
+      <!-- ================= 5 STAGES OF LEARNING ================= -->
+      <section class="journey-section" id="stages">
+        <span class="section-eyebrow">The Learner's Journey</span>
+        <h2 class="section-title">The 5 Stages: From Zero to AI Engineer</h2>
+        <p class="section-desc">
+          Instead of just listing technologies, your study path is organized around what you need to understand, construct, and verify at each phase of your development.
+        </p>
+
+        <div class="stages-track">
+          <div class="stage-item">
+            <span class="stage-num">Stage 1</span>
+            <div class="stage-name">Understand AI</div>
+            <p class="stage-sub">Pillars 1 &amp; 2 &middot; What AI can/cannot do, token basics, math intuition without gatekeeping.</p>
+          </div>
+
+          <div class="stage-item stage-active">
+            <span class="stage-num">Stage 2 &middot; Current</span>
+            <div class="stage-name">Learn from Data</div>
+            <p class="stage-sub">Pillars 3 &amp; 4 &middot; Data science lifecycle, regression, classification, pipelines.</p>
+          </div>
+
+          <div class="stage-item">
+            <span class="stage-num">Stage 3</span>
+            <div class="stage-name">Intelligent Models</div>
+            <p class="stage-sub">Pillars 5 &amp; 6 &middot; Neural networks, backprop step-by-step, attention, transformers.</p>
+          </div>
+
+          <div class="stage-item">
+            <span class="stage-num">Stage 4</span>
+            <div class="stage-name">Build AI Apps</div>
+            <p class="stage-sub">Pillars 7 &amp; 8 &middot; RAG pipelines, autonomous agents, tool calling, MCP servers.</p>
+          </div>
+
+          <div class="stage-item">
+            <span class="stage-num">Stage 5</span>
+            <div class="stage-name">Ship Reliable AI</div>
+            <p class="stage-sub">Pillars 9 &amp; 10 &middot; LLM evaluations, prompt security, red-teaming, cost &amp; latency.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 10-STEP PEDAGOGY SHOWCASE ================= -->
+      <section class="pedagogy-showcase">
+        <span class="pill pill--teal" style="margin-bottom:12px;">Teaching Philosophy</span>
+        <h3>How Every Article Is Structured</h3>
+        <p class="lead-text">
+          No jargon dumps or walls of unexplained formulas. Every topic adheres to a consistent 10-step sequence so you always understand the intuition before the mathematics.
+        </p>
+
+        <div class="pedagogy-steps-grid">
+          <div class="p-step-box">
+            <span class="p-num">01</span>
+            <span class="p-title">The Question</span>
+          </div>
+          <div class="p-step-box">
+            <span class="p-num">02</span>
+            <span class="p-title">Real-Life Example</span>
+          </div>
+          <div class="p-step-box">
+            <span class="p-num">03</span>
+            <span class="p-title">Visual Explanation</span>
+          </div>
+          <div class="p-step-box">
+            <span class="p-num">04</span>
+            <span class="p-title">Concept in Plain English</span>
+          </div>
+          <div class="p-step-box">
+            <span class="p-num">05</span>
+            <span class="p-title">Math (Symbols Decoded)</span>
+          </div>
+          <div class="p-step-box">
+            <span class="p-num">06</span>
+            <span class="p-title">Runnable Python Code</span>
+          </div>
+          <div class="p-step-box">
+            <span class="p-num">07</span>
+            <span class="p-title">Common Traps &amp; Mistakes</span>
+          </div>
+          <div class="p-step-box">
+            <span class="p-num">08</span>
+            <span class="p-title">Knowledge Check Quiz</span>
+          </div>
+          <div class="p-step-box">
+            <span class="p-num">09</span>
+            <span class="p-title">Try It Yourself</span>
+          </div>
+          <div class="p-step-box">
+            <span class="p-num">10</span>
+            <span class="p-title">Continue Learning</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 10 PILLARS CURRICULUM ================= -->
+      <section class="pillars-section" id="pillars">
+        <span class="section-eyebrow">Comprehensive Syllabus</span>
+        <h2 class="section-title">The 10 Learning Pillars (2026–2027)</h2>
+        <p class="section-desc">
+          From core computational foundations to agent orchestration and adversarial security.
+        </p>
+
+        <div class="pillars-grid">
+
+          <!-- Pillar 1 -->
+          <article class="pillar-card">
+            <div class="pillar-head">
+              <span class="pillar-num">Pillar 01</span>
+              <span class="pill pill--teal">Stage 1</span>
+            </div>
+            <h3>AI Foundations</h3>
+            <div class="pillar-goal">Goal: Understand what AI is before writing code.</div>
+            <ul class="pillar-topics">
+              <li>How computers learn patterns</li>
+              <li>Models, algorithms, and parameters</li>
+              <li>Tokens, embeddings, context windows</li>
+              <li>What AI can and cannot do</li>
+            </ul>
+            <div class="pillar-project">
+              <strong>Practical:</strong> Call your first LLM API and inspect token usage.
+            </div>
+            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
+          </article>
+
+          <!-- Pillar 2 -->
+          <article class="pillar-card">
+            <div class="pillar-head">
+              <span class="pillar-num">Pillar 02</span>
+              <span class="pill pill--teal">Stage 1</span>
+            </div>
+            <h3>Python, Math &amp; Data</h3>
+            <div class="pillar-goal">Goal: Build foundations required to create models.</div>
+            <ul class="pillar-topics">
+              <li>Python essentials &amp; vectorized NumPy</li>
+              <li>Pandas for real-world datasets &amp; cleaning</li>
+              <li>Vectors, matrices &amp; gradient intuition</li>
+              <li>Train, validation, and test splits</li>
+            </ul>
+            <div class="pillar-project">
+              <strong>Practical:</strong> Explore a student-performance dataset for exam score drivers.
+            </div>
+            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
+          </article>
+
+          <!-- Pillar 3 -->
+          <article class="pillar-card">
+            <div class="pillar-head">
+              <span class="pillar-num">Pillar 03</span>
+              <span class="pill pill--emerald">Stage 2</span>
+            </div>
+            <h3>Data Science</h3>
+            <div class="pillar-goal">Goal: Turn messy raw data into decisive insights.</div>
+            <ul class="pillar-topics">
+              <li>The Data Science lifecycle &amp; EDA</li>
+              <li>Sampling, hypothesis testing, distributions</li>
+              <li>SQL for production data analysis</li>
+              <li>Data leakage &amp; analytical pitfalls</li>
+            </ul>
+            <div class="pillar-project">
+              <strong>Practical:</strong> Analyze retail transaction data to diagnose revenue drops.
+            </div>
+            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
+          </article>
+
+          <!-- Pillar 4 (LIVE) -->
+          <article class="pillar-card pillar-live">
+            <div class="pillar-head">
+              <span class="pillar-num">Pillar 04</span>
+              <span class="pill pill--emerald">Live Reading Guide</span>
+            </div>
+            <h3>Machine Learning Core</h3>
+            <div class="pillar-goal">Goal: Master how computers find patterns in historical data.</div>
+            <ul class="pillar-topics">
+              <li>Supervised, Unsupervised &amp; Reinforcement paradigms</li>
+              <li>Predicting numbers (Regression &middot; OLS, Ridge, Lasso)</li>
+              <li>Predicting categories (Classification &middot; Logistic, Trees, XGBoost)</li>
+              <li>Interactive Architecture Explorer &amp; 3-Question Quiz</li>
+            </ul>
+            <div class="pillar-project">
+              <strong>Practical:</strong> Train house price predictor and customer churn classifier.
+            </div>
+            <a class="btn btn--accent" href="ml.html" style="padding:8px 18px; font-size:13px; align-self:flex-start;">Read Guide Now &rarr;</a>
+          </article>
+
+          <!-- Pillar 5 -->
+          <article class="pillar-card">
+            <div class="pillar-head">
+              <span class="pillar-num">Pillar 05</span>
+              <span class="pill pill--blue">Stage 3</span>
+            </div>
+            <h3>Deep Learning &amp; Neural Nets</h3>
+            <div class="pillar-goal">Goal: Understand layered networks learning complex features.</div>
+            <ul class="pillar-topics">
+              <li>The artificial neuron, weights, and biases</li>
+              <li>Backpropagation demystified step-by-step</li>
+              <li>Activations: ReLU, Sigmoid, Softmax</li>
+              <li>CNNs for image recognition &amp; transfer learning</li>
+            </ul>
+            <div class="pillar-project">
+              <strong>Practical:</strong> Build a digit classifier in NumPy, then PyTorch.
+            </div>
+            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
+          </article>
+
+          <!-- Pillar 6 -->
+          <article class="pillar-card">
+            <div class="pillar-head">
+              <span class="pillar-num">Pillar 06</span>
+              <span class="pill pill--blue">Stage 3</span>
+            </div>
+            <h3>NLP &amp; Language Models</h3>
+            <div class="pillar-goal">Goal: How machines process, represent, and generate language.</div>
+            <ul class="pillar-topics">
+              <li>Tokenization, embeddings, and semantic similarity</li>
+              <li>The Transformer architecture &amp; Self-Attention</li>
+              <li>Pretraining vs Fine-Tuning vs Alignment (RLHF/DPO)</li>
+              <li>Context windows &amp; why models hallucinate</li>
+            </ul>
+            <div class="pillar-project">
+              <strong>Practical:</strong> Train a sentiment classifier and text generation prompt runner.
+            </div>
+            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
+          </article>
+
+          <!-- Pillar 7 -->
+          <article class="pillar-card">
+            <div class="pillar-head">
+              <span class="pillar-num">Pillar 07</span>
+              <span class="pill pill--purple">Stage 4</span>
+            </div>
+            <h3>Generative &amp; Multimodal AI</h3>
+            <div class="pillar-goal">Goal: Build with state-of-the-art vision, audio, and language.</div>
+            <ul class="pillar-topics">
+              <li>Diffusion models for image synthesis &amp; editing</li>
+              <li>Multimodal models: combining text, audio &amp; images</li>
+              <li>Local inference, model quantization (GGUF, AWQ)</li>
+              <li>Model Context Protocol (MCP) tool integration</li>
+            </ul>
+            <div class="pillar-project">
+              <strong>Practical:</strong> Build a multimodal document assistant for complex PDF analysis.
+            </div>
+            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
+          </article>
+
+          <!-- Pillar 8 -->
+          <article class="pillar-card">
+            <div class="pillar-head">
+              <span class="pillar-num">Pillar 08</span>
+              <span class="pill pill--purple">Stage 4</span>
+            </div>
+            <h3>RAG, AI Agents &amp; Automation</h3>
+            <div class="pillar-goal">Goal: Design autonomous agents with tools, memory &amp; state.</div>
+            <ul class="pillar-topics">
+              <li>RAG: Chunking, Vector DBs, Hybrid Search, Reranking</li>
+              <li>Tool calling, function calling &amp; ReAct loops</li>
+              <li>Agent memory, planning &amp; human-in-the-loop guardrails</li>
+              <li>Scheduled automated workflows &amp; error recovery</li>
+            </ul>
+            <div class="pillar-project">
+              <strong>Practical:</strong> Build an enterprise customer support agent with order lookup.
+            </div>
+            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
+          </article>
+
+          <!-- Pillar 9 -->
+          <article class="pillar-card">
+            <div class="pillar-head">
+              <span class="pillar-num">Pillar 09</span>
+              <span class="pill pill--rose">Stage 5</span>
+            </div>
+            <h3>AI Engineering &amp; Evaluation</h3>
+            <div class="pillar-goal">Goal: Turn experimental prototypes into rock-solid products.</div>
+            <ul class="pillar-topics">
+              <li>FastAPI model serving &amp; Docker containerization</li>
+              <li>Building evaluation datasets &amp; LLM-as-judge benchmarks</li>
+              <li>Latency, error tracking, caching &amp; token cost control</li>
+              <li>A/B testing prompts and continuous model monitoring</li>
+            </ul>
+            <div class="pillar-project">
+              <strong>Practical:</strong> Deploy an evaluated RAG pipeline with observability dashboard.
+            </div>
+            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
+          </article>
+
+          <!-- Pillar 10 -->
+          <article class="pillar-card">
+            <div class="pillar-head">
+              <span class="pillar-num">Pillar 10</span>
+              <span class="pill pill--rose">Stage 5</span>
+            </div>
+            <h3>AI Security, Ethics &amp; Research</h3>
+            <div class="pillar-goal">Goal: Defend against jailbreaks, leaks, and systemic bias.</div>
+            <ul class="pillar-topics">
+              <li>Prompt injection, indirect jailbreaks &amp; sanitization</li>
+              <li>Least-privilege tool execution &amp; RAG data isolation</li>
+              <li>Adversarial red-teaming &amp; synthetic data governance</li>
+              <li>Emerging research: Embodied robotics &amp; frontier architectures</li>
+            </ul>
+            <div class="pillar-project">
+              <strong>Practical:</strong> Red-team an agent to prevent unauthorized database modifications.
+            </div>
+            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
+          </article>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="sitefoot">
+    <div class="sitefoot__inner">
+      <div class="sitefoot__brand">
+        <a href="index.html">AI Playbook</a>
+        <p>A reading-first, practitioner-focused curriculum for modern Artificial Intelligence. Structured for genuine mastery from first principles to production reliability.</p>
+        <a class="sitefoot__roadmap-link" href="ml.html">Open Pillar 04: Machine Learning Notes &rarr;</a>
+      </div>
+      <nav aria-label="10 Pillars Directory">
+        <p class="sitefoot__label">Curriculum Pillars</p>
+        <ol>
+          <li><a href="#pillars">01. AI Foundations</a></li>
+          <li><a href="#pillars">02. Python, Math &amp; Data</a></li>
+          <li><a href="#pillars">03. Data Science</a></li>
+          <li><a href="ml.html"><strong>04. Machine Learning (Live Guide)</strong></a></li>
+          <li><a href="#pillars">05. Deep Learning &amp; Neural Nets</a></li>
+          <li><a href="#pillars">06. NLP &amp; Language Models</a></li>
+          <li><a href="#pillars">07. Generative &amp; Multimodal AI</a></li>
+          <li><a href="#pillars">08. RAG, Agents &amp; Automation</a></li>
+          <li><a href="#pillars">09. AI Engineering &amp; Evaluation</a></li>
+          <li><a href="#pillars">10. AI Security &amp; Ethics</a></li>
+        </ol>
+      </nav>
+    </div>
+    <p class="sitefoot__fine">AI Playbook 2026–2027 &middot; Built with quiet Apple-inspired design restraint. No hype, no fluff.</p>
+  </footer>
+
+  <!-- Theme Toggle & Navigation Script -->
+  <script>
+    (function () {
+      var html = document.documentElement;
+      var themeToggle = document.getElementById("theme-toggle");
+      var THEME_KEY = "ai_playbook_theme";
+
+      // Initialize Theme
+      var savedTheme = localStorage.getItem(THEME_KEY);
+      if (savedTheme) {
+        html.setAttribute("data-theme", savedTheme);
+        themeToggle.textContent = savedTheme === "dark" ? "🌙" : "☀️";
+      } else {
+        html.setAttribute("data-theme", "light");
+        themeToggle.textContent = "☀️";
+      }
+
+      themeToggle.addEventListener("click", function () {
+        var current = html.getAttribute("data-theme");
+        var next = current === "dark" ? "light" : "dark";
+        html.setAttribute("data-theme", next);
+        themeToggle.textContent = next === "dark" ? "🌙" : "☀️";
+        localStorage.setItem(THEME_KEY, next);
+      });
+
+      // Drawer Toggle
+      var body = document.body;
+      var openBtn = document.getElementById("menu-open");
+      var closeBtn = document.getElementById("menu-close");
+      var scrim = document.getElementById("scrim");
+      var drawer = document.getElementById("drawer");
+
+      function setMenu(open) {
+        body.classList.toggle("menu-open", open);
+        drawer.setAttribute("aria-hidden", String(!open));
+        openBtn.setAttribute("aria-expanded", String(open));
+      }
+
+      openBtn.addEventListener("click", function () { setMenu(true); });
+      closeBtn.addEventListener("click", function () { setMenu(false); });
+      scrim.addEventListener("click", function () { setMenu(false); });
+
+      drawer.querySelectorAll("a").forEach(function (a) {
+        a.addEventListener("click", function () { setMenu(false); });
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && body.classList.contains("menu-open")) setMenu(false);
+      });
+
+      // Scroll reveals
+      var items = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+          });
+        }, { threshold: 0.1 });
+        items.forEach(function (el) { io.observe(el); });
+      } else {
+        items.forEach(function (el) { el.classList.add("in"); });
+      }
+    })();
+  </script>
+</body>
+</html>
