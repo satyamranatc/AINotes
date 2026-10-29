@@ -1,834 +1,1465 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Playbook (2026–2027) — From Zero to AI Engineer</title>
-  <meta name="description" content="A reading-first AI curriculum combining technical depth, beginner-friendly textbooks, and practical engineering guides across 10 modern AI pillars.">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="sidebar.css">
-  <style>
-    /* Hero & Landing specific styles */
-    .hero-home {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 88px 24px 48px;
-      text-align: center;
-      position: relative;
-      z-index: 2;
-    }
-    .hero-home h1 {
-      font-size: clamp(38px, 5.8vw, 64px);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.1;
-      margin: 18px 0 20px;
-      color: var(--text);
-    }
-    .hero-home h1 em {
-      color: var(--accent);
-      font-style: normal;
-    }
-    .hero-home p.lead {
-      font-size: clamp(17px, 2.2vw, 20.5px);
-      color: var(--text-2);
-      max-width: 760px;
-      margin: 0 auto 32px;
-      line-height: 1.62;
-    }
-
-    /* Concrete Promise Box */
-    .promise-box {
-      max-width: 780px;
-      margin: 0 auto 36px;
-      background: var(--surface);
-      border: 1px solid var(--accent-border);
-      border-left: 4px solid var(--accent);
-      border-radius: var(--r-md);
-      padding: 18px 24px;
-      text-align: left;
-      box-shadow: var(--shadow-sm);
-    }
-    .promise-box strong {
-      display: block;
-      color: var(--accent-ink);
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
-    .promise-box p {
-      margin: 0;
-      font-size: 15.5px;
-      color: var(--text);
-      line-height: 1.55;
-    }
-
-    /* 3 Primary Choices CTA Group */
-    .cta-group {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px;
-      margin-bottom: 40px;
-    }
-
-    .milestone-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--r-pill);
-      font-size: 13px;
-      color: var(--text-2);
-      margin-bottom: 48px;
-      box-shadow: var(--shadow-sm);
-    }
-    .milestone-badge .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      display: inline-block;
-    }
-
-    /* 5 Stages Learning Journey */
-    .journey-section {
-      padding: 80px 0 60px;
-      border-top: 1px solid var(--line);
-    }
-    .section-eyebrow {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent-ink);
-      display: block;
-      margin-bottom: 8px;
-    }
-    .section-title {
-      font-size: clamp(26px, 3.5vw, 36px);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      margin: 0 0 12px;
-    }
-    .section-desc {
-      font-size: 16.5px;
-      color: var(--text-2);
-      max-width: 680px;
-      margin: 0 0 40px;
-      line-height: 1.6;
-    }
-
-    .stages-track {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
-      margin-bottom: 48px;
-    }
-    @media (max-width: 1040px) {
-      .stages-track {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      }
-    }
-    .stage-item {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--r-md);
-      padding: 20px 18px;
-      box-shadow: var(--shadow-sm);
-      position: relative;
-      transition: all 0.2s ease;
-    }
-    .stage-item:hover {
-      transform: translateY(-2px);
-      border-color: var(--line-strong);
-      box-shadow: var(--shadow-md);
-    }
-    .stage-item.stage-active {
-      border-color: var(--accent);
-      background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
-    }
-    .stage-num {
-      font-size: 11px;
-      font-family: var(--mono);
-      font-weight: 700;
-      color: var(--accent-ink);
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      display: block;
-    }
-    .stage-name {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-    .stage-sub {
-      font-size: 12.5px;
-      color: var(--text-3);
-      line-height: 1.45;
-      margin: 0;
-    }
-
-    /* 10 Pillars Curriculum Grid */
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 22px;
-      margin-bottom: 80px;
-    }
-    .pillar-card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--r-md);
-      padding: 26px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.22s ease;
-      position: relative;
-    }
-    .pillar-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--line-strong);
-      box-shadow: var(--shadow-md);
-    }
-    .pillar-card.pillar-live {
-      border-color: var(--accent-border);
-      background: linear-gradient(145deg, var(--surface) 0%, var(--surface-2) 100%);
-    }
-    .pillar-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .pillar-num {
-      font-size: 11.5px;
-      font-family: var(--mono);
-      font-weight: 700;
-      color: var(--text-3);
-    }
-    .pillar-card h3 {
-      font-size: 19px;
-      font-weight: 700;
-      letter-spacing: -0.015em;
-      margin: 0 0 8px;
-      color: var(--text);
-    }
-    .pillar-goal {
-      font-size: 14px;
-      color: var(--accent-ink);
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-    .pillar-topics {
-      list-style: none;
-      margin: 0 0 20px;
-      padding: 0;
-      font-size: 13.5px;
-      color: var(--text-2);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex-grow: 1;
-    }
-    .pillar-topics li {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .pillar-topics li::before {
-      content: "•";
-      color: var(--accent);
-      font-weight: bold;
-    }
-    .pillar-project {
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-      border-radius: var(--r-sm);
-      padding: 10px 14px;
-      font-size: 12.5px;
-      color: var(--text-2);
-      margin-bottom: 18px;
-    }
-    .pillar-project strong {
-      color: var(--text);
-    }
-
-    /* Pedagogy 10-Step Feature Strip */
-    .pedagogy-showcase {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--r-lg);
-      padding: 36px 32px;
-      margin-bottom: 80px;
-      box-shadow: var(--shadow-sm);
-    }
-    .pedagogy-showcase h3 {
-      font-size: 22px;
-      font-weight: 700;
-      margin: 0 0 10px;
-      color: var(--text);
-    }
-    .pedagogy-showcase p.lead-text {
-      color: var(--text-2);
-      font-size: 15.5px;
-      margin-bottom: 24px;
-      max-width: 720px;
-    }
-    .pedagogy-steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-    }
-    .p-step-box {
-      background: var(--surface-2);
-      border: 1px solid var(--line);
-      border-radius: var(--r-sm);
-      padding: 12px 14px;
-    }
-    .p-step-box .p-num {
-      font-size: 10.5px;
-      font-family: var(--mono);
-      font-weight: 700;
-      color: var(--accent-ink);
-      display: block;
-      margin-bottom: 2px;
-    }
-    .p-step-box .p-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Machine Learning Models — Architectural & Mathematical Foundations</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- KaTeX for High-Fidelity Mathematical Typography -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"></script>
 </head>
 <body>
+  <div class="site-wrapper">
+    <div class="site-container">
+      
+      <!-- Table of Contents Sidebar (Desktop) -->
+      <aside class="toc-sidebar">
+        <nav class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li class="toc-item"><a href="#overview">Core Foundations</a></li>
+            <li class="toc-item"><a href="#part-1-linear-regression">1. Linear Regression</a></li>
+            <li class="toc-item"><a href="#part-2-knn">2. K-Nearest Neighbors</a></li>
+            <li class="toc-item"><a href="#part-2-svm">3. Support Vector Machine</a></li>
+            <li class="toc-item"><a href="#part-2-logistic-regression">4. Logistic Regression</a></li>
+            <li class="toc-item"><a href="#part-3-decision-tree">5. Decision Tree</a></li>
+            <li class="toc-item"><a href="#part-4-random-forest">6. Random Forest</a></li>
+            <li class="toc-item"><a href="#part-5-comparison">Quick Comparison Matrix</a></li>
+            <li class="toc-item"><a href="#part-6-metrics">Metrics & Loss Functions</a></li>
+            <li class="toc-item"><a href="#part-7-selection-guide">Model Selection Guide</a></li>
+            <li class="toc-item"><a href="#part-8-core-principles">Fundamental Concepts</a></li>
+            <li class="toc-item"><a href="#summary">Executive Summary</a></li>
+          </ul>
+        </nav>
+      </aside>
 
-  <!-- Top Navigation Bar -->
-  <header class="topbar">
-    <div class="topbar__inner">
-      <div class="topbar__left">
-        <button class="menu-btn" id="menu-open" type="button" aria-controls="drawer" aria-expanded="false">
-          <span class="menu-btn__bars" aria-hidden="true"></span>
-          Curriculum
-        </button>
-        <a class="topbar__brand" href="index.html">
-          AI Playbook
-          <span class="topbar__brand-badge">2026–2027</span>
-        </a>
-      </div>
+      <!-- Main Article Stream -->
+      <main class="main-content">
+        <article>
+          
+          <!-- Article Header -->
+          <header class="article-header">
+            <div class="article-category">Instructor's Field Guide &middot; Machine Learning</div>
+            <h1 class="article-title">Machine Learning Models: Principles, Mathematics, and Practical Selection</h1>
+            <p class="article-subtitle">A comprehensive pedagogical study covering algorithmic mechanisms, mathematical formulations under the hood, and real-world trade-offs.</p>
+            <div class="article-meta">
+              <span>Author: Curriculum Research Group</span>
+              <span class="meta-divider">&bull;</span>
+              <span>Focus: Core Supervised Learning</span>
+              <span class="meta-divider">&bull;</span>
+              <span>Reading Time: 18 min</span>
+            </div>
+          </header>
 
-      <nav class="topbar__nav">
-        <a href="#stages">5 Stages</a>
-        <a href="#pillars">10 Pillars</a>
-        <a href="ml.html">Machine Learning Core</a>
-      </nav>
+          <!-- Introduction Section -->
+          <section id="overview">
+            <p class="lead">
+              Machine learning models extract systematic empirical relationships from historical data to generalize over previously unobserved inputs. At its core, supervised machine learning partitions into two fundamental paradigms based on the nature of the target variable.
+            </p>
 
-      <div class="topbar__right">
-        <button class="theme-btn" id="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle Light/Dark Theme">
-          ☀️
-        </button>
-      </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Problem Type</th>
+                    <th>Objective</th>
+                    <th>Canonical Examples</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Regression</strong></td>
+                    <td>Predict a continuous, numerical quantity</td>
+                    <td>Real estate valuation, employee compensation, temperature forecasting</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Classification</strong></td>
+                    <td>Predict a discrete class or qualitative label</td>
+                    <td>Spam detection, credit default risk, clinical diagnostics</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="callout callout-secondary">
+              <div class="callout-title">Core Axiom</div>
+              <p>Regression answers <strong>"how much?"</strong> whereas classification answers <strong>"which category?"</strong></p>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 1: REGRESSION                         -->
+          <!-- ========================================== -->
+          <section id="part-1-linear-regression">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Regression</span>
+              <span class="badge badge-neutral">Parametric</span>
+            </div>
+            <h2>1. Linear Regression</h2>
+            <p><strong>Primary Objective:</strong> Model and predict a continuous dependent variable as a linear combination of one or more input features.</p>
+
+            <h3>Mechanics and Intuition</h3>
+            <p>
+              Consider estimating a student's academic marks ($Y$) given their weekly preparation hours ($X$). The algorithm models this interaction by identifying the optimal straight line traversing the feature space, adjusting its slope and intercept such that the aggregate discrepancy between real data points and the line is minimized.
+            </p>
+
+            <!-- Figure 1: Linear Regression & Residuals -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 1.1</span>
+                <span class="figure-title">Linear Regression: Fitted Model and Residual Errors</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 680 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Linear regression diagram with data points, fitted line, and residual error bars">
+                  <defs>
+                    <marker id="arrow-1" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#515154"/>
+                    </marker>
+                  </defs>
+                  <!-- Background grid -->
+                  <g stroke="#f0f0f4" stroke-width="1">
+                    <line x1="80" y1="50" x2="620" y2="50" />
+                    <line x1="80" y1="110" x2="620" y2="110" />
+                    <line x1="80" y1="170" x2="620" y2="170" />
+                    <line x1="80" y1="230" x2="620" y2="230" />
+                    <line x1="170" y1="40" x2="170" y2="260" />
+                    <line x1="260" y1="40" x2="260" y2="260" />
+                    <line x1="350" y1="40" x2="350" y2="260" />
+                    <line x1="440" y1="40" x2="440" y2="260" />
+                    <line x1="530" y1="40" x2="530" y2="260" />
+                  </g>
+                  
+                  <!-- Axes -->
+                  <line x1="80" y1="260" x2="630" y2="260" stroke="#515154" stroke-width="1.5" marker-end="url(#arrow-1)" />
+                  <line x1="80" y1="260" x2="80" y2="30" stroke="#515154" stroke-width="1.5" marker-end="url(#arrow-1)" />
+                  
+                  <text x="630" y="280" font-size="12" font-family="-apple-system, sans-serif" fill="#515154" text-anchor="end">Feature Input (x) &mdash; Study Hours</text>
+                  <text x="70" y="24" font-size="12" font-family="-apple-system, sans-serif" fill="#515154" text-anchor="start">Output (y) &mdash; Marks</text>
+
+                  <!-- Residual Lines (Dashed Red) -->
+                  <line x1="160" y1="225" x2="160" y2="195" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,3" />
+                  <line x1="230" y1="150" x2="230" y2="168" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,3" />
+                  <line x1="320" y1="165" x2="320" y2="134" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,3" />
+                  <line x1="410" y1="90" x2="410" y2="100" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,3" />
+                  <line x1="490" y1="95" x2="490" y2="69" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,3" />
+                  <line x1="560" y1="35" x2="560" y2="43" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,3" />
+
+                  <!-- Regression Line -->
+                  <line x1="80" y1="225" x2="600" y2="28" stroke="#0066cc" stroke-width="2.5" />
+                  
+                  <!-- Intercept Indicator -->
+                  <circle cx="80" cy="225" r="4.5" fill="#0066cc" />
+                  <text x="92" y="222" font-size="11" font-family="-apple-system, sans-serif" fill="#0066cc" font-weight="600">Intercept (b)</text>
+
+                  <!-- Slope Triangle -->
+                  <path d="M 360 119 L 440 119 L 440 89" fill="none" stroke="#6e6e73" stroke-width="1" stroke-dasharray="2,2" />
+                  <text x="400" y="132" font-size="10" font-family="-apple-system, sans-serif" fill="#6e6e73" text-anchor="middle">&Delta;x</text>
+                  <text x="450" y="106" font-size="10" font-family="-apple-system, sans-serif" fill="#6e6e73" text-anchor="start">&Delta;y (Slope m)</text>
+
+                  <!-- Observations (Data Points) -->
+                  <circle cx="160" cy="195" r="5" fill="#1d1d1f" stroke="#ffffff" stroke-width="1.5" />
+                  <circle cx="230" cy="168" r="5" fill="#1d1d1f" stroke="#ffffff" stroke-width="1.5" />
+                  <circle cx="320" cy="134" r="5" fill="#1d1d1f" stroke="#ffffff" stroke-width="1.5" />
+                  <circle cx="410" cy="100" r="5" fill="#1d1d1f" stroke="#ffffff" stroke-width="1.5" />
+                  <circle cx="490" cy="69" r="5" fill="#1d1d1f" stroke="#ffffff" stroke-width="1.5" />
+                  <circle cx="560" cy="43" r="5" fill="#1d1d1f" stroke="#ffffff" stroke-width="1.5" />
+
+                  <!-- Callout Annotations -->
+                  <rect x="440" y="180" width="180" height="48" rx="6" fill="#ffffff" stroke="#e5e5ea" stroke-width="1" />
+                  <text x="450" y="198" font-size="11" font-weight="600" fill="#1d1d1f" font-family="-apple-system, sans-serif">Fitted Line: y = mx + b</text>
+                  <text x="450" y="214" font-size="10" fill="#ef4444" font-family="-apple-system, sans-serif">Residual: e_i = (y_i &minus; &ycirc;_i)</text>
+                </svg>
+              </div>
+              <figcaption>
+                The regression line $\hat{y} = mx + b$ minimizes the sum of squared vertical residuals (dashed red segments) across observed data points.
+              </figcaption>
+            </div>
+
+            <h3>Mathematical Foundations</h3>
+            <p>In simple univariate linear regression, the relationship is parameterized by:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{y = mx + b}$$
+              </div>
+            </div>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Variable</th>
+                    <th>Formal Definition</th>
+                    <th>Operational Context</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>$y$</td>
+                    <td>Dependent target variable</td>
+                    <td>The predicted score or measurement</td>
+                  </tr>
+                  <tr>
+                    <td>$x$</td>
+                    <td>Independent predictor variable</td>
+                    <td>Observed input feature (e.g. study hours)</td>
+                  </tr>
+                  <tr>
+                    <td>$m$</td>
+                    <td>Weight / Slope parameter</td>
+                    <td>Rate of change in $y$ per unit change in $x$</td>
+                  </tr>
+                  <tr>
+                    <td>$b$</td>
+                    <td>Bias / Y-intercept parameter</td>
+                    <td>Baseline expected outcome when $x = 0$</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p><strong>Univariate Numerical Walkthrough:</strong> Given learned parameters $y = 10x + 20$, if a student dedicates $x = 5$ hours:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$y = 10(5) + 20 = \boxed{70}$$
+              </div>
+            </div>
+
+            <p><strong>Multivariate Generalization:</strong> When extended to an arbitrary vector of $n$ features $(x_1, x_2, \dots, x_n)$:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{y = w_1x_1 + w_2x_2 + \dots + w_nx_n + b = \mathbf{w}^T\mathbf{x} + b}$$
+              </div>
+            </div>
+
+            <h4>Optimization Objective</h4>
+            <p>Linear regression solves for the weights $\mathbf{w}$ that minimize the <strong>Mean Squared Error (MSE)</strong> across $n$ training instances:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}\left(y_i - \hat{y}_i\right)^2}$$
+              </div>
+            </div>
+            <p>Here, $y_i$ represents the verified ground truth, and $\hat{y}_i$ designates the model's computed estimation.</p>
+
+            <div class="decision-grid">
+              <div class="decision-box use">
+                <div class="decision-box-title">When to Use</div>
+                <ul>
+                  <li>Direct prediction of continuous numeric targets (e.g. pricing, sales volume, crop yield).</li>
+                  <li>Relationships are known to be approximately linear.</li>
+                  <li>Complete transparency and coefficient interpretability are essential.</li>
+                  <li>Fast training and immediate analytical baselines are needed.</li>
+                </ul>
+              </div>
+              <div class="decision-box avoid">
+                <div class="decision-box-title">When to Avoid</div>
+                <ul>
+                  <li>Complex nonlinear interactions or polynomial geometries dominate.</li>
+                  <li>Heavy uncleaned outliers exist that quadratically inflate MSE.</li>
+                  <li>Severe multicollinearity among input features degrades coefficient stability.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="callout callout-secondary">
+              <div class="callout-title">Production Application</div>
+              <p>Predicting municipal property valuations by evaluating continuous features such as square footage, room count, and neighborhood desirability indices.</p>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 2: CLASSIFICATION                     -->
+          <!-- ========================================== -->
+          <section id="part-2-knn">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Classification</span>
+              <span class="badge badge-neutral">Instance-Based / Non-Parametric</span>
+            </div>
+            <h2>2. K-Nearest Neighbors (KNN)</h2>
+            <p><strong>Primary Objective:</strong> Classify an unobserved query instance by determining the consensus label among its $K$ most proximate neighbors in the feature space.</p>
+
+            <h3>Mechanics and Intuition</h3>
+            <p>
+              Imagine receiving an unclassified fruit characterized by physical measurements (e.g. weight = 150g, color index = 0.85). The algorithm:
+            </p>
+            <ol>
+              <li>Computes pairwise metric distances between the query instance and every indexed training sample.</li>
+              <li>Sorts the records and isolates the $K$ points situated at minimal geometric distance.</li>
+              <li>Tallies the discrete labels within this neighborhood.</li>
+              <li>Assigns the plurality class (majority vote) to the query instance.</li>
+            </ol>
+
+            <!-- Figure 2: KNN Decision Space -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 2.1</span>
+                <span class="figure-title">KNN Metric Neighborhood: K=1 versus K=5</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 680 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="K-Nearest Neighbors decision space with K=1 and K=5 circles around query point">
+                  <!-- Coordinate Grid -->
+                  <g stroke="#f0f0f4" stroke-width="1">
+                    <line x1="80" y1="40" x2="600" y2="40" />
+                    <line x1="80" y1="100" x2="600" y2="100" />
+                    <line x1="80" y1="160" x2="600" y2="160" />
+                    <line x1="80" y1="220" x2="600" y2="220" />
+                    <line x1="80" y1="280" x2="600" y2="280" />
+                    <line x1="160" y1="20" x2="160" y2="280" />
+                    <line x1="280" y1="20" x2="280" y2="280" />
+                    <line x1="400" y1="20" x2="400" y2="280" />
+                    <line x1="520" y1="20" x2="520" y2="280" />
+                  </g>
+                  
+                  <!-- K=5 Neighborhood Boundary (Large Dotted Circle) -->
+                  <circle cx="320" cy="150" r="105" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4,4" />
+                  <text x="430" y="160" font-size="11" font-family="-apple-system, sans-serif" fill="#2563eb" font-weight="600">K = 5 Neighborhood</text>
+
+                  <!-- K=1 Neighborhood Boundary (Inner Dotted Circle) -->
+                  <circle cx="320" cy="150" r="42" fill="none" stroke="#6e6e73" stroke-width="1.2" stroke-dasharray="2,2" />
+                  <text x="330" y="102" font-size="10" font-family="-apple-system, sans-serif" fill="#6e6e73">K = 1</text>
+
+                  <!-- Query Point -->
+                  <polygon points="320,138 332,150 320,162 308,150" fill="#111827" stroke="#ffffff" stroke-width="1.5" />
+                  <text x="305" y="178" font-size="11" font-family="-apple-system, sans-serif" fill="#111827" font-weight="600">Query Point x_q</text>
+
+                  <!-- Class A Points (Blue: Apples) -->
+                  <circle cx="305" cy="120" r="6" fill="#2563eb" /> <!-- Inside K=1 -->
+                  <circle cx="260" cy="160" r="6" fill="#2563eb" /> <!-- Inside K=5 -->
+                  <circle cx="340" cy="210" r="6" fill="#2563eb" /> <!-- Inside K=5 -->
+                  <circle cx="390" cy="125" r="6" fill="#2563eb" /> <!-- Inside K=5 -->
+                  <circle cx="210" cy="90" r="6" fill="#2563eb" />
+                  <circle cx="220" cy="220" r="6" fill="#2563eb" />
+                  <circle cx="170" cy="140" r="6" fill="#2563eb" />
+                  <circle cx="380" cy="50" r="6" fill="#2563eb" />
+
+                  <!-- Class B Points (Amber: Oranges) -->
+                  <circle cx="360" cy="180" r="6" fill="#d97706" /> <!-- Inside K=5 (1 Orange) -->
+                  <circle cx="450" cy="190" r="6" fill="#d97706" />
+                  <circle cx="480" cy="130" r="6" fill="#d97706" />
+                  <circle cx="440" cy="250" r="6" fill="#d97706" />
+                  <circle cx="530" cy="170" r="6" fill="#d97706" />
+                  <circle cx="510" cy="80" r="6" fill="#d97706" />
+
+                  <!-- Legend and Outcome Box -->
+                  <rect x="80" y="20" width="160" height="90" rx="6" fill="#ffffff" stroke="#e5e5ea" stroke-width="1" />
+                  <circle cx="95" cy="38" r="5" fill="#2563eb" />
+                  <text x="110" y="42" font-size="11" font-family="-apple-system, sans-serif" fill="#1d1d1f">Class A: Apple (4 in K=5)</text>
+                  <circle cx="95" cy="60" r="5" fill="#d97706" />
+                  <text x="110" y="64" font-size="11" font-family="-apple-system, sans-serif" fill="#1d1d1f">Class B: Orange (1 in K=5)</text>
+                  <polygon points="95,80 100,85 95,90 90,85" fill="#111827" />
+                  <text x="110" y="88" font-size="11" font-family="-apple-system, sans-serif" fill="#111827" font-weight="600">Decision: Apple</text>
+                </svg>
+              </div>
+              <figcaption>
+                At $K=5$, the localized metric ball encloses 4 instances of Class A and 1 of Class B, yielding an Apple classification via majority tally.
+              </figcaption>
+            </div>
+
+            <h3>Mathematical Foundations</h3>
+            <p>Proximity is conventionally evaluated using <strong>Euclidean distance</strong>. For two planar points $\mathbf{x} = (x_1, y_1)$ and $\mathbf{z} = (x_2, y_2)$:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{d(\mathbf{x}, \mathbf{z}) = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}}$$
+              </div>
+            </div>
+
+            <p>Generalized across an $n$-dimensional attribute space $\mathbf{x}, \mathbf{z} \in \mathbb{R}^n$:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{d(\mathbf{x}, \mathbf{z}) = \sqrt{\sum_{j=1}^{n} (x_j - z_j)^2}}$$
+              </div>
+            </div>
+
+            <p><strong>Step-by-Step Calculation:</strong> Given coordinate vectors $A = (2, 3)$ and $B = (5, 7)$:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$d = \sqrt{(5-2)^2 + (7-3)^2} = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \boxed{5}$$
+              </div>
+            </div>
+
+            <h3>The Hyperparameter Dilemma: Selecting $K$</h3>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Hyperparameter Setting</th>
+                    <th>Structural Effect on Boundary</th>
+                    <th>Bias-Variance Implication</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>$K = 1$</strong></td>
+                    <td>Highly jagged, complex decision boundaries matching every local outlier</td>
+                    <td>High Variance (Overfitting danger)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Small $K$ (e.g. 3)</strong></td>
+                    <td>Retains sharp local flexibility while dampening individual noise points</td>
+                    <td>Balanced for dense clusters</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Large $K$ (e.g. 50+)</strong></td>
+                    <td>Overly smooth, generalized boundary dominated by global class distribution</td>
+                    <td>High Bias (Underfitting danger)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="decision-grid">
+              <div class="decision-box use">
+                <div class="decision-box-title">When to Use</div>
+                <ul>
+                  <li>Small to moderately sized datasets with low feature dimensionality.</li>
+                  <li>Feature spaces where cluster proximity directly correlates with class membership.</li>
+                  <li>No explicit functional training step is desired (instant ingestion).</li>
+                </ul>
+              </div>
+              <div class="decision-box avoid">
+                <div class="decision-box-title">When to Avoid</div>
+                <ul>
+                  <li>Large-scale production systems requiring low-latency scoring ($O(Nd)$ inference).</li>
+                  <li>High-dimensional manifolds subject to the "Curse of Dimensionality".</li>
+                  <li>Unnormalized datasets where differing feature scales distort metric distances.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="callout">
+              <div class="callout-title">Teacher's Note: The "Lazy Learner"</div>
+              <p>
+                KNN executes zero iterative weight optimization during training ($O(1)$ training cost). It merely serializes the training corpus into memory. The entire computational overhead is deferred to inference time, when every query demands full-corpus distance evaluations.
+              </p>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- 3. SUPPORT VECTOR MACHINE                  -->
+          <!-- ========================================== -->
+          <section id="part-2-svm">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Classification</span>
+              <span class="badge badge-regression">Regression (SVR)</span>
+              <span class="badge badge-neutral">Max-Margin Boundary</span>
+            </div>
+            <h2>3. Support Vector Machine (SVM)</h2>
+            <p><strong>Primary Objective:</strong> Construct an optimal separating hyperplane that maximizes the geometric margin between discrete classes.</p>
+
+            <h3>Mechanics and Intuition</h3>
+            <p>
+              In linearly separable environments, an infinite number of potential hyperplanes can split two classes. SVM isolates the unique boundary that maximizes the clearance ("margin") separating itself from the closest instances of both classes. These critical boundary points are designated <strong>support vectors</strong>.
+            </p>
+
+            <!-- Figure 3: SVM Hyperplane -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 3.1</span>
+                <span class="figure-title">Maximum Margin Separating Hyperplane and Support Vectors</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 680 340" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Support Vector Machine maximum margin hyperplane with positive and negative margins, and support vectors circled">
+                  <defs>
+                    <marker id="arrow-svm" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#1d1d1f"/>
+                    </marker>
+                    <marker id="arrow-margin-end" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444"/>
+                    </marker>
+                    <marker id="arrow-margin-start" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 10 1 L 0 5 L 10 9 z" fill="#ef4444"/>
+                    </marker>
+                  </defs>
+                  <!-- Axes -->
+                  <line x1="60" y1="300" x2="620" y2="300" stroke="#d2d2d7" stroke-width="1" />
+                  <line x1="60" y1="300" x2="60" y2="30" stroke="#d2d2d7" stroke-width="1" />
+                  
+                  <!-- Margin Corridor Fill -->
+                  <polygon points="120,290 540,50 590,95 170,335" fill="#f5f5f7" opacity="0.6" />
+
+                  <!-- Hyperplane w^T x + b = 0 -->
+                  <line x1="100" y1="270" x2="550" y2="30" stroke="#0066cc" stroke-width="2.5" />
+                  <text x="560" y="35" font-size="12" font-weight="600" fill="#0066cc" font-family="-apple-system, sans-serif">w^T x + b = 0</text>
+
+                  <!-- Positive Margin w^T x + b = +1 -->
+                  <line x1="160" y1="315" x2="610" y2="75" stroke="#6e6e73" stroke-width="1.5" stroke-dasharray="4,4" />
+                  <text x="520" y="115" font-size="11" fill="#6e6e73" font-family="-apple-system, sans-serif">w^T x + b = +1</text>
+
+                  <!-- Negative Margin w^T x + b = -1 -->
+                  <line x1="40" y1="225" x2="490" y2="-15" stroke="#6e6e73" stroke-width="1.5" stroke-dasharray="4,4" />
+                  <text x="320" y="55" font-size="11" fill="#6e6e73" font-family="-apple-system, sans-serif">w^T x + b = &minus;1</text>
+
+                  <!-- Margin Width Dimension Line -->
+                  <line x1="240" y1="118" x2="264" y2="163" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrow-margin-end)" marker-start="url(#arrow-margin-start)" />
+                  <text x="280" y="148" font-size="11" font-weight="600" fill="#ef4444" font-family="-apple-system, sans-serif">Margin = 2 / ||w||</text>
+
+                  <!-- Normal Vector w -->
+                  <line x1="375" y1="123" x2="420" y2="60" stroke="#1d1d1f" stroke-width="2" marker-end="url(#arrow-svm)" />
+                  <text x="430" y="65" font-size="11" font-weight="600" fill="#1d1d1f" font-family="-apple-system, sans-serif">Normal Vector w</text>
+
+                  <!-- Negative Class Samples (Dark Slate Circles) -->
+                  <circle cx="120" cy="180" r="5" fill="#1e293b" />
+                  <circle cx="180" cy="140" r="5" fill="#1e293b" />
+                  <circle cx="250" cy="80" r="5" fill="#1e293b" />
+                  <circle cx="150" cy="90" r="5" fill="#1e293b" />
+
+                  <!-- Negative Support Vectors on Margin w^T x + b = -1 -->
+                  <circle cx="215" cy="132" r="5" fill="#1e293b" />
+                  <circle cx="215" cy="132" r="10" fill="none" stroke="#ef4444" stroke-width="1.5" />
+                  <circle cx="340" cy="65" r="5" fill="#1e293b" />
+                  <circle cx="340" cy="65" r="10" fill="none" stroke="#ef4444" stroke-width="1.5" />
+
+                  <!-- Positive Class Samples (Blue Circles) -->
+                  <circle cx="350" cy="270" r="5" fill="#2563eb" />
+                  <circle cx="430" cy="240" r="5" fill="#2563eb" />
+                  <circle cx="500" cy="180" r="5" fill="#2563eb" />
+                  <circle cx="490" cy="250" r="5" fill="#2563eb" />
+
+                  <!-- Positive Support Vector on Margin w^T x + b = +1 -->
+                  <circle cx="310" cy="235" r="5" fill="#2563eb" />
+                  <circle cx="310" cy="235" r="10" fill="none" stroke="#ef4444" stroke-width="1.5" />
+
+                  <text x="140" y="270" font-size="11" font-style="italic" fill="#ef4444" font-family="-apple-system, sans-serif">Circled Points = Support Vectors</text>
+                </svg>
+              </div>
+              <figcaption>
+                The optimal decision boundary $w^Tx + b = 0$ is governed strictly by the support vectors positioned along the canonical margin boundaries $w^Tx + b = \pm 1$.
+              </figcaption>
+            </div>
+
+            <h3>Mathematical Formulation</h3>
+            <p>The linear decision boundary satisfies:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{\mathbf{w}^T\mathbf{x} + b = 0}$$
+              </div>
+            </div>
+
+            <p>With binary decision function:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$f(\mathbf{x}) = \text{sign}(\mathbf{w}^T\mathbf{x} + b)$$
+              </div>
+            </div>
+
+            <p>The orthogonal distance from any arbitrary observation $\mathbf{x}$ to the hyperplane is:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{d = \frac{|\mathbf{w}^T\mathbf{x} + b|}{\|\mathbf{w}\|}}$$
+              </div>
+            </div>
+
+            <p>For a linearly separable dataset bounded by canonical margins $\mathbf{w}^T\mathbf{x} + b = \pm 1$, total margin width equates to:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{\text{Margin Width} = \frac{2}{\|\mathbf{w}\|}}$$
+              </div>
+            </div>
+
+            <p>Maximizing $\frac{2}{\|\mathbf{w}\|}$ is mathematically equivalent to solving the convex quadratic programming objective:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{\min_{\mathbf{w}, b} \frac{1}{2}\|\mathbf{w}\|^2 \quad \text{subject to } y_i(\mathbf{w}^T\mathbf{x}_i + b) \ge 1, \quad \forall i}$$
+              </div>
+            </div>
+            <p>For real-world data with non-separable noise, a <strong>soft margin</strong> is implemented by incorporating slack variables $\xi_i \ge 0$ controlled by regularization penalty parameter $C$.</p>
+
+            <h3>The Kernel Trick: Navigating Nonlinear Spaces</h3>
+            <p>
+              When data cannot be linearly partitioned in its original feature space $\mathbb{R}^d$, SVM applies a kernel function $K(\mathbf{x}_i, \mathbf{x}_j) = \phi(\mathbf{x}_i)^T \phi(\mathbf{x}_j)$ to compute inner products within a higher-dimensional implicit space without explicitly projecting coordinate vectors.
+            </p>
+            <ul>
+              <li><strong>Linear Kernel:</strong> $K(\mathbf{x}, \mathbf{z}) = \mathbf{x}^T\mathbf{z}$ (Ideal for text classification).</li>
+              <li><strong>Polynomial Kernel:</strong> $K(\mathbf{x}, \mathbf{z}) = (\mathbf{x}^T\mathbf{z} + c)^d$.</li>
+              <li><strong>Radial Basis Function (RBF / Gaussian):</strong> $K(\mathbf{x}, \mathbf{z}) = \exp(-\gamma \|\mathbf{x} - \mathbf{z}\|^2)$ (Excels at complex curvilinear envelopes).</li>
+            </ul>
+
+            <div class="decision-grid">
+              <div class="decision-box use">
+                <div class="decision-box-title">When to Use</div>
+                <ul>
+                  <li>High-dimensional feature spaces where dimension count exceeds sample size ($d > n$).</li>
+                  <li>Clear margin of separation exists between classes.</li>
+                  <li>Text document classification, genome sequencing, and image recognition.</li>
+                </ul>
+              </div>
+              <div class="decision-box avoid">
+                <div class="decision-box-title">When to Avoid</div>
+                <ul>
+                  <li>Massive datasets containing hundreds of thousands to millions of rows ($O(n^2)$ to $O(n^3)$ training complexity).</li>
+                  <li>Noisy data regimes with highly overlapping class distributions.</li>
+                  <li>Use cases demanding direct probabilistic interpretation without Platt scaling calibration.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="callout callout-secondary">
+              <div class="callout-title">Core Distinguishing Fact</div>
+              <p>Unlike KNN, which evaluates all training records during every prediction, an SVM discards all non-boundary data post-training; the decision boundary relies exclusively on the support vectors.</p>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- 4. LOGISTIC REGRESSION                     -->
+          <!-- ========================================== -->
+          <section id="part-2-logistic-regression">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Classification</span>
+              <span class="badge badge-neutral">Probabilistic Linear Model</span>
+            </div>
+            <h2>4. Logistic Regression</h2>
+            <p><strong>Primary Objective:</strong> Model the posterior conditional probability $P(Y=1|\mathbf{x})$ that an instance belongs to a target binary category.</p>
+
+            <h3>Mechanics and Intuition</h3>
+            <p>
+              Despite the term "regression" in its name, Logistic Regression serves as a primary tool for discrete classification. Rather than outputting unbounded continuous values, the model computes an intermediate linear log-odds score and passes it through an activation function (the sigmoid) to squash outputs into the probability domain $(0, 1)$.
+            </p>
+
+            <!-- Figure 4: Logistic Regression Sigmoid -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 4.1</span>
+                <span class="figure-title">The Standard Logistic (Sigmoid) Function and Decision Boundary</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 680 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logistic sigmoid curve showing probability mapping from z score to 0 to 1 with 0.5 threshold">
+                  <defs>
+                    <marker id="arrow-logit" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#515154"/>
+                    </marker>
+                  </defs>
+                  <!-- Axes -->
+                  <line x1="80" y1="260" x2="620" y2="260" stroke="#515154" stroke-width="1.5" marker-end="url(#arrow-logit)" />
+                  <line x1="340" y1="280" x2="340" y2="30" stroke="#515154" stroke-width="1.5" marker-end="url(#arrow-logit)" />
+                  
+                  <!-- Asymptote lines -->
+                  <line x1="80" y1="60" x2="600" y2="60" stroke="#d2d2d7" stroke-width="1" stroke-dasharray="2,2" />
+                  <text x="60" y="64" font-size="11" font-family="-apple-system, sans-serif" fill="#6e6e73" text-anchor="end">P = 1.0</text>
+                  <text x="60" y="264" font-size="11" font-family="-apple-system, sans-serif" fill="#6e6e73" text-anchor="end">P = 0.0</text>
+
+                  <!-- Horizontal Decision Threshold at P = 0.5 -->
+                  <line x1="80" y1="160" x2="600" y2="160" stroke="#e5e5ea" stroke-width="1" stroke-dasharray="3,3" />
+                  <text x="60" y="164" font-size="11" font-weight="600" font-family="-apple-system, sans-serif" fill="#ef4444" text-anchor="end">P = 0.5</text>
+                  <circle cx="340" cy="160" r="4.5" fill="#ef4444" />
+                  <text x="350" y="152" font-size="11" font-weight="600" fill="#ef4444" font-family="-apple-system, sans-serif">Threshold (z = 0, P = 0.5)</text>
+
+                  <!-- Sigmoid Curve Path -->
+                  <path d="M 100 258 C 220 258, 280 230, 340 160 C 400 90, 460 62, 580 62" fill="none" stroke="#0066cc" stroke-width="2.5" />
+
+                  <!-- Specific Point Demonstration: z=2, P=0.881 -->
+                  <circle cx="440" cy="84" r="5" fill="#1d1d1f" />
+                  <line x1="440" y1="260" x2="440" y2="84" stroke="#1d1d1f" stroke-width="1" stroke-dasharray="2,2" />
+                  <line x1="340" y1="84" x2="440" y2="84" stroke="#1d1d1f" stroke-width="1" stroke-dasharray="2,2" />
+                  
+                  <rect x="450" y="90" width="160" height="40" rx="4" fill="#ffffff" stroke="#e5e5ea" stroke-width="1" />
+                  <text x="458" y="106" font-size="11" font-weight="600" fill="#1d1d1f" font-family="-apple-system, sans-serif">z = +2.0</text>
+                  <text x="458" y="122" font-size="11" fill="#0066cc" font-family="-apple-system, sans-serif">&sigma;(z) &approx; 0.881 (88.1% Pass)</text>
+
+                  <!-- Classification Zone Labels -->
+                  <text x="210" y="240" font-size="12" font-weight="600" fill="#6e6e73" font-family="-apple-system, sans-serif">Class 0 Zone (P &lt; 0.5)</text>
+                  <text x="470" y="45" font-size="12" font-weight="600" fill="#166534" font-family="-apple-system, sans-serif">Class 1 Zone (P &ge; 0.5)</text>
+
+                  <!-- Axis Ticks & Labels -->
+                  <text x="620" y="278" font-size="11" font-family="-apple-system, sans-serif" fill="#515154">Score z = w^T x + b</text>
+                  <text x="340" y="278" font-size="11" font-family="-apple-system, sans-serif" fill="#515154" text-anchor="middle">z = 0</text>
+                  <text x="440" y="278" font-size="11" font-family="-apple-system, sans-serif" fill="#515154" text-anchor="middle">z = +2</text>
+                  <text x="240" y="278" font-size="11" font-family="-apple-system, sans-serif" fill="#515154" text-anchor="middle">z = &minus;2</text>
+                </svg>
+              </div>
+              <figcaption>
+                The sigmoid function $\sigma(z)$ maps unbounded real linear scores into monotonically bounded probabilities within $(0, 1)$.
+              </figcaption>
+            </div>
+
+            <h3>Mathematical Foundations</h3>
+            <p><strong>Step 1: Compute the Linear Aggregate Score ($z$)</strong></p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{z = w_1x_1 + w_2x_2 + \dots + w_nx_n + b = \mathbf{w}^T\mathbf{x} + b}$$
+              </div>
+            </div>
+
+            <p><strong>Step 2: Map through the Logistic (Sigmoid) Function</strong></p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{\sigma(z) = \frac{1}{1 + e^{-z}} = \frac{e^z}{1 + e^z}}$$
+              </div>
+            </div>
+
+            <p><strong>Empirical Calculation Example:</strong> Suppose feature weighting yields $z = 2$ for a candidate:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$P(Y = \text{Pass}) = \frac{1}{1 + e^{-2}} \approx \frac{1}{1 + 0.1353} = \boxed{0.881} \quad (88.1\%)$$
+              </div>
+            </div>
+            <p>Subject to standard decision threshold $\tau = 0.5$:</p>
+            <ul>
+              <li>If $P \ge 0.5 \implies$ Predict <strong>Pass (Class 1)</strong></li>
+              <li>If $P < 0.5 \implies$ Predict <strong>Fail (Class 0)</strong></li>
+            </ul>
+
+            <h4>Loss Function: Binary Cross-Entropy (Log Loss)</h4>
+            <p>Because the sigmoid function renders Mean Squared Error non-convex, parameter estimation applies Maximum Likelihood Estimation via <strong>Binary Cross-Entropy Loss</strong>:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{L(\mathbf{w}) = -\frac{1}{n}\sum_{i=1}^{n}\Big[y_i \ln(p_i) + (1 - y_i)\ln(1 - p_i)\Big]}$$
+              </div>
+            </div>
+            <p>Where $y_i \in \{0, 1\}$ represents ground truth, and $p_i = \sigma(\mathbf{w}^T\mathbf{x}_i + b)$ denotes predicted probability.</p>
+
+            <div class="decision-grid">
+              <div class="decision-box use">
+                <div class="decision-box-title">When to Use</div>
+                <ul>
+                  <li>Direct probabilistic risk estimates (e.g. loan default probability, customer churn likelihood).</li>
+                  <li>Highly interpretable feature odds ratios ($e^{w_j}$) are required.</li>
+                  <li>Standard classification baseline for tabular and sparse textual datasets.</li>
+                </ul>
+              </div>
+              <div class="decision-box avoid">
+                <div class="decision-box-title">When to Avoid</div>
+                <ul>
+                  <li>Strongly nonlinear decision boundaries without explicit feature transformations.</li>
+                  <li>Complex high-order feature interactions that are unmodeled in the feature engineering stage.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="callout callout-secondary">
+              <div class="callout-title">Production Application</div>
+              <p>Subscriber churn prediction: Estimating probability that a recurring SaaS account will terminate service within 30 days based on login frequency, ticket volume, and billing tier.</p>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 3: DECISION TREES                     -->
+          <!-- ========================================== -->
+          <section id="part-3-decision-tree">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Classification</span>
+              <span class="badge badge-regression">Regression (CART)</span>
+              <span class="badge badge-neutral">Rule-Based / Non-Parametric</span>
+            </div>
+            <h2>5. Decision Tree</h2>
+            <p><strong>Primary Objective:</strong> Partition the input feature space recursively into orthogonal hyper-rectangles using hierarchical, rule-based splits that maximize information gain.</p>
+
+            <h3>Mechanics and Intuition</h3>
+            <p>
+              A decision tree operates like an expert decision flowchart. Starting at the root node containing the entire dataset, the algorithm evaluates every candidate feature and split threshold, selecting the split that maximally purifies the resulting child subsets.
+            </p>
+
+            <!-- Figure 5: Decision Tree Architecture -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 5.1</span>
+                <span class="figure-title">Hierarchical Decision Tree Flow and Node Partitioning</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 680 340" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hierarchical decision tree diagram showing root split on attendance, internal split on study hours, and terminal leaf outcomes">
+                  <defs>
+                    <marker id="arrow-tree" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
+                    </marker>
+                  </defs>
+                  <!-- Root Node -->
+                  <rect x="250" y="20" width="180" height="56" rx="6" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5" />
+                  <text x="340" y="42" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Attendance &ge; 75%?</text>
+                  <text x="340" y="60" font-size="10" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">N = 100 &bull; Gini = 0.48</text>
+
+                  <!-- Branch Connectors from Root -->
+                  <line x1="290" y1="76" x2="160" y2="130" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-tree)" />
+                  <text x="200" y="96" font-size="11" font-weight="600" fill="#ef4444" font-family="-apple-system, sans-serif">No (&lt; 75%)</text>
+
+                  <line x1="390" y1="76" x2="480" y2="130" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-tree)" />
+                  <text x="450" y="96" font-size="11" font-weight="600" fill="#166534" font-family="-apple-system, sans-serif">Yes (&ge; 75%)</text>
+
+                  <!-- Left Child: Terminal Leaf (Fail) -->
+                  <rect x="70" y="130" width="160" height="54" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+                  <text x="150" y="152" font-size="12" font-weight="700" fill="#991b1b" text-anchor="middle" font-family="-apple-system, sans-serif">Predict: Fail</text>
+                  <text x="150" y="170" font-size="10" fill="#b91c1c" text-anchor="middle" font-family="-apple-system, sans-serif">Pure &bull; N = 30 (0 Pass, 30 Fail)</text>
+
+                  <!-- Right Child: Internal Decision Node -->
+                  <rect x="400" y="130" width="180" height="56" rx="6" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5" />
+                  <text x="490" y="152" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Study &ge; 2 Hours/Day?</text>
+                  <text x="490" y="170" font-size="10" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">N = 70 &bull; Gini = 0.38</text>
+
+                  <!-- Sub-branch Connectors -->
+                  <line x1="440" y1="186" x2="370" y2="240" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-tree)" />
+                  <text x="380" y="210" font-size="11" font-weight="600" fill="#ef4444" font-family="-apple-system, sans-serif">No</text>
+
+                  <line x1="540" y1="186" x2="590" y2="240" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-tree)" />
+                  <text x="580" y="210" font-size="11" font-weight="600" fill="#166534" font-family="-apple-system, sans-serif">Yes</text>
+
+                  <!-- Left Sub-Leaf: Terminal Leaf (Fail) -->
+                  <rect x="290" y="240" width="150" height="54" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+                  <text x="365" y="262" font-size="12" font-weight="700" fill="#991b1b" text-anchor="middle" font-family="-apple-system, sans-serif">Predict: Fail</text>
+                  <text x="365" y="280" font-size="10" fill="#b91c1c" text-anchor="middle" font-family="-apple-system, sans-serif">N = 18 &bull; Gini = 0.14</text>
+
+                  <!-- Right Sub-Leaf: Terminal Leaf (Pass) -->
+                  <rect x="520" y="240" width="150" height="54" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
+                  <text x="595" y="262" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Predict: Pass</text>
+                  <text x="595" y="280" font-size="10" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">N = 52 &bull; Gini = 0.08</text>
+                </svg>
+              </div>
+              <figcaption>
+                Hierarchical splitting partition: each non-terminal node evaluates a single predicate, routing instances toward increasingly pure terminal leaves.
+              </figcaption>
+            </div>
+
+            <h3>Mathematical Foundations: Splitting Criteria</h3>
+
+            <h4>1. Gini Impurity (CART Default)</h4>
+            <p>Measures the frequency with which a randomly selected element from the subset would be incorrectly labeled if classified according to the label distribution:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{\text{Gini} = 1 - \sum_{i=1}^{C} p_i^2}$$
+              </div>
+            </div>
+            <p><em>Example 1: Perfectly Balanced Node (50% Pass, 50% Fail)</em></p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\text{Gini} = 1 - \left(0.5^2 + 0.5^2\right) = 1 - (0.25 + 0.25) = \boxed{0.50} \quad (\text{Maximum Impurity})$$
+              </div>
+            </div>
+            <p><em>Example 2: Pure Node (100% Pass)</em></p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\text{Gini} = 1 - (1.0^2) = \boxed{0.0} \quad (\text{Perfect Purity})$$
+              </div>
+            </div>
+
+            <h4>2. Shannon Entropy (ID3 / C4.5)</h4>
+            <p>Measures the expected information content or uncertainty present in a set of outcomes:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{H(S) = -\sum_{i=1}^{C} p_i \log_2(p_i)}$$
+              </div>
+            </div>
+            <p>For a node with 50% Pass and 50% Fail:</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$H = -\left[0.5 \log_2(0.5) + 0.5 \log_2(0.5)\right] = -[0.5(-1) + 0.5(-1)] = \boxed{1.0\text{ bit}}$$
+              </div>
+            </div>
+            <p>For a pure single-class node: $H = 0\text{ bits}$.</p>
+
+            <h4>3. Information Gain (Reduction in Uncertainty)</h4>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{\text{IG}(S, A) = H(S) - \sum_{v \in \text{Values}(A)} \frac{|S_v|}{|S|} H(S_v)}$$
+              </div>
+            </div>
+            <p>The tree systematically selects the feature $A$ and threshold that maximize Information Gain (or maximize Gini reduction).</p>
+
+            <div class="decision-grid">
+              <div class="decision-box use">
+                <div class="decision-box-title">When to Use</div>
+                <ul>
+                  <li>Strict auditing and explainability demands (e.g. credit underwriting, diagnostic pathways).</li>
+                  <li>Mixed feature types (numerical and categorical) without mandatory feature scaling.</li>
+                  <li>Rapid non-linear modeling and feature importance inspection.</li>
+                </ul>
+              </div>
+              <div class="decision-box avoid">
+                <div class="decision-box-title">When to Avoid</div>
+                <ul>
+                  <li>High variance regimes where slight training data shifts alter tree topology drastically.</li>
+                  <li>Linear or additive relationships requiring deep stair-step approximations.</li>
+                  <li>Unconstrained depth settings leading to acute memorization/overfitting.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="callout">
+              <div class="callout-title">Teacher's Tip: Regularization Hyperparameters</div>
+              <p>
+                To prevent unconstrained tree expansion from memorizing noise, constrain growth using:
+                <code>max_depth</code> (terminal tree height), <code>min_samples_split</code> (minimum instances required to branch), and <code>min_samples_leaf</code> (minimum quota per terminal leaf).
+              </p>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 4: RANDOM FOREST                      -->
+          <!-- ========================================== -->
+          <section id="part-4-random-forest">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">Ensemble Architecture</span>
+              <span class="badge badge-classification">Classification</span>
+              <span class="badge badge-regression">Regression</span>
+            </div>
+            <h2>6. Random Forest</h2>
+            <p><strong>Primary Objective:</strong> Construct an ensemble of decorrelated decision trees to substantially reduce prediction variance while preserving low model bias.</p>
+
+            <h3>Mechanics and Intuition</h3>
+            <p>
+              A single decision tree is prone to high variance: slight variations in the training sample generate completely different splits. Random Forest implements the <em>Wisdom of Crowds</em> by training hundreds of individual trees, each observing perturbed data and feature subsets, before aggregating their outputs into a consensus prediction.
+            </p>
+
+            <!-- Figure 6: Random Forest Ensemble -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 6.1</span>
+                <span class="figure-title">Random Forest Architecture: Bagging, Feature Subsampling, and Aggregation</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 720 340" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Random Forest ensemble architecture showing dataset, bootstrap samples, independent trees, individual predictions, and majority vote aggregator">
+                  <defs>
+                    <marker id="arrow-rf" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
+                    </marker>
+                  </defs>
+                  <!-- Level 1: Full Training Set -->
+                  <rect x="260" y="15" width="200" height="42" rx="6" fill="#1e293b" />
+                  <text x="360" y="38" font-size="12" font-weight="600" fill="#ffffff" text-anchor="middle" font-family="-apple-system, sans-serif">Original Training Set (N, P)</text>
+
+                  <!-- Connectors to Bootstrap Samples -->
+                  <line x1="300" y1="57" x2="120" y2="95" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
+                  <line x1="360" y1="57" x2="360" y2="95" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
+                  <line x1="420" y1="57" x2="600" y2="95" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
+
+                  <!-- Level 2: Bootstrap Subsets -->
+                  <rect x="40" y="95" width="160" height="36" rx="4" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1" />
+                  <text x="120" y="117" font-size="11" fill="#334155" text-anchor="middle" font-family="-apple-system, sans-serif">Bootstrap Sample D_1</text>
+
+                  <rect x="280" y="95" width="160" height="36" rx="4" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1" />
+                  <text x="360" y="117" font-size="11" fill="#334155" text-anchor="middle" font-family="-apple-system, sans-serif">Bootstrap Sample D_2</text>
+
+                  <rect x="520" y="95" width="160" height="36" rx="4" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1" />
+                  <text x="600" y="117" font-size="11" fill="#334155" text-anchor="middle" font-family="-apple-system, sans-serif">Bootstrap Sample D_M</text>
+
+                  <!-- Connectors to Trees -->
+                  <line x1="120" y1="131" x2="120" y2="160" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
+                  <line x1="360" y1="131" x2="360" y2="160" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
+                  <line x1="600" y1="131" x2="600" y2="160" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
+
+                  <!-- Level 3: Individual Decision Trees -->
+                  <rect x="50" y="160" width="140" height="46" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.2" />
+                  <text x="120" y="180" font-size="11" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Tree 1 (T_1)</text>
+                  <text x="120" y="196" font-size="9" fill="#9333ea" text-anchor="middle" font-family="-apple-system, sans-serif">Random Features &radic;P</text>
+
+                  <rect x="290" y="160" width="140" height="46" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.2" />
+                  <text x="360" y="180" font-size="11" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Tree 2 (T_2)</text>
+                  <text x="360" y="196" font-size="9" fill="#9333ea" text-anchor="middle" font-family="-apple-system, sans-serif">Random Features &radic;P</text>
+
+                  <rect x="530" y="160" width="140" height="46" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.2" />
+                  <text x="600" y="180" font-size="11" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Tree M (T_M)</text>
+                  <text x="600" y="196" font-size="9" fill="#9333ea" text-anchor="middle" font-family="-apple-system, sans-serif">Random Features &radic;P</text>
+
+                  <!-- Connectors to Predictions -->
+                  <line x1="120" y1="206" x2="120" y2="230" stroke="#64748b" stroke-width="1.2" />
+                  <line x1="360" y1="206" x2="360" y2="230" stroke="#64748b" stroke-width="1.2" />
+                  <line x1="600" y1="206" x2="600" y2="230" stroke="#64748b" stroke-width="1.2" />
+
+                  <!-- Prediction Labels -->
+                  <text x="120" y="244" font-size="11" font-weight="600" fill="#16a34a" text-anchor="middle" font-family="-apple-system, sans-serif">Vote: Pass</text>
+                  <text x="360" y="244" font-size="11" font-weight="600" fill="#16a34a" text-anchor="middle" font-family="-apple-system, sans-serif">Vote: Pass</text>
+                  <text x="600" y="244" font-size="11" font-weight="600" fill="#dc2626" text-anchor="middle" font-family="-apple-system, sans-serif">Vote: Fail</text>
+
+                  <!-- Convergence into Aggregator -->
+                  <line x1="120" y1="250" x2="320" y2="280" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-rf)" />
+                  <line x1="360" y1="250" x2="360" y2="280" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-rf)" />
+                  <line x1="600" y1="250" x2="400" y2="280" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow-rf)" />
+
+                  <!-- Aggregator & Final Output -->
+                  <rect x="250" y="280" width="220" height="44" rx="6" fill="#0284c7" />
+                  <text x="360" y="298" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="-apple-system, sans-serif">Majority Voting / Average</text>
+                  <text x="360" y="314" font-size="10" fill="#e0f2fe" text-anchor="middle" font-family="-apple-system, sans-serif">Final Prediction: Pass</text>
+                </svg>
+              </div>
+              <figcaption>
+                Bagging with random feature subsampling: individual decorrelated trees vote independently, neutralizing idiosyncratic errors.
+              </figcaption>
+            </div>
+
+            <h3>Mathematical Foundations</h3>
+            <p>Random Forest relies on two complementary randomization pillars:</p>
+            <ol>
+              <li>
+                <strong>Bootstrap Aggregation (Bagging):</strong> Each tree $T_m$ is trained on an independently drawn bootstrap subset of $N$ records sampled <em>with replacement</em> from the parent training set. Typically, each bootstrap sample captures approximately $(1 - 1/e) \approx 63.2\%$ of unique instances; the unselected $36.8\%$ form the <strong>Out-Of-Bag (OOB)</strong> evaluation pool.
+              </li>
+              <li>
+                <strong>Random Feature Subsampling:</strong> At every candidate split within each tree, only a random subset of features is evaluated (typically $m = \sqrt{p}$ for classification, and $m = p/3$ for regression). This prevents dominant predictors from inducing strong cross-tree correlation.
+              </li>
+            </ol>
+
+            <h4>Ensemble Combination Formulations</h4>
+            <p><strong>Classification via Plurality (Majority) Voting:</strong></p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{\hat{y} = \operatorname{mode}\Big\{T_1(\mathbf{x}),\, T_2(\mathbf{x}),\, \dots,\, T_M(\mathbf{x})\Big\}}$$
+              </div>
+            </div>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tree Instance</th>
+                    <th>Individual Predicted Class</th>
+                    <th>Ensemble Aggregation Tally</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Tree 1, 2, 4</td>
+                    <td>Pass</td>
+                    <td rowspan="2"><strong>Pass: 3 votes &bull; Fail: 2 votes</strong><br>Consensus Prediction: <strong>Pass</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Tree 3, 5</td>
+                    <td>Fail</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p><strong>Regression via Output Averaging:</strong></p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\boxed{\hat{y} = \frac{1}{M}\sum_{m=1}^{M} T_m(\mathbf{x})}$$
+              </div>
+            </div>
+            <p>For house price estimates across three trees ($₹40\text{L}, ₹45\text{L}, ₹50\text{L}$):</p>
+            <div class="math-card">
+              <div class="math-display">
+                $$\hat{y} = \frac{40 + 45 + 50}{3} = \boxed{₹45\text{ lakh}}$$
+              </div>
+            </div>
+
+            <div class="decision-grid">
+              <div class="decision-box use">
+                <div class="decision-box-title">When to Use</div>
+                <ul>
+                  <li>Top-tier benchmark performance on structured, tabular datasets.</li>
+                  <li>Presence of complex high-order feature interactions and non-linear boundaries.</li>
+                  <li>Mitigating extreme overfitting inherent in single decision trees.</li>
+                </ul>
+              </div>
+              <div class="decision-box avoid">
+                <div class="decision-box-title">When to Avoid</div>
+                <ul>
+                  <li>Ultra-low latency microsecond scoring constraints.</li>
+                  <li>Severe compute/memory hardware boundaries on edge devices.</li>
+                  <li>Extrapolating targets beyond observed training ranges in regression tasks.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="callout callout-secondary">
+              <div class="callout-title">Production Application</div>
+              <p>Financial transaction fraud scoring: Evaluating historical telemetry, merchant attributes, device fingerprints, and geolocation anomalies in high-throughput banking channels.</p>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 5: COMPARISON MATRIX                  -->
+          <!-- ========================================== -->
+          <section id="part-5-comparison">
+            <h2>Part 5: Comprehensive Algorithmic Comparison</h2>
+            <p>A structural summary contrasting the six foundational architectures across mechanics, optimization, target domains, and primary failure modes.</p>
+
+            <div class="table-wrapper wide-breakout">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Model</th>
+                    <th>Core Paradigm</th>
+                    <th>Mathematical Core</th>
+                    <th>Best Suited For</th>
+                    <th>Primary Limitation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Linear Regression</strong></td>
+                    <td>Parametric Linear Fit</td>
+                    <td>$y = \mathbf{w}^T\mathbf{x} + b$, MSE Loss</td>
+                    <td>Continuous numerical estimation</td>
+                    <td>Underfits complex nonlinear manifolds</td>
+                  </tr>
+                  <tr>
+                    <td><strong>KNN</strong></td>
+                    <td>Instance-Based Non-Parametric</td>
+                    <td>Euclidean Metric: $\sqrt{\sum(x_j-z_j)^2}$</td>
+                    <td>Similarity-based local classification</td>
+                    <td>Inference latency scales with corpus size $O(N)$</td>
+                  </tr>
+                  <tr>
+                    <td><strong>SVM</strong></td>
+                    <td>Maximum Margin Hyperplane</td>
+                    <td>$\min \frac{1}{2}\|\mathbf{w}\|^2$, Kernel projections</td>
+                    <td>High-dimensional structured data</td>
+                    <td>High training complexity on massive datasets</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Logistic Regression</strong></td>
+                    <td>Probabilistic Discriminative</td>
+                    <td>$\sigma(\mathbf{w}^T\mathbf{x} + b)$, Binary Cross-Entropy</td>
+                    <td>Binary probability modeling</td>
+                    <td>Linear log-odds decision boundary</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Decision Tree</strong></td>
+                    <td>Hierarchical Binary Partition</td>
+                    <td>Gini Impurity, Information Gain</td>
+                    <td>Auditable, rule-based decisioning</td>
+                    <td>High variance; prone to severe overfitting</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Random Forest</strong></td>
+                    <td>Ensemble Bagging</td>
+                    <td>Bootstrap aggregation, Voting/Averaging</td>
+                    <td>General-purpose tabular modeling</td>
+                    <td>Loss of direct single-tree interpretability</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 6: LOSS FUNCTIONS & METRICS           -->
+          <!-- ========================================== -->
+          <section id="part-6-metrics">
+            <h2>Part 6: Comparative Analysis of Loss & Splitting Metrics</h2>
+            <p>Students frequently conflate objective functions, loss penalties, and metric distances. The table below delineates their specific operational domains.</p>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Metric / Formula</th>
+                    <th>Primary Algorithm Domain</th>
+                    <th>Physical / Mathematical Meaning</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Mean Squared Error (MSE)</strong></td>
+                    <td>Linear Regression & Regression Trees</td>
+                    <td>Average squared Euclidean deviation between continuous observations and predictions</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Gini Impurity</strong></td>
+                    <td>Decision Trees (CART)</td>
+                    <td>Probability of misclassifying a randomly chosen element under subset label distribution</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Entropy (Shannon)</strong></td>
+                    <td>Decision Trees (ID3 / C4.5)</td>
+                    <td>Quantitative measure of informational disorder, surprise, or uncertainty in bits</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Information Gain</strong></td>
+                    <td>Decision Trees</td>
+                    <td>Net reduction in parent node entropy achieved by applying a candidate split</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Binary Cross-Entropy Loss</strong></td>
+                    <td>Logistic Regression & Classifiers</td>
+                    <td>Kullback-Leibler divergence measuring penalty for confident erroneous probability assignments</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Euclidean Distance</strong></td>
+                    <td>K-Nearest Neighbors</td>
+                    <td>Straight-line metric distance separating coordinate vectors across $d$-dimensional space</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Geometric Margin ($2/\|\mathbf{w}\|$)</strong></td>
+                    <td>Support Vector Machine</td>
+                    <td>Orthogonal clearance corridor separating opposing class support vectors</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="takeaway-card">
+              <h4>Architectural Distinction Summary</h4>
+              <ul>
+                <li><strong>Linear Regression</strong> seeks to minimize continuous numeric prediction deviations.</li>
+                <li><strong>Logistic Regression</strong> seeks to minimize classification probability divergence.</li>
+                <li><strong>Decision Trees</strong> seek partition thresholds that maximally cleanse impurity.</li>
+                <li><strong>KNN</strong> queries geometric proximity without learning parametric coefficients.</li>
+                <li><strong>SVM</strong> optimizes the geometric clearance corridor separating classes.</li>
+                <li><strong>Random Forest</strong> averages out individual model variance across diverse randomized trees.</li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 7: MODEL SELECTION GUIDE              -->
+          <!-- ========================================== -->
+          <section id="part-7-selection-guide">
+            <h2>Part 7: Practical Model Selection Decision Guide</h2>
+            <p>When approaching a machine learning assignment, employ this targeted decision matrix to select an initial baseline architecture.</p>
+
+            <div class="table-wrapper wide-breakout">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Target Problem Context</th>
+                    <th>Recommended Starting Model</th>
+                    <th>Architectural Justification</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Predicting residential real estate prices</td>
+                    <td>Linear Regression or Random Forest Regressor</td>
+                    <td>Linear Regression establishes an interpretable baseline; Random Forest models geographic nonlinearities</td>
+                  </tr>
+                  <tr>
+                    <td>Predicting student exam pass / fail</td>
+                    <td>Logistic Regression or Decision Tree</td>
+                    <td>Provides clean, calibrated probability scoring and clear threshold inspection</td>
+                  </tr>
+                  <tr>
+                    <td>Classifying physical items by sensor dimensions</td>
+                    <td>K-Nearest Neighbors (KNN)</td>
+                    <td>Physical items exhibit compact localized coordinate clusters in scaled measurement spaces</td>
+                  </tr>
+                  <tr>
+                    <td>Classifying high-dimensional sparse text vectors</td>
+                    <td>Logistic Regression or Linear SVM</td>
+                    <td>Both models handle thousands of sparse TF-IDF / one-hot dimensions efficiently</td>
+                  </tr>
+                  <tr>
+                    <td>Predicting enterprise customer churn</td>
+                    <td>Logistic Regression or Random Forest</td>
+                    <td>Logistic Regression exposes odds-ratio drivers; Random Forest captures feature interactions</td>
+                  </tr>
+                  <tr>
+                    <td>Explaining loan underwriting decisions to regulators</td>
+                    <td>Decision Tree</td>
+                    <td>Enables extraction of explicit, auditable boolean rules (e.g. Credit Score &ge; 700)</td>
+                  </tr>
+                  <tr>
+                    <td>Stabilizing a decision tree that suffers high variance</td>
+                    <td>Random Forest</td>
+                    <td>Bootstrap aggregation systematically dampens variance without inflating structural bias</td>
+                  </tr>
+                  <tr>
+                    <td>Separating complex curvilinear classification boundaries</td>
+                    <td>SVM with RBF Kernel</td>
+                    <td>Kernel trick projects instances into infinite-dimensional Hilbert space for linear separation</td>
+                  </tr>
+                  <tr>
+                    <td>Modeling complex tabular data with interactions</td>
+                    <td>Random Forest Regressor</td>
+                    <td>Inherent capacity to capture non-linear relationships without manual polynomial expansions</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 8: CORE CONCEPTS                      -->
+          <!-- ========================================== -->
+          <section id="part-8-core-principles">
+            <h2>Part 8: Three Fundamental Concepts to Teach Students</h2>
+
+            <h3>1. Feature Scaling and Metric Sensitivity</h3>
+            <p>
+              Numerical features frequently inhabit wildly disparate physical scales. For instance, consider modeling individuals where Age spans $[18, 65]$ years while Annual Salary spans $[₹10,000, ₹2,000,000]$.
+            </p>
+            <p>
+              Without normalization or standardization ($z = \frac{x - \mu}{\sigma}$), the salary feature numerically dominates distance metrics by four orders of magnitude, rendering the age feature inconsequential.
+            </p>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Algorithm Class</th>
+                    <th>Requires Feature Scaling?</th>
+                    <th>Underlying Cause</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>KNN</strong></td>
+                    <td><strong>Strictly Mandatory</strong></td>
+                    <td>Metric distance directly distorts along larger axes</td>
+                  </tr>
+                  <tr>
+                    <td><strong>SVM</strong></td>
+                    <td><strong>Strictly Mandatory</strong></td>
+                    <td>Gradient steps and margin regularizer $\|\mathbf{w}\|^2$ penalize coordinates unevenly</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Logistic / Linear (Regularized)</strong></td>
+                    <td><strong>Mandatory</strong></td>
+                    <td>$L_1$ and $L_2$ penalties unfairly compress coefficients of smaller-scale features</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Decision Tree & Random Forest</strong></td>
+                    <td><strong>Not Required</strong></td>
+                    <td>Splits evaluate rank-order monotonicity along single features independently</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>2. The Bias-Variance Tradeoff: Underfitting vs. Overfitting</h3>
+            <p>
+              The central challenge in supervised learning is ensuring that the empirical model generalizes effectively to unseen distributions rather than memorizing stochastic noise.
+            </p>
+
+            <!-- Figure 7: Bias Variance Tradeoff -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 7.1</span>
+                <span class="figure-title">The Bias-Variance Spectrum: Underfitting, Generalization, and Overfitting</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 720 220" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison of Underfitting with high bias, Good Fit with optimal generalization, and Overfitting with high variance">
+                  <!-- Panel 1: Underfitting -->
+                  <g transform="translate(10, 10)">
+                    <rect x="0" y="0" width="220" height="190" rx="6" fill="#fbfbfd" stroke="#e5e5ea" />
+                    <text x="110" y="24" font-size="12" font-weight="700" fill="#dc2626" text-anchor="middle" font-family="-apple-system, sans-serif">Underfitting (High Bias)</text>
+                    <text x="110" y="40" font-size="10" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">Model too rigid to capture pattern</text>
+                    <!-- Scatter points forming quadratic curve -->
+                    <circle cx="30" cy="150" r="3.5" fill="#1e293b" />
+                    <circle cx="50" cy="125" r="3.5" fill="#1e293b" />
+                    <circle cx="75" cy="110" r="3.5" fill="#1e293b" />
+                    <circle cx="105" cy="98" r="3.5" fill="#1e293b" />
+                    <circle cx="135" cy="102" r="3.5" fill="#1e293b" />
+                    <circle cx="160" cy="120" r="3.5" fill="#1e293b" />
+                    <circle cx="190" cy="155" r="3.5" fill="#1e293b" />
+                    <!-- Rigid Flat Line -->
+                    <line x1="25" y1="125" x2="195" y2="125" stroke="#ef4444" stroke-width="2" />
+                    <text x="110" y="175" font-size="10" fill="#b91c1c" text-anchor="middle" font-family="-apple-system, sans-serif">High Train Error &bull; High Test Error</text>
+                  </g>
+
+                  <!-- Panel 2: Good Fit -->
+                  <g transform="translate(250, 10)">
+                    <rect x="0" y="0" width="220" height="190" rx="6" fill="#fbfbfd" stroke="#16a34a" stroke-width="1.5" />
+                    <text x="110" y="24" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Optimal Generalization</text>
+                    <text x="110" y="40" font-size="10" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">Learns underlying true manifold</text>
+                    <!-- Same Scatter points -->
+                    <circle cx="30" cy="150" r="3.5" fill="#1e293b" />
+                    <circle cx="50" cy="125" r="3.5" fill="#1e293b" />
+                    <circle cx="75" cy="110" r="3.5" fill="#1e293b" />
+                    <circle cx="105" cy="98" r="3.5" fill="#1e293b" />
+                    <circle cx="135" cy="102" r="3.5" fill="#1e293b" />
+                    <circle cx="160" cy="120" r="3.5" fill="#1e293b" />
+                    <circle cx="190" cy="155" r="3.5" fill="#1e293b" />
+                    <!-- Smooth Quadratic Fit -->
+                    <path d="M 25 158 Q 110 75, 195 162" fill="none" stroke="#16a34a" stroke-width="2.5" />
+                    <text x="110" y="175" font-size="10" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">Low Train Error &bull; Low Test Error</text>
+                  </g>
+
+                  <!-- Panel 3: Overfitting -->
+                  <g transform="translate(490, 10)">
+                    <rect x="0" y="0" width="220" height="190" rx="6" fill="#fbfbfd" stroke="#e5e5ea" />
+                    <text x="110" y="24" font-size="12" font-weight="700" fill="#d97706" text-anchor="middle" font-family="-apple-system, sans-serif">Overfitting (High Variance)</text>
+                    <text x="110" y="40" font-size="10" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">Memorizes noise and perturbations</text>
+                    <!-- Same Scatter points -->
+                    <circle cx="30" cy="150" r="3.5" fill="#1e293b" />
+                    <circle cx="50" cy="125" r="3.5" fill="#1e293b" />
+                    <circle cx="75" cy="110" r="3.5" fill="#1e293b" />
+                    <circle cx="105" cy="98" r="3.5" fill="#1e293b" />
+                    <circle cx="135" cy="102" r="3.5" fill="#1e293b" />
+                    <circle cx="160" cy="120" r="3.5" fill="#1e293b" />
+                    <circle cx="190" cy="155" r="3.5" fill="#1e293b" />
+                    <!-- Wild Polyline passing through all points -->
+                    <path d="M 25 160 L 30 150 L 40 100 L 50 125 L 65 140 L 75 110 L 90 80 L 105 98 L 120 120 L 135 102 L 150 85 L 160 120 L 175 180 L 190 155 L 195 165" fill="none" stroke="#d97706" stroke-width="2" />
+                    <text x="110" y="175" font-size="10" fill="#b45309" text-anchor="middle" font-family="-apple-system, sans-serif">Zero Train Error &bull; High Test Error</text>
+                  </g>
+                </svg>
+              </div>
+              <figcaption>
+                The spectrum of model capacity: Underfitting stems from excessive model stiffness (high bias); overfitting stems from excessive model flexibility chasing stochastic noise (high variance).
+              </figcaption>
+            </div>
+
+            <h3>3. Training Phase versus Inference Workflow</h3>
+            <p>Every supervised pipeline partitions cleanly into four discrete lifecycle phases:</p>
+            <ol>
+              <li><strong>Data Partitioning:</strong> Strictly segment historical records into training, validation, and untouched test partitions before feature preprocessing.</li>
+              <li><strong>Parameter Estimation (Training):</strong> The algorithm optimizes its weights ($\mathbf{w}, b$) or establishes orthogonal boundary rules to minimize training loss.</li>
+              <li><strong>Hyperparameter Tuning (Validation):</strong> Calibrate structural constraints (such as $K$ in KNN, $C$ and $\gamma$ in SVM, or <code>max_depth</code> in Trees) on cross-validation sets.</li>
+              <li><strong>Generalization Assessment (Inference):</strong> Evaluate final model fidelity on the pristine test holdout to obtain an unbiased estimate of real-world production performance.</li>
+            </ol>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SUMMARY & CORE TEACHING PRINCIPLE          -->
+          <!-- ========================================== -->
+          <section id="summary">
+            <h2>Executive Revision: Algorithmic Synopses</h2>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Model Architecture</th>
+                    <th>Concise One-Line Theoretical Definition</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Linear Regression</strong></td>
+                    <td>Determines a hyperplane parameterizing an approximately linear mapping to predict continuous quantities.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>K-Nearest Neighbors (KNN)</strong></td>
+                    <td>Assigns classification or continuous estimates via local distance weighting among nearest stored training records.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Support Vector Machine (SVM)</strong></td>
+                    <td>Solves a quadratic programming objective to isolate a separating boundary that maximizes orthogonal margin clearance.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Logistic Regression</strong></td>
+                    <td>Passes a linear combination of input features through a sigmoid activation to model class posterior probabilities.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Decision Tree</strong></td>
+                    <td>Partitions feature space via a hierarchical sequence of orthogonal questions to maximize purity at terminal leaves.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Random Forest</strong></td>
+                    <td>Aggregates an ensemble of decorrelated bootstrap trees via voting or averaging to neutralize individual tree variance.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="callout" style="border-left-color: #0066cc; background-color: #f0f7ff;">
+              <div class="callout-title" style="color: #0066cc; font-size: 0.9rem;">The Core Pedagogical Principle</div>
+              <p style="font-size: 1.12rem; line-height: 1.6; color: #0f172a; margin-top: 6px;">
+                <strong>Do not teach students only the mathematical formulas. Teach them which specific problem each formula was invented to solve.</strong>
+              </p>
+              <p style="font-size: 0.95rem; color: #475569; margin-top: 8px;">
+                When students grasp that Gini Impurity and Shannon Entropy serve as scoring functions for feature split quality, that Euclidean distance quantifies point similarity, and that the $2/\|\mathbf{w}\|$ margin objective creates an error-tolerance cushion, the mathematics transitions from arbitrary rote equations into intuitive, purposeful engineering.
+              </p>
+            </div>
+          </section>
+
+          <!-- Footer -->
+          <footer class="article-footer">
+            <p>Machine Learning Teacher's Notes &bull; Advanced Agentic AI Curriculum &bull; Pure Vanilla CSS Architecture</p>
+            <p style="margin-top: 4px; font-size: 0.78rem;">Designed for deep reading, print distribution, and publication-grade pedagogical instruction.</p>
+          </footer>
+
+        </article>
+      </main>
+
     </div>
-  </header>
-
-  <!-- Left Sidebar Drawer -->
-  <div class="scrim" id="scrim"></div>
-  <aside class="drawer" id="drawer" aria-label="Curriculum Navigation">
-    <div class="drawer__head">
-      <a class="drawer__brand" href="index.html">AI Playbook</a>
-      <button class="drawer__close" id="menu-close" type="button" aria-label="Close menu">&times;</button>
-    </div>
-
-    <nav aria-label="5 Stages of AI Learning">
-      <p class="drawer__label">The 5 Stages</p>
-      <ul class="drawer__list">
-        <li>
-          <a href="#stages">
-            <span class="drawer__title"><span class="drawer__step">1</span>Stage 1: Understand AI</span>
-            <span class="drawer__desc">Foundations &amp; Python Intuition</span>
-          </a>
-        </li>
-        <li>
-          <a href="#stages">
-            <span class="drawer__title"><span class="drawer__step">2</span>Stage 2: Learn from Data</span>
-            <span class="drawer__desc">Data Science &amp; Traditional ML</span>
-          </a>
-        </li>
-        <li>
-          <a href="#stages">
-            <span class="drawer__title"><span class="drawer__step">3</span>Stage 3: Intelligent Models</span>
-            <span class="drawer__desc">Deep Learning &amp; Language Models</span>
-          </a>
-        </li>
-        <li>
-          <a href="#stages">
-            <span class="drawer__title"><span class="drawer__step">4</span>Stage 4: Build AI Apps</span>
-            <span class="drawer__desc">RAG, Agents &amp; Multimodal AI</span>
-          </a>
-        </li>
-        <li>
-          <a href="#stages">
-            <span class="drawer__title"><span class="drawer__step">5</span>Stage 5: Ship Reliable AI</span>
-            <span class="drawer__desc">Evaluation, Security &amp; Deployment</span>
-          </a>
-        </li>
-      </ul>
-
-      <p class="drawer__label">Flagship Guide</p>
-      <ul class="drawer__list">
-        <li>
-          <a href="ml.html">
-            <span class="drawer__title"><span class="drawer__step">★</span>Pillar 04: Machine Learning</span>
-            <span class="drawer__desc">10-Step Pedagogy &middot; Interactive Diagram</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <p class="drawer__foot">Reading-first AI curriculum built for mastery without hype.</p>
-  </aside>
-
-  <!-- Main Hero Stage -->
-  <main>
-    <div class="stage-bg">
-      <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
-
-      <section class="hero-home">
-        <span class="pill pill--teal reveal">2026–2027 Edition &middot; Reading-First Learning Platform</span>
-        <h1 class="reveal" data-d="1">From Raw Data to<br><em>Autonomous Intelligence.</em></h1>
-        
-        <p class="lead reveal" data-d="2">
-          A combination of a well-written technical blog, a beginner-friendly textbook, and an engineering handbook. Progress step-by-step from zero knowledge to building, evaluating, and deploying production AI systems.
-        </p>
-
-        <!-- Concrete Educational Promise -->
-        <div class="promise-box reveal" data-d="2">
-          <strong>The AI Playbook Promise</strong>
-          <p>
-            Learn AI from scratch through simple explanations, real-life visual analogies, hands-on Python projects, and step-by-step practice — even if you are new to mathematics and programming.
-          </p>
-        </div>
-
-        <!-- 3 Primary Choices -->
-        <div class="cta-group reveal" data-d="3">
-          <a class="btn btn--accent" href="ml.html">Start Reading Lesson 1 &rarr;</a>
-          <a class="btn btn--primary" href="#stages">Explore the 5-Stage Roadmap &darr;</a>
-          <a class="btn btn--ghost" href="#pillars">Browse 10 Pillars &darr;</a>
-        </div>
-
-        <div class="milestone-badge reveal" data-d="3">
-          <span class="dot"></span>
-          <span>Current Milestone: <strong>Pillar 04 — How computers learn from examples (Machine Learning Core)</strong></span>
-        </div>
-      </section>
-    </div>
-
-    <div class="wrap">
-
-      <!-- ================= 5 STAGES OF LEARNING ================= -->
-      <section class="journey-section" id="stages">
-        <span class="section-eyebrow">The Learner's Journey</span>
-        <h2 class="section-title">The 5 Stages: From Zero to AI Engineer</h2>
-        <p class="section-desc">
-          Instead of just listing technologies, your study path is organized around what you need to understand, construct, and verify at each phase of your development.
-        </p>
-
-        <div class="stages-track">
-          <div class="stage-item">
-            <span class="stage-num">Stage 1</span>
-            <div class="stage-name">Understand AI</div>
-            <p class="stage-sub">Pillars 1 &amp; 2 &middot; What AI can/cannot do, token basics, math intuition without gatekeeping.</p>
-          </div>
-
-          <div class="stage-item stage-active">
-            <span class="stage-num">Stage 2 &middot; Current</span>
-            <div class="stage-name">Learn from Data</div>
-            <p class="stage-sub">Pillars 3 &amp; 4 &middot; Data science lifecycle, regression, classification, pipelines.</p>
-          </div>
-
-          <div class="stage-item">
-            <span class="stage-num">Stage 3</span>
-            <div class="stage-name">Intelligent Models</div>
-            <p class="stage-sub">Pillars 5 &amp; 6 &middot; Neural networks, backprop step-by-step, attention, transformers.</p>
-          </div>
-
-          <div class="stage-item">
-            <span class="stage-num">Stage 4</span>
-            <div class="stage-name">Build AI Apps</div>
-            <p class="stage-sub">Pillars 7 &amp; 8 &middot; RAG pipelines, autonomous agents, tool calling, MCP servers.</p>
-          </div>
-
-          <div class="stage-item">
-            <span class="stage-num">Stage 5</span>
-            <div class="stage-name">Ship Reliable AI</div>
-            <p class="stage-sub">Pillars 9 &amp; 10 &middot; LLM evaluations, prompt security, red-teaming, cost &amp; latency.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= 10-STEP PEDAGOGY SHOWCASE ================= -->
-      <section class="pedagogy-showcase">
-        <span class="pill pill--teal" style="margin-bottom:12px;">Teaching Philosophy</span>
-        <h3>How Every Article Is Structured</h3>
-        <p class="lead-text">
-          No jargon dumps or walls of unexplained formulas. Every topic adheres to a consistent 10-step sequence so you always understand the intuition before the mathematics.
-        </p>
-
-        <div class="pedagogy-steps-grid">
-          <div class="p-step-box">
-            <span class="p-num">01</span>
-            <span class="p-title">The Question</span>
-          </div>
-          <div class="p-step-box">
-            <span class="p-num">02</span>
-            <span class="p-title">Real-Life Example</span>
-          </div>
-          <div class="p-step-box">
-            <span class="p-num">03</span>
-            <span class="p-title">Visual Explanation</span>
-          </div>
-          <div class="p-step-box">
-            <span class="p-num">04</span>
-            <span class="p-title">Concept in Plain English</span>
-          </div>
-          <div class="p-step-box">
-            <span class="p-num">05</span>
-            <span class="p-title">Math (Symbols Decoded)</span>
-          </div>
-          <div class="p-step-box">
-            <span class="p-num">06</span>
-            <span class="p-title">Runnable Python Code</span>
-          </div>
-          <div class="p-step-box">
-            <span class="p-num">07</span>
-            <span class="p-title">Common Traps &amp; Mistakes</span>
-          </div>
-          <div class="p-step-box">
-            <span class="p-num">08</span>
-            <span class="p-title">Knowledge Check Quiz</span>
-          </div>
-          <div class="p-step-box">
-            <span class="p-num">09</span>
-            <span class="p-title">Try It Yourself</span>
-          </div>
-          <div class="p-step-box">
-            <span class="p-num">10</span>
-            <span class="p-title">Continue Learning</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= 10 PILLARS CURRICULUM ================= -->
-      <section class="pillars-section" id="pillars">
-        <span class="section-eyebrow">Comprehensive Syllabus</span>
-        <h2 class="section-title">The 10 Learning Pillars (2026–2027)</h2>
-        <p class="section-desc">
-          From core computational foundations to agent orchestration and adversarial security.
-        </p>
-
-        <div class="pillars-grid">
-
-          <!-- Pillar 1 -->
-          <article class="pillar-card">
-            <div class="pillar-head">
-              <span class="pillar-num">Pillar 01</span>
-              <span class="pill pill--teal">Stage 1</span>
-            </div>
-            <h3>AI Foundations</h3>
-            <div class="pillar-goal">Goal: Understand what AI is before writing code.</div>
-            <ul class="pillar-topics">
-              <li>How computers learn patterns</li>
-              <li>Models, algorithms, and parameters</li>
-              <li>Tokens, embeddings, context windows</li>
-              <li>What AI can and cannot do</li>
-            </ul>
-            <div class="pillar-project">
-              <strong>Practical:</strong> Call your first LLM API and inspect token usage.
-            </div>
-            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
-          </article>
-
-          <!-- Pillar 2 -->
-          <article class="pillar-card">
-            <div class="pillar-head">
-              <span class="pillar-num">Pillar 02</span>
-              <span class="pill pill--teal">Stage 1</span>
-            </div>
-            <h3>Python, Math &amp; Data</h3>
-            <div class="pillar-goal">Goal: Build foundations required to create models.</div>
-            <ul class="pillar-topics">
-              <li>Python essentials &amp; vectorized NumPy</li>
-              <li>Pandas for real-world datasets &amp; cleaning</li>
-              <li>Vectors, matrices &amp; gradient intuition</li>
-              <li>Train, validation, and test splits</li>
-            </ul>
-            <div class="pillar-project">
-              <strong>Practical:</strong> Explore a student-performance dataset for exam score drivers.
-            </div>
-            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
-          </article>
-
-          <!-- Pillar 3 -->
-          <article class="pillar-card">
-            <div class="pillar-head">
-              <span class="pillar-num">Pillar 03</span>
-              <span class="pill pill--emerald">Stage 2</span>
-            </div>
-            <h3>Data Science</h3>
-            <div class="pillar-goal">Goal: Turn messy raw data into decisive insights.</div>
-            <ul class="pillar-topics">
-              <li>The Data Science lifecycle &amp; EDA</li>
-              <li>Sampling, hypothesis testing, distributions</li>
-              <li>SQL for production data analysis</li>
-              <li>Data leakage &amp; analytical pitfalls</li>
-            </ul>
-            <div class="pillar-project">
-              <strong>Practical:</strong> Analyze retail transaction data to diagnose revenue drops.
-            </div>
-            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
-          </article>
-
-          <!-- Pillar 4 (LIVE) -->
-          <article class="pillar-card pillar-live">
-            <div class="pillar-head">
-              <span class="pillar-num">Pillar 04</span>
-              <span class="pill pill--emerald">Live Reading Guide</span>
-            </div>
-            <h3>Machine Learning Core</h3>
-            <div class="pillar-goal">Goal: Master how computers find patterns in historical data.</div>
-            <ul class="pillar-topics">
-              <li>Supervised, Unsupervised &amp; Reinforcement paradigms</li>
-              <li>Predicting numbers (Regression &middot; OLS, Ridge, Lasso)</li>
-              <li>Predicting categories (Classification &middot; Logistic, Trees, XGBoost)</li>
-              <li>Interactive Architecture Explorer &amp; 3-Question Quiz</li>
-            </ul>
-            <div class="pillar-project">
-              <strong>Practical:</strong> Train house price predictor and customer churn classifier.
-            </div>
-            <a class="btn btn--accent" href="ml.html" style="padding:8px 18px; font-size:13px; align-self:flex-start;">Read Guide Now &rarr;</a>
-          </article>
-
-          <!-- Pillar 5 -->
-          <article class="pillar-card">
-            <div class="pillar-head">
-              <span class="pillar-num">Pillar 05</span>
-              <span class="pill pill--blue">Stage 3</span>
-            </div>
-            <h3>Deep Learning &amp; Neural Nets</h3>
-            <div class="pillar-goal">Goal: Understand layered networks learning complex features.</div>
-            <ul class="pillar-topics">
-              <li>The artificial neuron, weights, and biases</li>
-              <li>Backpropagation demystified step-by-step</li>
-              <li>Activations: ReLU, Sigmoid, Softmax</li>
-              <li>CNNs for image recognition &amp; transfer learning</li>
-            </ul>
-            <div class="pillar-project">
-              <strong>Practical:</strong> Build a digit classifier in NumPy, then PyTorch.
-            </div>
-            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
-          </article>
-
-          <!-- Pillar 6 -->
-          <article class="pillar-card">
-            <div class="pillar-head">
-              <span class="pillar-num">Pillar 06</span>
-              <span class="pill pill--blue">Stage 3</span>
-            </div>
-            <h3>NLP &amp; Language Models</h3>
-            <div class="pillar-goal">Goal: How machines process, represent, and generate language.</div>
-            <ul class="pillar-topics">
-              <li>Tokenization, embeddings, and semantic similarity</li>
-              <li>The Transformer architecture &amp; Self-Attention</li>
-              <li>Pretraining vs Fine-Tuning vs Alignment (RLHF/DPO)</li>
-              <li>Context windows &amp; why models hallucinate</li>
-            </ul>
-            <div class="pillar-project">
-              <strong>Practical:</strong> Train a sentiment classifier and text generation prompt runner.
-            </div>
-            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
-          </article>
-
-          <!-- Pillar 7 -->
-          <article class="pillar-card">
-            <div class="pillar-head">
-              <span class="pillar-num">Pillar 07</span>
-              <span class="pill pill--purple">Stage 4</span>
-            </div>
-            <h3>Generative &amp; Multimodal AI</h3>
-            <div class="pillar-goal">Goal: Build with state-of-the-art vision, audio, and language.</div>
-            <ul class="pillar-topics">
-              <li>Diffusion models for image synthesis &amp; editing</li>
-              <li>Multimodal models: combining text, audio &amp; images</li>
-              <li>Local inference, model quantization (GGUF, AWQ)</li>
-              <li>Model Context Protocol (MCP) tool integration</li>
-            </ul>
-            <div class="pillar-project">
-              <strong>Practical:</strong> Build a multimodal document assistant for complex PDF analysis.
-            </div>
-            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
-          </article>
-
-          <!-- Pillar 8 -->
-          <article class="pillar-card">
-            <div class="pillar-head">
-              <span class="pillar-num">Pillar 08</span>
-              <span class="pill pill--purple">Stage 4</span>
-            </div>
-            <h3>RAG, AI Agents &amp; Automation</h3>
-            <div class="pillar-goal">Goal: Design autonomous agents with tools, memory &amp; state.</div>
-            <ul class="pillar-topics">
-              <li>RAG: Chunking, Vector DBs, Hybrid Search, Reranking</li>
-              <li>Tool calling, function calling &amp; ReAct loops</li>
-              <li>Agent memory, planning &amp; human-in-the-loop guardrails</li>
-              <li>Scheduled automated workflows &amp; error recovery</li>
-            </ul>
-            <div class="pillar-project">
-              <strong>Practical:</strong> Build an enterprise customer support agent with order lookup.
-            </div>
-            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
-          </article>
-
-          <!-- Pillar 9 -->
-          <article class="pillar-card">
-            <div class="pillar-head">
-              <span class="pillar-num">Pillar 09</span>
-              <span class="pill pill--rose">Stage 5</span>
-            </div>
-            <h3>AI Engineering &amp; Evaluation</h3>
-            <div class="pillar-goal">Goal: Turn experimental prototypes into rock-solid products.</div>
-            <ul class="pillar-topics">
-              <li>FastAPI model serving &amp; Docker containerization</li>
-              <li>Building evaluation datasets &amp; LLM-as-judge benchmarks</li>
-              <li>Latency, error tracking, caching &amp; token cost control</li>
-              <li>A/B testing prompts and continuous model monitoring</li>
-            </ul>
-            <div class="pillar-project">
-              <strong>Practical:</strong> Deploy an evaluated RAG pipeline with observability dashboard.
-            </div>
-            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
-          </article>
-
-          <!-- Pillar 10 -->
-          <article class="pillar-card">
-            <div class="pillar-head">
-              <span class="pillar-num">Pillar 10</span>
-              <span class="pill pill--rose">Stage 5</span>
-            </div>
-            <h3>AI Security, Ethics &amp; Research</h3>
-            <div class="pillar-goal">Goal: Defend against jailbreaks, leaks, and systemic bias.</div>
-            <ul class="pillar-topics">
-              <li>Prompt injection, indirect jailbreaks &amp; sanitization</li>
-              <li>Least-privilege tool execution &amp; RAG data isolation</li>
-              <li>Adversarial red-teaming &amp; synthetic data governance</li>
-              <li>Emerging research: Embodied robotics &amp; frontier architectures</li>
-            </ul>
-            <div class="pillar-project">
-              <strong>Practical:</strong> Red-team an agent to prevent unauthorized database modifications.
-            </div>
-            <span class="btn btn--ghost" style="padding:8px 16px; font-size:13px; align-self:flex-start;">Coming Soon</span>
-          </article>
-
-        </div>
-      </section>
-
-    </div>
-  </main>
-
-  <!-- Site Footer -->
-  <footer class="sitefoot">
-    <div class="sitefoot__inner">
-      <div class="sitefoot__brand">
-        <a href="index.html">AI Playbook</a>
-        <p>A reading-first, practitioner-focused curriculum for modern Artificial Intelligence. Structured for genuine mastery from first principles to production reliability.</p>
-        <a class="sitefoot__roadmap-link" href="ml.html">Open Pillar 04: Machine Learning Notes &rarr;</a>
-      </div>
-      <nav aria-label="10 Pillars Directory">
-        <p class="sitefoot__label">Curriculum Pillars</p>
-        <ol>
-          <li><a href="#pillars">01. AI Foundations</a></li>
-          <li><a href="#pillars">02. Python, Math &amp; Data</a></li>
-          <li><a href="#pillars">03. Data Science</a></li>
-          <li><a href="ml.html"><strong>04. Machine Learning (Live Guide)</strong></a></li>
-          <li><a href="#pillars">05. Deep Learning &amp; Neural Nets</a></li>
-          <li><a href="#pillars">06. NLP &amp; Language Models</a></li>
-          <li><a href="#pillars">07. Generative &amp; Multimodal AI</a></li>
-          <li><a href="#pillars">08. RAG, Agents &amp; Automation</a></li>
-          <li><a href="#pillars">09. AI Engineering &amp; Evaluation</a></li>
-          <li><a href="#pillars">10. AI Security &amp; Ethics</a></li>
-        </ol>
-      </nav>
-    </div>
-    <p class="sitefoot__fine">AI Playbook 2026–2027 &middot; Built with quiet Apple-inspired design restraint. No hype, no fluff.</p>
-  </footer>
-
-  <!-- Theme Toggle & Navigation Script -->
-  <script>
-    (function () {
-      var html = document.documentElement;
-      var themeToggle = document.getElementById("theme-toggle");
-      var THEME_KEY = "ai_playbook_theme";
-
-      // Initialize Theme
-      var savedTheme = localStorage.getItem(THEME_KEY);
-      if (savedTheme) {
-        html.setAttribute("data-theme", savedTheme);
-        themeToggle.textContent = savedTheme === "dark" ? "🌙" : "☀️";
-      } else {
-        html.setAttribute("data-theme", "light");
-        themeToggle.textContent = "☀️";
-      }
-
-      themeToggle.addEventListener("click", function () {
-        var current = html.getAttribute("data-theme");
-        var next = current === "dark" ? "light" : "dark";
-        html.setAttribute("data-theme", next);
-        themeToggle.textContent = next === "dark" ? "🌙" : "☀️";
-        localStorage.setItem(THEME_KEY, next);
-      });
-
-      // Drawer Toggle
-      var body = document.body;
-      var openBtn = document.getElementById("menu-open");
-      var closeBtn = document.getElementById("menu-close");
-      var scrim = document.getElementById("scrim");
-      var drawer = document.getElementById("drawer");
-
-      function setMenu(open) {
-        body.classList.toggle("menu-open", open);
-        drawer.setAttribute("aria-hidden", String(!open));
-        openBtn.setAttribute("aria-expanded", String(open));
-      }
-
-      openBtn.addEventListener("click", function () { setMenu(true); });
-      closeBtn.addEventListener("click", function () { setMenu(false); });
-      scrim.addEventListener("click", function () { setMenu(false); });
-
-      drawer.querySelectorAll("a").forEach(function (a) {
-        a.addEventListener("click", function () { setMenu(false); });
-      });
-
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && body.classList.contains("menu-open")) setMenu(false);
-      });
-
-      // Scroll reveals
-      var items = document.querySelectorAll(".reveal");
-      if ("IntersectionObserver" in window) {
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (en) {
-            if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
-          });
-        }, { threshold: 0.1 });
-        items.forEach(function (el) { io.observe(el); });
-      } else {
-        items.forEach(function (el) { el.classList.add("in"); });
-      }
-    })();
-  </script>
+  </div>
 </body>
 </html>
