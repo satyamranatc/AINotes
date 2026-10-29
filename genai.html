@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM & Generative AI Engineering: APIs, LangChain, Tool Calling & MCP</title>
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- KaTeX for Mathematical Typography -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body>
+
+  <!-- Top Global Navigation Bar -->
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <a href="index.html" class="top-nav-brand">AI Engineering Curriculum</a>
+      <ul class="top-nav-links">
+        <li><a href="index.html" class="nav-pill">Machine Learning</a></li>
+        <li><a href="genai.html" class="nav-pill active">LLMs, LangChain &amp; MCP</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="site-wrapper">
+    <div class="site-container">
+      
+      <!-- Table of Contents Sidebar (Desktop) -->
+      <aside class="toc-sidebar">
+        <nav class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li class="toc-item"><a href="#llm-mechanics">1. LLM Mechanics</a></li>
+            <li class="toc-item"><a href="#api-calling">2. Gemini &amp; Groq APIs</a></li>
+            <li class="toc-item"><a href="#roles-history">3. Roles &amp; Chat History</a></li>
+            <li class="toc-item"><a href="#langchain-lcel">4. LangChain &amp; LCEL</a></li>
+            <li class="toc-item"><a href="#tool-calling">5. Function &amp; Tool Calling</a></li>
+            <li class="toc-item"><a href="#mcp-protocol">6. Model Context Protocol</a></li>
+            <li class="toc-item"><a href="#production-tradeoffs">7. Architectural Matrix</a></li>
+            <li class="toc-item"><a href="#pedagogical-summary">Executive Summary</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Article Stream -->
+      <main class="main-content">
+        <article>
+          
+          <!-- Article Header -->
+          <header class="article-header">
+            <div class="article-category">Instructor's Field Guide &middot; Generative AI &amp; Agent Architecture</div>
+            <h1 class="article-title">LLMs, LangChain, Tool Calling &amp; Model Context Protocol (MCP)</h1>
+            <p class="article-subtitle">A production-focused technical curriculum from low-level API calling in Gemini and Groq, multi-turn role orchestration, and LangChain LCEL, to standard agent tool calling and MCP server-client architecture.</p>
+            <div class="article-meta">
+              <span>Author: Curriculum Research Group</span>
+              <span class="meta-divider">&bull;</span>
+              <span>Focus: Generative AI &amp; Agent Systems</span>
+              <span class="meta-divider">&bull;</span>
+              <span>Reading Time: 26 min</span>
+            </div>
+          </header>
+
+          <!-- ========================================== -->
+          <!-- PART 1: LLM MECHANICS                      -->
+          <!-- ========================================== -->
+          <section id="llm-mechanics">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Foundations</span>
+              <span class="badge badge-neutral">Autoregressive Decoding</span>
+            </div>
+            <h2>1. LLM Foundations: Autoregressive Inference and Sampling</h2>
+            <p class="lead">
+              Large Language Models (LLMs) are decoder-centric statistical models trained to estimate the conditional probability distribution over a vocabulary of sub-word tokens. Understanding how these tokens are predicted and sampled is foundational to building reliable applications.
+            </p>
+
+            <h3>The Autoregressive Loop</h3>
+            <p>
+              Given a sequence of input tokens $\mathbf{w}_{1:t-1} = (w_1, w_2, \dots, w_{t-1})$, the model predicts the probability distribution of the next token $w_t$:
+            </p>
+            <div class="math-card">
+              <div class="math-display">
+                $$P(w_t \mid w_1, w_2, \dots, w_{t-1}) = \operatorname{softmax}\left(\frac{\mathbf{z}_t}{T}\right)$$
+              </div>
+            </div>
+            <p>
+              Where $\mathbf{z}_t \in \mathbb{R}^{|V|}$ represents the unnormalized logit vector projected across the vocabulary $V$, and $T > 0$ designates the <strong>sampling temperature</strong>. Once token $w_t$ is selected, it is appended to the input sequence, and the process repeats in an autoregressive feedback loop until an end-of-sequence token (<code>&lt;eos&gt;</code>) or maximum token length is encountered.
+            </p>
+
+            <!-- Figure 1.1: LLM Generation Loop -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 1.1</span>
+                <span class="figure-title">Autoregressive Generation and Stochastic Sampling Pipeline</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 720 280" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LLM Autoregressive Generation pipeline from Prompt to Tokenizer to Transformer to Logits to Softmax to Next Token appended back">
+                  <defs>
+                    <marker id="arrow-gen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
+                    </marker>
+                    <marker id="arrow-feedback" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7"/>
+                    </marker>
+                  </defs>
+                  <!-- Background Panel -->
+                  <rect x="10" y="10" width="700" height="260" rx="8" fill="#ffffff" stroke="#e5e5ea" stroke-width="1"/>
+
+                  <!-- Step 1: Input Prompt -->
+                  <rect x="30" y="50" width="100" height="60" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+                  <text x="80" y="76" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Input Prompt</text>
+                  <text x="80" y="94" font-size="9" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">"Explain gravity"</text>
+
+                  <!-- Connector 1 -->
+                  <line x1="130" y1="80" x2="160" y2="80" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-gen)"/>
+
+                  <!-- Step 2: Tokenizer -->
+                  <rect x="160" y="50" width="100" height="60" rx="6" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.2"/>
+                  <text x="210" y="76" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">BPE Tokenizer</text>
+                  <text x="210" y="94" font-size="9" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">[4512, 19842]</text>
+
+                  <!-- Connector 2 -->
+                  <line x1="260" y1="80" x2="290" y2="80" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-gen)"/>
+
+                  <!-- Step 3: Transformer Core -->
+                  <rect x="290" y="40" width="120" height="80" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+                  <text x="350" y="70" font-size="11" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Transformer</text>
+                  <text x="350" y="86" font-size="9" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">Self-Attention &amp; FFN</text>
+                  <text x="350" y="102" font-size="8" fill="#60a5fa" text-anchor="middle" font-family="-apple-system, sans-serif">KV Cache State</text>
+
+                  <!-- Connector 3 -->
+                  <line x1="410" y1="80" x2="440" y2="80" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-gen)"/>
+
+                  <!-- Step 4: Logits & Softmax -->
+                  <rect x="440" y="50" width="110" height="60" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+                  <text x="495" y="76" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Softmax (T, Top-P)</text>
+                  <text x="495" y="94" font-size="9" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">P(w_t | w_&lt;t)</text>
+
+                  <!-- Connector 4 -->
+                  <line x1="550" y1="80" x2="580" y2="80" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-gen)"/>
+
+                  <!-- Step 5: Sampled Token -->
+                  <rect x="580" y="50" width="105" height="60" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+                  <text x="632" y="76" font-size="11" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Sampled Token</text>
+                  <text x="632" y="94" font-size="9" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">w_t = "pulls"</text>
+
+                  <!-- Autoregressive Feedback Loop Path -->
+                  <path d="M 632 110 L 632 210 L 80 210 L 80 110" fill="none" stroke="#0284c7" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrow-feedback)"/>
+                  <text x="360" y="235" font-size="11" font-weight="600" fill="#0284c7" text-anchor="middle" font-family="-apple-system, sans-serif">Autoregressive Loop: Append w_t to context and re-evaluate until &lt;eos&gt;</text>
+                </svg>
+              </div>
+              <figcaption>
+                The generative pipeline: unnormalized token logits are calibrated by temperature scaling and nucleus filtering before sampling. The sampled token feeds back into the sequence context.
+              </figcaption>
+            </div>
+
+            <h3>Decoding Parameters: Controlling Stochasticity</h3>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Parameter</th>
+                    <th>Mechanism</th>
+                    <th>Recommended Setting</th>
+                    <th>Operational Behavior</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Temperature ($T$)</strong></td>
+                    <td>Scales logits prior to softmax: $\mathbf{z}/T$</td>
+                    <td>$0.0$ (Deterministic) to $0.7$ (Balanced)</td>
+                    <td>$T \to 0$ collapses probability onto argmax (greedy decoding); high $T$ flattens the distribution across diverse tokens.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Top-$P$ (Nucleus)</strong></td>
+                    <td>Restricts sampling to smallest set of tokens whose cumulative probability $\sum p_i \ge P$</td>
+                    <td>$0.90$ to $0.95$</td>
+                    <td>Dynamically expands pool when uncertainty is high; contracts pool to top token when model is confident.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Top-$K$</strong></td>
+                    <td>Hard cutoff keeping strictly top $K$ candidate tokens</td>
+                    <td>$40$ to $50$</td>
+                    <td>Prevents bizarre tails from generating low-probability tokens.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Max Output Tokens</strong></td>
+                    <td>Hard generation ceiling</td>
+                    <td>Task dependent ($512$ - $4096$)</td>
+                    <td>Protects against infinite token runaway and limits API cost per request.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 2: API CALLING (GEMINI & GROQ)        -->
+          <!-- ========================================== -->
+          <section id="api-calling">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">SDK Integration</span>
+              <span class="badge badge-neutral">Production APIs</span>
+            </div>
+            <h2>2. Direct Python API Calling: Google Gemini &amp; Groq</h2>
+            <p>
+              While abstraction frameworks like LangChain simplify application composition, mastering raw SDK invocations is essential for debugging, latency minimization, and understanding wire protocols.
+            </p>
+
+            <h3>2.1 Google Gemini API</h3>
+            <p>
+              Google provides the official <code>google-genai</code> SDK, designed for the Gemini 2.5 and 1.5 model families. Key models include <code>gemini-2.5-flash</code> (ultra-fast sub-second multimodal inference) and <code>gemini-1.5-pro</code> (extended 2-million-token context window).
+            </p>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">gemini_direct_calling.py</span>
+                <span class="code-lang-tag">Python 3.10+</span>
+              </div>
+              <pre><code>import os
+from google import genai
+from google.genai import types
+
+# 1. Initialize Client (Pulls GEMINI_API_KEY from environment)
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+
+# 2. Standard Synchronous Call with System Instruction & Decoding Parameters
+response = client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents="Explain quantum entanglement in two crisp technical sentences.",
+    config=types.GenerateContentConfig(
+        system_instruction="You are an expert theoretical physicist. Deliver mathematically rigorous yet concise explanations.",
+        temperature=0.2,
+        max_output_tokens=256,
+    ),
+)
+print("Standard Response:\n", response.text)
+
+# 3. Streaming Response Chunk-by-Chunk (Reduces perceived latency)
+print("\nStreaming Generation:")
+response_stream = client.models.generate_content_stream(
+    model="gemini-2.5-flash",
+    contents="Outline three core limitations of transformer self-attention.",
+)
+for chunk in response_stream:
+    if chunk.text:
+        print(chunk.text, end="", flush=True)
+print()</code></pre>
+            </div>
+
+            <h3>2.2 Groq API (Language Processing Units)</h3>
+            <p>
+              Groq specializes in high-throughput, ultra-low latency inference powered by custom deterministic LPU (Language Processing Unit) tensor hardware. Groq implements an OpenAI-compatible SDK interface, serving open-weights foundation models including Meta's <code>llama-3.3-70b-versatile</code> at speeds upwards of 300 to 500 tokens per second.
+            </p>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">groq_direct_calling.py</span>
+                <span class="code-lang-tag">Python 3.10+</span>
+              </div>
+              <pre><code>import os
+from groq import Groq
+
+# 1. Initialize Client (Pulls GROQ_API_KEY from environment)
+groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+# 2. High-Speed LPU Generation
+chat_completion = groq_client.chat.completions.create(
+    messages=[
+        {
+            "role": "system",
+            "content": "You are a senior systems engineer specializing in high-performance distributed computing."
+        },
+        {
+            "role": "user",
+            "content": "Why does memory bandwidth dominate FLOPs in LLM inference decoding?"
+        }
+    ],
+    model="llama-3.3-70b-versatile",
+    temperature=0.3,
+    max_tokens=512,
+    stream=True,  # Stream tokens directly as they depart LPU SRAM
+)
+
+print("Groq LPU Streaming Response:")
+for chunk in chat_completion:
+    content = chunk.choices[0].delta.content
+    if content:
+        print(content, end="", flush=True)
+print()</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 3: ROLES & CHAT HISTORY               -->
+          <!-- ========================================== -->
+          <section id="roles-history">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">State Management</span>
+              <span class="badge badge-classification">Multi-Turn Architecture</span>
+            </div>
+            <h2>3. Role Assignment and Chat History Maintenance</h2>
+            <p>
+              LLMs are strictly <strong>stateless functions</strong>: each HTTP call is independent. They retain zero internal memory of past interactions. To create conversational persistence, the client application must maintain and resend the chronological message stack on every turn.
+            </p>
+
+            <h3>The Three Fundamental Roles</h3>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Role Identifier</th>
+                    <th>Structural Authority</th>
+                    <th>Responsibility and Scope</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>system</code></td>
+                    <td>Highest Priority Directive</td>
+                    <td>Establishes core persona, behavioral boundaries, safety constraints, and formatting rules. Placed as the initial anchor message.</td>
+                  </tr>
+                  <tr>
+                    <td><code>user</code></td>
+                    <td>External Input</td>
+                    <td>Contains the end-user query, contextual documents, or runtime arguments.</td>
+                  </tr>
+                  <tr>
+                    <td><code>assistant</code> / <code>model</code></td>
+                    <td>Generated Output</td>
+                    <td>The historical synthetic text emitted by the LLM in prior turns.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Figure 2.1: Multi-Turn Memory -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 2.1</span>
+                <span class="figure-title">Stateful Context Window and Sliding Pruning Topology</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 720 260" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Conversation history stack showing persistent system anchor, pruned historical messages, and active context window">
+                  <!-- System Anchor -->
+                  <rect x="30" y="30" width="660" height="38" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+                  <text x="45" y="54" font-size="11" font-weight="700" fill="#0f172a" font-family="-apple-system, sans-serif">ROLE: SYSTEM (Anchor)</text>
+                  <text x="210" y="54" font-size="10" fill="#475569" font-family="-apple-system, sans-serif">"You are an expert tutor. Never disclose private variables. Be concise."</text>
+
+                  <!-- Evicted Message (Pruned) -->
+                  <g opacity="0.4">
+                    <rect x="30" y="78" width="660" height="32" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-dasharray="3,3"/>
+                    <text x="45" y="99" font-size="10" fill="#94a3b8" font-family="-apple-system, sans-serif">ROLE: USER &bull; Turn 1 (Evicted / Exceeded Token Budget Window)</text>
+                    <text x="560" y="99" font-size="10" font-weight="600" fill="#dc2626" font-family="-apple-system, sans-serif">[PRUNED]</text>
+                  </g>
+
+                  <!-- Active Context Window Bracket -->
+                  <rect x="25" y="118" width="670" height="120" rx="8" fill="none" stroke="#0066cc" stroke-width="1.5" stroke-dasharray="4,4"/>
+                  <text x="680" y="132" font-size="10" font-weight="700" fill="#0066cc" text-anchor="end" font-family="-apple-system, sans-serif">ACTIVE CONTEXT WINDOW (Sliding Window K=4)</text>
+
+                  <!-- Message 2: Assistant -->
+                  <rect x="40" y="128" width="640" height="30" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+                  <text x="55" y="147" font-size="10" font-weight="600" fill="#2563eb" font-family="-apple-system, sans-serif">ROLE: ASSISTANT &bull; Turn 2:</text>
+                  <text x="210" y="147" font-size="10" fill="#334155" font-family="-apple-system, sans-serif">"Gradient descent optimizes parameters by evaluating error gradients..."</text>
+
+                  <!-- Message 3: User -->
+                  <rect x="40" y="164" width="640" height="30" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+                  <text x="55" y="183" font-size="10" font-weight="600" fill="#0f172a" font-family="-apple-system, sans-serif">ROLE: USER &bull; Turn 3:</text>
+                  <text x="210" y="183" font-size="10" fill="#334155" font-family="-apple-system, sans-serif">"What if the learning rate is chosen too high?"</text>
+
+                  <!-- Message 4: Assistant (Pending / Response) -->
+                  <rect x="40" y="200" width="640" height="30" rx="4" fill="#f0fdf4" stroke="#16a34a"/>
+                  <text x="55" y="219" font-size="10" font-weight="600" fill="#15803d" font-family="-apple-system, sans-serif">ROLE: ASSISTANT &bull; Turn 4:</text>
+                  <text x="210" y="219" font-size="10" fill="#166534" font-family="-apple-system, sans-serif">"An excessive learning rate induces numerical oscillation or divergence."</text>
+                </svg>
+              </div>
+              <figcaption>
+                Multi-turn conversation topology: The system prompt remains pinned as the immovable root directive, while historical dialog pairs rotate through a sliding buffer to prevent token exhaustion.
+              </figcaption>
+            </div>
+
+            <h3>Production-Ready Stateful Conversation Loop</h3>
+            <p>
+              The script below demonstrates a robust Python conversational class that enforces a system instruction, tracks message history, and applies a sliding token-window constraint.
+            </p>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">stateful_chat_manager.py</span>
+                <span class="code-lang-tag">Python 3.10+</span>
+              </div>
+              <pre><code>from groq import Groq
+
+class StatefulChatSession:
+    def __init__(self, system_prompt: str, model: str = "llama-3.3-70b-versatile", max_history_turns: int = 6):
+        self.client = Groq()
+        self.model = model
+        self.max_history_turns = max_history_turns
+        self.system_prompt = system_prompt
+        # Internal state buffer
+        self.messages = [{"role": "system", "content": self.system_prompt}]
+
+    def send_message(self, user_text: str) -> str:
+        # 1. Append User Input
+        self.messages.append({"role": "user", "content": user_text})
+
+        # 2. Enforce Sliding Window: Retain system prompt + last N messages
+        if len(self.messages) > (self.max_history_turns * 2 + 1):
+            # messages[0] is system; keep last (max_history_turns * 2) turns
+            self.messages = [self.messages[0]] + self.messages[-(self.max_history_turns * 2):]
+
+        # 3. Invoke LLM with complete state history
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=self.messages,
+            temperature=0.3,
+        )
+
+        reply = response.choices[0].message.content
+
+        # 4. Append Assistant Response to state
+        self.messages.append({"role": "assistant", "content": reply})
+        return reply
+
+# Demonstration
+session = StatefulChatSession(system_prompt="You are an expert computational biologist.")
+print("Turn 1:", session.send_message("What is CRISPR-Cas9?"))
+print("Turn 2:", session.send_message("How does the guide RNA locate the target sequence?"))
+# The model accurately resolves 'guide RNA' in context of Turn 1!</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 4: LANGCHAIN FROM BASIC TO LCEL       -->
+          <!-- ========================================== -->
+          <section id="langchain-lcel">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Composition Framework</span>
+              <span class="badge badge-neutral">LCEL</span>
+            </div>
+            <h2>4. LangChain: Architecture, Runnables, and LCEL</h2>
+            <p>
+              While raw SDK calls suffice for simple scripts, complex agentic workflows require chaining prompts, guardrails, formatters, and external tools. <strong>LangChain</strong> provides this abstraction through <strong>LCEL (LangChain Expression Language)</strong>, treating components as unified <code>Runnable</code> objects composable via the pipe operator (<code>|</code>).
+            </p>
+
+            <h3>The Three Core Building Blocks</h3>
+            <ol>
+              <li><strong>Prompt Templates (<code>ChatPromptTemplate</code>):</strong> Transform raw dictionaries into formatted message lists, abstracting role definitions and variables.</li>
+              <li><strong>Chat Models (<code>BaseChatModel</code>):</strong> Standardized wrappers around LLM providers (e.g. <code>ChatGoogleGenerativeAI</code>, <code>ChatGroq</code>).</li>
+              <li><strong>Output Parsers (<code>BaseOutputParser</code>):</strong> Convert unstructured <code>AIMessage</code> outputs into verified strings, JSON objects, or validated Pydantic models.</li>
+            </ol>
+
+            <!-- Figure 4.1: LangChain LCEL -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 4.1</span>
+                <span class="figure-title">LangChain Expression Language (LCEL) Dataflow Pipeline</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 720 220" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LangChain LCEL dataflow diagram showing dictionary input through ChatPromptTemplate through Model through OutputParser">
+                  <defs>
+                    <marker id="arrow-lcel" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0066cc"/>
+                    </marker>
+                  </defs>
+                  <!-- Input Dict -->
+                  <rect x="20" y="70" width="110" height="60" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+                  <text x="75" y="96" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Input Dict</text>
+                  <text x="75" y="114" font-size="9" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">{"topic": "Docker"}</text>
+
+                  <!-- Pipe 1 -->
+                  <line x1="130" y1="100" x2="165" y2="100" stroke="#0066cc" stroke-width="2" marker-end="url(#arrow-lcel)"/>
+                  <text x="148" y="92" font-size="14" font-weight="700" fill="#0066cc" text-anchor="middle" font-family="-apple-system, sans-serif">|</text>
+
+                  <!-- Stage 1: PromptTemplate -->
+                  <rect x="165" y="55" width="140" height="90" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+                  <text x="235" y="82" font-size="11" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">ChatPromptTemplate</text>
+                  <text x="235" y="100" font-size="9" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">System + Human Msg</text>
+                  <text x="235" y="118" font-size="8" fill="#60a5fa" text-anchor="middle" font-family="-apple-system, sans-serif">Outputs: PromptValue</text>
+
+                  <!-- Pipe 2 -->
+                  <line x1="305" y1="100" x2="345" y2="100" stroke="#0066cc" stroke-width="2" marker-end="url(#arrow-lcel)"/>
+                  <text x="325" y="92" font-size="14" font-weight="700" fill="#0066cc" text-anchor="middle" font-family="-apple-system, sans-serif">|</text>
+
+                  <!-- Stage 2: ChatModel -->
+                  <rect x="345" y="55" width="145" height="90" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+                  <text x="417" y="82" font-size="11" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">ChatModel</text>
+                  <text x="417" y="100" font-size="9" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">Gemini / Groq / OpenAI</text>
+                  <text x="417" y="118" font-size="8" fill="#4ade80" text-anchor="middle" font-family="-apple-system, sans-serif">Outputs: AIMessage</text>
+
+                  <!-- Pipe 3 -->
+                  <line x1="490" y1="100" x2="525" y2="100" stroke="#0066cc" stroke-width="2" marker-end="url(#arrow-lcel)"/>
+                  <text x="508" y="92" font-size="14" font-weight="700" fill="#0066cc" text-anchor="middle" font-family="-apple-system, sans-serif">|</text>
+
+                  <!-- Stage 3: OutputParser -->
+                  <rect x="525" y="55" width="165" height="90" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+                  <text x="607" y="82" font-size="11" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">OutputParser</text>
+                  <text x="607" y="100" font-size="9" fill="#9333ea" text-anchor="middle" font-family="-apple-system, sans-serif">StrOutputParser / Pydantic</text>
+                  <text x="607" y="118" font-size="8" fill="#c084fc" text-anchor="middle" font-family="-apple-system, sans-serif">Outputs: str or Pydantic Object</text>
+                </svg>
+              </div>
+              <figcaption>
+                The LCEL abstraction: Unifying asynchronous execution, batch streaming, and type safety across decoupled functional nodes connected by the standard Unix-style pipe operator.
+              </figcaption>
+            </div>
+
+            <h3>End-to-End LCEL Implementation with Structured Output</h3>
+            <p>
+              In production, models must emit strictly validated schema data rather than conversational prose. Below is an LCEL pipeline utilizing Groq/Gemini with Pydantic output validation.
+            </p>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">langchain_lcel_structured.py</span>
+                <span class="code-lang-tag">Python 3.10+</span>
+              </div>
+              <pre><code>from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import PydanticOutputParser
+from pydantic import BaseModel, Field
+
+# 1. Define Target Data Contract via Pydantic
+class SecurityAuditResult(BaseModel):
+    vulnerability_detected: bool = Field(description="Whether a vulnerability is present")
+    severity: str = Field(description="Severity tier: Low, Medium, High, or Critical")
+    cve_reference: str = Field(description="Associated CVE tag or standard identification")
+    remediation_step: str = Field(description="Actionable code change or patch required")
+
+# 2. Instantiate Parser and Inject Format Instructions into Prompt
+parser = PydanticOutputParser(pydantic_object=SecurityAuditResult)
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a lead security auditor. Analyze code snippets strictly.\n{format_instructions}"),
+    ("human", "Audit this snippet:\n{code_snippet}")
+])
+
+# 3. Instantiate Model
+model = ChatGroq(model_name="llama-3.3-70b-versatile", temperature=0.1)
+
+# 4. Construct LCEL Chain using the Pipe Operator
+chain = prompt | model | parser
+
+# 5. Invoke Chain
+result: SecurityAuditResult = chain.invoke({
+    "code_snippet": "cursor.execute(f'SELECT * FROM users WHERE username = \"{user_input}\"')",
+    "format_instructions": parser.get_format_instructions()
+})
+
+print(f"Vulnerability: {result.vulnerability_detected}")
+print(f"Severity:      {result.severity}")
+print(f"Remediation:   {result.remediation_step}")</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 5: TOOL & FUNCTION CALLING            -->
+          <!-- ========================================== -->
+          <section id="tool-calling">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Agent Capabilities</span>
+              <span class="badge badge-neutral">Function Calling</span>
+            </div>
+            <h2>5. Tool Calling: From Under-the-Hood Protocol to LangChain</h2>
+            <p>
+              By default, an LLM operates strictly within its frozen weights. It cannot query today's stock price, query an internal SQL database, or trigger a deployment pipeline. <strong>Tool calling</strong> bridges this gap by enabling the LLM to command external execution environments.
+            </p>
+
+            <h3>How Tool Calling Actually Works Under the Hood</h3>
+            <p>
+              It is a common misconception that the LLM executes Python code directly. In reality, tool calling is a strictly coordinated <strong>4-step protocol handshake</strong> between the client and model:
+            </p>
+
+            <!-- Figure 3.1: Tool Calling Lifecycle -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 3.1</span>
+                <span class="figure-title">The Four-Step Tool Calling Protocol Handshake</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 720 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tool Calling 4-step sequence between User, Application Runtime, LLM, and External Tool">
+                  <defs>
+                    <marker id="arrow-tool" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f172a"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Lifeline Columns -->
+                  <rect x="50" y="20" width="110" height="34" rx="4" fill="#f1f5f9" stroke="#64748b"/>
+                  <text x="105" y="42" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">1. End User</text>
+                  <line x1="105" y1="54" x2="105" y2="300" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+                  <rect x="210" y="20" width="130" height="34" rx="4" fill="#eff6ff" stroke="#3b82f6"/>
+                  <text x="275" y="42" font-size="11" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">2. App / Agent Core</text>
+                  <line x1="275" y1="54" x2="275" y2="300" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+                  <rect x="400" y="20" width="120" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a"/>
+                  <text x="460" y="42" font-size="11" font-weight="700" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">3. LLM Model</text>
+                  <line x1="460" y1="54" x2="460" y2="300" stroke="#86efac" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+                  <rect x="570" y="20" width="120" height="34" rx="4" fill="#faf5ff" stroke="#a855f7"/>
+                  <text x="630" y="42" font-size="11" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">4. Local Python API</text>
+                  <line x1="630" y1="54" x2="630" y2="300" stroke="#d8b4fe" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+                  <!-- Step 1: User -> App -> LLM -->
+                  <line x1="105" y1="80" x2="270" y2="80" stroke="#0f172a" stroke-width="1.5" marker-end="url(#arrow-tool)"/>
+                  <text x="180" y="74" font-size="9" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">"Check AAPL price"</text>
+
+                  <line x1="275" y1="100" x2="455" y2="100" stroke="#0066cc" stroke-width="1.5" marker-end="url(#arrow-tool)"/>
+                  <text x="365" y="94" font-size="9" fill="#0066cc" text-anchor="middle" font-family="-apple-system, sans-serif">1. Prompt + Tool JSON Schemas</text>
+
+                  <!-- Step 2: LLM -> App -->
+                  <line x1="460" y1="140" x2="280" y2="140" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrow-tool)"/>
+                  <text x="370" y="134" font-size="9" font-weight="600" fill="#dc2626" text-anchor="middle" font-family="-apple-system, sans-serif">2. Emits tool_calls: {name: 'get_quote', symbol: 'AAPL'}</text>
+
+                  <!-- Step 3: App -> Python Tool -> App -->
+                  <line x1="275" y1="180" x2="625" y2="180" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arrow-tool)"/>
+                  <text x="450" y="174" font-size="9" fill="#7c3aed" text-anchor="middle" font-family="-apple-system, sans-serif">3. Client executes local get_quote('AAPL')</text>
+
+                  <line x1="630" y1="210" x2="280" y2="210" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arrow-tool)"/>
+                  <text x="450" y="204" font-size="9" fill="#7c3aed" text-anchor="middle" font-family="-apple-system, sans-serif">Returns execution result: {'price': 234.50}</text>
+
+                  <!-- Step 4: App -> LLM -> Final -->
+                  <line x1="275" y1="245" x2="455" y2="245" stroke="#0066cc" stroke-width="1.5" marker-end="url(#arrow-tool)"/>
+                  <text x="365" y="239" font-size="9" fill="#0066cc" text-anchor="middle" font-family="-apple-system, sans-serif">4. Send role='tool' message back</text>
+
+                  <line x1="460" y1="275" x2="280" y2="275" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-tool)"/>
+                  <text x="370" y="269" font-size="9" fill="#16a34a" text-anchor="middle" font-family="-apple-system, sans-serif">Emits final text: "Apple is trading at $234.50"</text>
+
+                  <line x1="275" y1="290" x2="110" y2="290" stroke="#0f172a" stroke-width="1.5" marker-end="url(#arrow-tool)"/>
+                  <text x="180" y="284" font-size="9" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Final Answer delivered</text>
+                </svg>
+              </div>
+              <figcaption>
+                The complete tool-calling lifecycle: Notice that execution is entirely quarantined inside the application client. The LLM acts purely as a semantic orchestrator emitting structured arguments.
+              </figcaption>
+            </div>
+
+            <h3>Production LangChain Tool Calling Implementation</h3>
+            <p>
+              In LangChain, functions are converted into LLM-compatible tools via the <code>@tool</code> decorator. Type hints and docstrings are parsed into the underlying JSON Schema provided to the model.
+            </p>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">langchain_tool_calling.py</span>
+                <span class="code-lang-tag">Python 3.10+</span>
+              </div>
+              <pre><code>from langchain_core.tools import tool
+from langchain_groq import ChatGroq
+from langchain_core.messages import HumanMessage, ToolMessage
+
+# 1. Define Tools with Strict Type Annotations and Expressive Docstrings
+@tool
+def get_order_status(order_id: str) -> dict:
+    """Retrieve tracking status, carrier, and ETA for a specific customer order ID."""
+    # Simulated enterprise database query
+    mock_db = {
+        "ORD-9821": {"status": "In Transit", "carrier": "FedEx", "eta_days": 2},
+        "ORD-4412": {"status": "Delivered", "carrier": "UPS", "eta_days": 0},
+    }
+    return mock_db.get(order_id, {"status": "Not Found", "carrier": "Unknown"})
+
+# 2. Bind Tools to the Foundation Model
+tools = [get_order_status]
+tools_by_name = {t.name: t for t in tools}
+
+llm = ChatGroq(model_name="llama-3.3-70b-versatile", temperature=0.0)
+llm_with_tools = llm.bind_tools(tools)
+
+# 3. Step 1: User sends query
+messages = [HumanMessage(content="Where is my shipment for order ORD-9821?")]
+ai_msg = llm_with_tools.invoke(messages)
+messages.append(ai_msg)
+
+# 4. Step 2: Check if model invoked a tool call
+if ai_msg.tool_calls:
+    for tool_call in ai_msg.tool_calls:
+        print(f"Model selected tool: '{tool_call['name']}' with args: {tool_call['args']}")
+        
+        # Step 3: Execute local function
+        selected_tool = tools_by_name[tool_call["name"]]
+        tool_output = selected_tool.invoke(tool_call["args"])
+        
+        # Step 4: Inject ToolMessage back into conversation stream
+        messages.append(ToolMessage(
+            content=str(tool_output),
+            tool_call_id=tool_call["id"]
+        ))
+
+    # Step 5: Final synthesis by the LLM
+    final_response = llm_with_tools.invoke(messages)
+    print("\nFinal Assistant Output:\n", final_response.content)</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 6: MODEL CONTEXT PROTOCOL (MCP)       -->
+          <!-- ========================================== -->
+          <section id="mcp-protocol">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">Open Standard Protocol</span>
+              <span class="badge badge-regression">Agentic Infrastructure</span>
+            </div>
+            <h2>6. Model Context Protocol (MCP)</h2>
+            <p class="lead">
+              Traditional tool calling requires writing custom integration glue code for every model provider, agent framework, and external database ($N \times M$ complexity). The <strong>Model Context Protocol (MCP)</strong>, introduced as an open standard by Anthropic, resolves this fragmentation by establishing a universal client-server specification for connecting AI systems to data and tools.
+            </p>
+
+            <h3>The MCP Architectural Triad</h3>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Component</th>
+                    <th>Role in the Ecosystem</th>
+                    <th>Technical Responsibility</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>MCP Host</strong></td>
+                    <td>The Agent Environment</td>
+                    <td>The top-level application runtime (e.g. IDE, AI Desktop, custom agent framework) that coordinates models and user interactions.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>MCP Client</strong></td>
+                    <td>The Protocol Consumer</td>
+                    <td>Maintains a 1:1 session connection with an MCP Server, translating protocol messages into model tool calls.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>MCP Server</strong></td>
+                    <td>The Capability Provider</td>
+                    <td>A lightweight independent process that exposes <strong>Prompts</strong>, <strong>Resources</strong>, and <strong>Tools</strong> across a standardized transport layer.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Figure 5.1: MCP Architecture -->
+            <div class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 5.1</span>
+                <span class="figure-title">Model Context Protocol (MCP) Triad &amp; Transport Mechanism</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 720 280" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Model Context Protocol architecture showing MCP Host holding MCP Client communicating via JSON-RPC over Stdio or SSE to MCP Server exposing Tools, Resources, and Prompts">
+                  <defs>
+                    <marker id="arrow-mcp" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Host Container -->
+                  <rect x="20" y="20" width="310" height="240" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+                  <text x="35" y="45" font-size="12" font-weight="700" fill="#0f172a" font-family="-apple-system, sans-serif">MCP HOST APPLICATION</text>
+                  <text x="35" y="62" font-size="9" fill="#64748b" font-family="-apple-system, sans-serif">Claude Desktop / Custom AI Agent / IDE Runtime</text>
+
+                  <!-- LLM Model in Host -->
+                  <rect x="40" y="80" width="270" height="50" rx="6" fill="#eff6ff" stroke="#3b82f6"/>
+                  <text x="175" y="102" font-size="11" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">LLM Engine</text>
+                  <text x="175" y="118" font-size="9" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">Gemini 2.5 / Llama 3.3 / Claude 3.5</text>
+
+                  <!-- Client in Host -->
+                  <rect x="40" y="150" width="270" height="90" rx="6" fill="#f0fdf4" stroke="#16a34a"/>
+                  <text x="175" y="172" font-size="11" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">MCP Client</text>
+                  <text x="175" y="190" font-size="9" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">Manages Subprocess &amp; Session Handshakes</text>
+                  <text x="175" y="215" font-size="8" fill="#4ade80" text-anchor="middle" font-family="-apple-system, sans-serif">Converts MCP Tools &lt;&mdash;&gt; Model Schemas</text>
+
+                  <!-- Transport Bridge (JSON-RPC) -->
+                  <line x1="310" y1="195" x2="410" y2="195" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow-mcp)" marker-start="url(#arrow-mcp)"/>
+                  <rect x="325" y="165" width="70" height="24" rx="4" fill="#e0f2fe" stroke="#38bdf8"/>
+                  <text x="360" y="180" font-size="8" font-weight="700" fill="#0369a1" text-anchor="middle" font-family="-apple-system, sans-serif">JSON-RPC 2.0</text>
+                  <text x="360" y="222" font-size="8" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">Stdio / SSE</text>
+
+                  <!-- Server Container -->
+                  <rect x="410" y="20" width="290" height="240" rx="8" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+                  <text x="425" y="45" font-size="12" font-weight="700" fill="#6b21a8" font-family="-apple-system, sans-serif">MCP SERVER (FastMCP)</text>
+                  <text x="425" y="62" font-size="9" fill="#9333ea" font-family="-apple-system, sans-serif">Isolated Subprocess or Remote Microservice</text>
+
+                  <!-- Primitives Exposed by Server -->
+                  <rect x="430" y="80" width="250" height="42" rx="4" fill="#ffffff" stroke="#c084fc"/>
+                  <text x="440" y="98" font-size="10" font-weight="700" fill="#6b21a8" font-family="-apple-system, sans-serif">1. Tools (@mcp.tool)</text>
+                  <text x="440" y="112" font-size="8" fill="#7e22ce" font-family="-apple-system, sans-serif">Executable functions with side-effects (SQL query, bash)</text>
+
+                  <rect x="430" y="132" width="250" height="42" rx="4" fill="#ffffff" stroke="#c084fc"/>
+                  <text x="440" y="150" font-size="10" font-weight="700" fill="#6b21a8" font-family="-apple-system, sans-serif">2. Resources (@mcp.resource)</text>
+                  <text x="440" y="164" font-size="8" fill="#7e22ce" font-family="-apple-system, sans-serif">Read-only context providers (File logs, Postgres schema)</text>
+
+                  <rect x="430" y="184" width="250" height="42" rx="4" fill="#ffffff" stroke="#c084fc"/>
+                  <text x="440" y="202" font-size="10" font-weight="700" fill="#6b21a8" font-family="-apple-system, sans-serif">3. Prompts (@mcp.prompt)</text>
+                  <text x="440" y="216" font-size="8" fill="#7e22ce" font-family="-apple-system, sans-serif">Pre-composed prompt templates with dynamic variables</text>
+                </svg>
+              </div>
+              <figcaption>
+                The MCP architecture decoupled: By enforcing a standard JSON-RPC 2.0 communication bus over standard input/output (stdio) or HTTP/SSE, any MCP Server works interchangeably across any compliant host.
+              </figcaption>
+            </div>
+
+            <h3>6.1 Building an MCP Server with Python FastMCP</h3>
+            <p>
+              The official <code>mcp</code> Python library includes <code>FastMCP</code>, a high-level server framework modeled after FastAPI. It enables exposing enterprise databases and tools with minimal boilerplate.
+            </p>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">enterprise_mcp_server.py</span>
+                <span class="code-lang-tag">Python 3.10+ (Server Process)</span>
+              </div>
+              <pre><code>import sqlite3
+from mcp.server.fastmcp import FastMCP
+
+# 1. Initialize FastMCP Server Instance
+mcp = FastMCP("Enterprise-Data-Server")
+
+# 2. Expose a Standard Resource (Read-Only Data Provider)
+@mcp.resource("schema://database/customers")
+def get_customer_schema() -> str:
+    """Provides the read-only DDL schema of the production customer database."""
+    return """
+    CREATE TABLE customers (
+        id INTEGER PRIMARY KEY,
+        name TEXT NOT NULL,
+        tier TEXT CHECK(tier IN ('Starter', 'Pro', 'Enterprise')),
+        spend_ytd REAL DEFAULT 0.0
+    );
+    """
+
+# 3. Expose an Executable Tool (Callable Function with Strict Validation)
+@mcp.tool()
+def query_customer_tier(customer_id: int) -> dict:
+    """Look up a customer's subscription tier and YTD spending by their numeric ID."""
+    # Simulated database lookup
+    mock_records = {
+        101: {"name": "Acme Corp", "tier": "Enterprise", "spend_ytd": 48500.00},
+        102: {"name": "Beta Labs", "tier": "Pro", "spend_ytd": 12400.50},
+    }
+    record = mock_records.get(customer_id)
+    if not record:
+        return {"error": f"Customer ID {customer_id} not found."}
+    return record
+
+# 4. Entrypoint to run server over Standard I/O (Stdio)
+if __name__ == "__main__":
+    mcp.run(transport="stdio")</code></pre>
+            </div>
+
+            <h3>6.2 Building an MCP Client Agent</h3>
+            <p>
+              An MCP Client spawns the server as a local subprocess (or establishes an SSE connection), discovers available tools, converts them into standard LLM format, and executes them when commanded.
+            </p>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">mcp_client_agent.py</span>
+                <span class="code-lang-tag">Python 3.10+ (Client Agent)</span>
+              </div>
+              <pre><code>import asyncio
+import os
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+from groq import Groq
+
+async def run_mcp_agent():
+    # 1. Configure the MCP Subprocess Parameters
+    server_params = StdioServerParameters(
+        command="python3",
+        args=["enterprise_mcp_server.py"],
+        env=os.environ.copy()
+    )
+
+    # 2. Establish Stdio Session with Server
+    async with stdio_client(server_params) as (read_stream, write_stream):
+        async with ClientSession(read_stream, write_stream) as session:
+            # Initialize Protocol Handshake
+            await session.initialize()
+
+            # 3. Discover Available Tools from Server
+            tools_result = await session.list_tools()
+            print("Connected to MCP Server. Available tools:")
+            for t in tools_result.tools:
+                print(f" - {t.name}: {t.description}")
+
+            # 4. Convert MCP Tools into OpenAI/Groq Compatible Function Schemas
+            groq_tools = [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": t.name,
+                        "description": t.description,
+                        "parameters": t.inputSchema
+                    }
+                }
+                for t in tools_result.tools
+            ]
+
+            # 5. Query LLM with Discovered Tools
+            groq_client = Groq()
+            query = "Check the subscription tier and total YTD spend for customer ID 101."
+            
+            response = groq_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role": "user", "content": query}],
+                tools=groq_tools,
+                tool_choice="auto",
+            )
+
+            msg = response.choices[0].message
+            # 6. Check if LLM requested an MCP Tool Execution
+            if msg.tool_calls:
+                call = msg.tool_calls[0]
+                import json
+                tool_args = json.loads(call.function.arguments)
+                print(f"\nModel requested MCP Tool: {call.function.name}({tool_args})")
+
+                # 7. Execute Tool through the MCP Session Protocol Bus
+                result = await session.call_tool(call.function.name, arguments=tool_args)
+                print("MCP Server Returned:", result.content[0].text)
+
+if __name__ == "__main__":
+    asyncio.run(run_mcp_agent())</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- PART 7: ARCHITECTURAL COMPARISON MATRIX   -->
+          <!-- ========================================== -->
+          <section id="production-tradeoffs">
+            <h2>Part 7: Architectural Comparison Matrix</h2>
+            <p>
+              Selecting the appropriate integration tier depends heavily on system latency requirements, maintenance overhead, and interoperability constraints.
+            </p>
+
+            <div class="table-wrapper wide-breakout">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Integration Strategy</th>
+                    <th>Core Strengths</th>
+                    <th>Primary Tradeoffs</th>
+                    <th>Ideal Production Scenarios</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Direct SDK (Gemini / Groq)</strong></td>
+                    <td>Zero abstraction overhead; minimal memory footprint; maximum raw token throughput.</td>
+                    <td>Vendor lock-in; manual history tracking; repetitive schema translation code.</td>
+                    <td>High-throughput microservices, edge inference, real-time voice/video streaming pipelines.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>LangChain LCEL</strong></td>
+                    <td>Unified provider switching; structured Pydantic parsing; built-in asynchronous batching.</td>
+                    <td>Framework dependency overhead; steep learning curve for complex nested debugging.</td>
+                    <td>Enterprise RAG architectures, complex multi-step document summarizers, structured data extractors.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Model Context Protocol (MCP)</strong></td>
+                    <td>Universal standard; cleanly decouples tool developers from model vendors; plug-and-play integrations.</td>
+                    <td>Requires managing subprocess/SSE server lifecycles; protocol latency overhead.</td>
+                    <td>Autonomous multi-agent ecosystems, IDE coding assistants, composable internal data platforms.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SUMMARY & CORE TEACHING PRINCIPLE          -->
+          <!-- ========================================== -->
+          <section id="pedagogical-summary">
+            <h2>Executive Revision: Key Engineering Principles</h2>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Concept</th>
+                    <th>Definitive Architectural Summary</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Autoregressive Sampling</strong></td>
+                    <td>LLMs predict next-token logits sequentially. Temperature scales the probability curve, while nucleus ($P$) caps the cumulative sampling mass.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Statelessness &amp; Roles</strong></td>
+                    <td>Models retain zero memory across turns. The client orchestrates continuity by resending an immutable <code>system</code> anchor followed by chronological message turns.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>LCEL Runnables</strong></td>
+                    <td>Composes prompts, models, and parsers into reproducible pipelines linked by the <code>|</code> pipe operator with uniform synchronous and asynchronous APIs.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tool Calling Protocol</strong></td>
+                    <td>A 4-step client-mediated negotiation. The LLM evaluates intent and emits arguments, while the client isolates and executes the physical Python function.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Model Context Protocol (MCP)</strong></td>
+                    <td>Standardizes agent tool and resource discovery via JSON-RPC 2.0, eliminating bespoke glue code across models and databases.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="callout" style="border-left-color: #0066cc; background-color: #f0f7ff;">
+              <div class="callout-title" style="color: #0066cc; font-size: 0.9rem;">The Core Engineering Axiom</div>
+              <p style="font-size: 1.12rem; line-height: 1.6; color: #0f172a; margin-top: 6px;">
+                <strong>An LLM is not an application; it is an ungrounded reasoning engine. Robust AI engineering is the discipline of anchoring that engine through strict schemas, context pruning, local tool execution, and standardized protocols like MCP.</strong>
+              </p>
+            </div>
+          </section>
+
+          <!-- Footer -->
+          <footer class="article-footer">
+            <p>Generative AI Curriculum &bull; Advanced Agentic AI Engineering &bull; Pure Vanilla CSS Architecture</p>
+            <p style="margin-top: 4px; font-size: 0.78rem;">Designed for deep reading, print distribution, and publication-grade engineering instruction.</p>
+          </footer>
+
+        </article>
+      </main>
+
+    </div>
+  </div>
+</body>
+</html>
