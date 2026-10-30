@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6. LangChain, Autonomous Agents &amp; MCP — AI Engineering Curriculum</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body>
+  <!-- Top Global Navigation Bar -->
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <a href="index.html" class="top-nav-brand">AI Engineering Curriculum</a>
+      <ul class="top-nav-links">
+        <li><a href="index.html" class="nav-pill">1. ML</a></li>
+        <li><a href="dl.html" class="nav-pill">2. Deep Learning &amp; FNN</a></li>
+        <li><a href="nlp.html" class="nav-pill">3. NLP</a></li>
+        <li><a href="cv.html" class="nav-pill">4. OpenCV &amp; Vision</a></li>
+        <li><a href="genai.html" class="nav-pill">5. LLMs &amp; RAG</a></li>
+        <li><a href="agents.html" class="nav-pill active">6. Agents &amp; MCP</a></li>
+        <li><a href="research.html" class="nav-pill">7. JEPA &amp; Research</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="site-wrapper">
+    <div class="site-container">
+      
+      <!-- Clear Grouped Sidebar TOC -->
+      <aside class="toc-sidebar">
+        <nav class="toc-sticky">
+          <div class="toc-title">GenAI Part 2 Contents</div>
+          <ul class="toc-list">
+            <li class="toc-group-label">Chains &amp; Tools</li>
+            <li class="toc-item"><a href="#langchain-lcel">1. LangChain &amp; LCEL Pipelines</a></li>
+            <li class="toc-item"><a href="#tool-calling">2. Tool Calling (4-Step Handshake)</a></li>
+            <li class="toc-group-label">Pillar 4: Agents</li>
+            <li class="toc-item"><a href="#autonomous-agents">3. Autonomous Agents (ReAct Loop)</a></li>
+            <li class="toc-group-label">Pillar 5: MCP</li>
+            <li class="toc-item"><a href="#mcp-protocol">4. Model Context Protocol (MCP)</a></li>
+            <li class="toc-item"><a href="#mcp-code">5. FastMCP Server &amp; Client Code</a></li>
+            <li class="toc-group-label">Summary</li>
+            <li class="toc-item"><a href="#summary">6. 5-Pillar GenAI Matrix</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Article Stream -->
+      <main class="main-content">
+        <article>
+          
+          <!-- Article Header -->
+          <header class="article-header">
+            <div class="article-category">Module 6 &middot; Generative AI Track (Part 2 of 2)</div>
+            <h1 class="article-title">LangChain, Tool Calling, Autonomous Agents &amp; MCP</h1>
+            <p class="article-subtitle">Step-by-step guide to turning passive LLMs into action-taking systems: compose pipelines with LangChain LCEL, connect Python functions via Tool Calling, build ReAct Agents, and standardize everything with the Model Context Protocol (MCP).</p>
+            <div class="article-meta">
+              <span>Pillars Covered: <strong>[LCEL &bull; Agents &bull; MCP]</strong></span>
+              <span class="meta-divider">&bull;</span>
+              <span>Reading Time: 16 min</span>
+            </div>
+          </header>
+
+          <!-- GenAI 5-Pillar Track Switcher -->
+          <div class="track-switcher" aria-label="Generative AI 5-Pillar Switcher">
+            <span class="track-switcher-label">GenAI 5 Pillars:</span>
+            <a href="genai.html#llm-mechanics" class="track-pill">&larr; 1. LLM</a>
+            <a href="genai.html#vector-storage" class="track-pill">&larr; 2. Vector Storage</a>
+            <a href="genai.html#rag-pipeline" class="track-pill">&larr; 3. RAG</a>
+            <a href="#autonomous-agents" class="track-pill active">4. Agents</a>
+            <a href="#mcp-protocol" class="track-pill active">5. MCP</a>
+          </div>
+
+          <ol class="roadmap">
+            <li><a href="#langchain-lcel">
+              <span class="roadmap-step">Piece 1 &bull; LCEL</span>
+              <span class="roadmap-title">LangChain Pipes</span>
+              <span class="roadmap-desc">prompt | model | parser</span>
+            </a></li>
+            <li><a href="#tool-calling">
+              <span class="roadmap-step">Piece 2 &bull; Tools</span>
+              <span class="roadmap-title">Tool Calling</span>
+              <span class="roadmap-desc">4-step client-mediated handshake</span>
+            </a></li>
+            <li><a href="#autonomous-agents">
+              <span class="roadmap-step">Piece 3 &bull; Agents</span>
+              <span class="roadmap-title">ReAct Agents</span>
+              <span class="roadmap-desc">Thought &rarr; Action &rarr; Observation loop</span>
+            </a></li>
+            <li><a href="#mcp-protocol">
+              <span class="roadmap-step">Piece 4 &bull; MCP</span>
+              <span class="roadmap-title">MCP Standard</span>
+              <span class="roadmap-desc">Host, Client, Server &amp; FastMCP code</span>
+            </a></li>
+          </ol>
+
+          <!-- ========================================== -->
+          <!-- SECTION 1: LANGCHAIN & LCEL                -->
+          <!-- ========================================== -->
+          <section id="langchain-lcel">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Composition</span>
+              <span class="badge badge-neutral">LCEL</span>
+            </div>
+            <h2>1. LangChain &amp; LCEL (`prompt | model | parser`)</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p><strong>LCEL (LangChain Expression Language)</strong> chains a Prompt Template, a Chat Model, and an Output Parser together using the Unix pipe operator (`|`) so the output of each step feeds cleanly into the next.</p>
+            </div>
+
+            <!-- Figure 1.1: LCEL -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 1.1</span>
+                <span class="figure-title">LCEL Pipeline: Dictionary &rarr; PromptTemplate &rarr; ChatModel &rarr; Pydantic Object</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 700 175" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="LCEL pipeline connecting Input Dict, ChatPromptTemplate, ChatModel, and PydanticOutputParser with pipe operators">
+                  <defs>
+                    <marker id="arrow-lcel" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0066cc"/>
+                    </marker>
+                  </defs>
+                  <rect x="20" y="50" width="115" height="68" rx="6" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.4"/>
+                  <text x="77" y="78" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Input Dict</text>
+                  <text x="77" y="98" font-size="11" fill="#475569" text-anchor="middle" font-family="SF Mono, monospace">{"code": "..."}</text>
+
+                  <line x1="135" y1="84" x2="170" y2="84" stroke="#0066cc" stroke-width="2" marker-end="url(#arrow-lcel)"/>
+                  <text x="152" y="74" font-size="13" font-weight="700" fill="#0066cc" text-anchor="middle">|</text>
+
+                  <rect x="175" y="50" width="145" height="68" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                  <text x="247" y="78" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">PromptTemplate</text>
+                  <text x="247" y="98" font-size="11" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">Builds Messages</text>
+
+                  <line x1="320" y1="84" x2="355" y2="84" stroke="#0066cc" stroke-width="2" marker-end="url(#arrow-lcel)"/>
+                  <text x="337" y="74" font-size="13" font-weight="700" fill="#0066cc" text-anchor="middle">|</text>
+
+                  <rect x="360" y="50" width="135" height="68" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+                  <text x="427" y="78" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">ChatModel</text>
+                  <text x="427" y="98" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">Groq / Gemini</text>
+
+                  <line x1="495" y1="84" x2="530" y2="84" stroke="#0066cc" stroke-width="2" marker-end="url(#arrow-lcel)"/>
+                  <text x="512" y="74" font-size="13" font-weight="700" fill="#0066cc" text-anchor="middle">|</text>
+
+                  <rect x="535" y="50" width="145" height="68" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+                  <text x="607" y="78" font-size="12" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">OutputParser</text>
+                  <text x="607" y="98" font-size="11" fill="#7e22ce" text-anchor="middle" font-family="-apple-system, sans-serif">Pydantic / JSON</text>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Every component in an LCEL chain supports `.invoke()`, `.stream()`, and `.batch()` with the exact same syntax.</figcaption>
+            </figure>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">lcel_structured_output.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>from pydantic import BaseModel, Field
+from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate
+
+# 1. Define the strict output schema using Pydantic
+class TicketTriage(BaseModel):
+    category: str = Field(description="billing, technical, or account")
+    urgent: bool = Field(description="True if production is blocked")
+
+# 2. Build the prompt and bind structured output to the model
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "Classify the customer support ticket."),
+    ("human", "{ticket_text}")
+])
+llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+
+# 3. Pipe prompt into schema-bound model
+chain = prompt | llm.with_structured_output(TicketTriage)
+result = chain.invoke({"ticket_text": "Our production API key stopped working 5 mins ago!"})
+print(result.category, "| Urgent:", result.urgent)</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 2: TOOL CALLING                    -->
+          <!-- ========================================== -->
+          <section id="tool-calling">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Protocol</span>
+              <span class="badge badge-neutral">Function Calling</span>
+            </div>
+            <h2>2. Tool Calling: The 4-Step Protocol Handshake</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>An LLM never runs your Python function directly—instead, it emits a structured JSON <strong>tool call request</strong> (`{"name": "get_weather", "args": {"city": "Delhi"}}`), your application runs the function locally, and you send the result back to the LLM.</p>
+            </div>
+
+            <!-- Figure 2.1: Tool Calling Sequence -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 2.1</span>
+                <span class="figure-title">The 4-Step Tool Calling Handshake Between App, LLM, and Python Function</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 700 250" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="4-step tool calling sequence between Your App, LLM API, and Local Python Tool">
+                  <defs>
+                    <marker id="arrow-tc" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f172a"/>
+                    </marker>
+                  </defs>
+                  <rect x="60" y="15" width="140" height="34" rx="5" fill="#eff6ff" stroke="#2563eb"/>
+                  <text x="130" y="37" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Your App Runtime</text>
+                  <line x1="130" y1="49" x2="130" y2="235" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+                  <rect x="290" y="15" width="130" height="34" rx="5" fill="#f0fdf4" stroke="#16a34a"/>
+                  <text x="355" y="37" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">LLM Engine</text>
+                  <line x1="355" y1="49" x2="355" y2="235" stroke="#86efac" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+                  <rect x="510" y="15" width="140" height="34" rx="5" fill="#faf5ff" stroke="#a855f7"/>
+                  <text x="580" y="37" font-size="12" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Python Function</text>
+                  <line x1="580" y1="49" x2="580" y2="235" stroke="#d8b4fe" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+                  <!-- Step 1 -->
+                  <line x1="130" y1="78" x2="350" y2="78" stroke="#0066cc" stroke-width="1.8" marker-end="url(#arrow-tc)"/>
+                  <text x="242" y="70" font-size="11" font-weight="600" fill="#0066cc" text-anchor="middle" font-family="-apple-system, sans-serif">Step 1: Send Query + Tool JSON Schemas</text>
+
+                  <!-- Step 2 -->
+                  <line x1="355" y1="118" x2="135" y2="118" stroke="#dc2626" stroke-width="1.8" marker-end="url(#arrow-tc)"/>
+                  <text x="242" y="110" font-size="11" font-weight="600" fill="#dc2626" text-anchor="middle" font-family="-apple-system, sans-serif">Step 2: LLM returns tool_calls: get_stock("AAPL")</text>
+
+                  <!-- Step 3 -->
+                  <line x1="130" y1="158" x2="575" y2="158" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#arrow-tc)"/>
+                  <text x="355" y="150" font-size="11" font-weight="600" fill="#7c3aed" text-anchor="middle" font-family="-apple-system, sans-serif">Step 3: App executes local Python function &rarr; USD 234.50</text>
+
+                  <!-- Step 4 -->
+                  <line x1="130" y1="205" x2="350" y2="205" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrow-tc)"/>
+                  <text x="242" y="197" font-size="11" font-weight="600" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Step 4: Send Tool Result back &rarr; LLM writes final answer</text>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Your database credentials and Python code stay 100% inside your application runtime. The LLM only sees the function's docstring, parameter names, and return value.</figcaption>
+            </figure>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 3: AUTONOMOUS AGENTS (REACT LOOP)  -->
+          <!-- ========================================== -->
+          <section id="autonomous-agents">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">Pillar 4: Agents</span>
+              <span class="badge badge-neutral">ReAct Loop</span>
+            </div>
+            <h2>3. Autonomous Agents: The ReAct Loop</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>While a simple chain runs a fixed set of steps once, an <strong>Autonomous Agent</strong> runs the LLM in a <code>while</code> loop—<strong>Thought &rarr; Action (Tool Call) &rarr; Observation (Tool Result)</strong>—deciding dynamically which tools to call and when the goal is complete.</p>
+            </div>
+
+            <!-- Figure 3.1: ReAct Agent Loop -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 3.1</span>
+                <span class="figure-title">The ReAct Agent Loop: Reason &rarr; Act (Call Tool) &rarr; Observe &rarr; Repeat</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 700 220" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ReAct Agent cyclic loop between Thought, Action Tool Call, and Observation, exiting to Final Answer">
+                  <defs>
+                    <marker id="arrow-ag" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0066cc"/>
+                    </marker>
+                  </defs>
+                  <!-- Goal -->
+                  <rect x="20" y="75" width="115" height="58" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+                  <text x="77" y="100" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">User Goal</text>
+                  <text x="77" y="118" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">Multi-step task</text>
+
+                  <line x1="135" y1="104" x2="175" y2="104" stroke="#0066cc" stroke-width="1.8" marker-end="url(#arrow-ag)"/>
+
+                  <!-- 1. Thought -->
+                  <rect x="180" y="75" width="145" height="58" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+                  <text x="252" y="100" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">1. Thought (LLM)</text>
+                  <text x="252" y="118" font-size="11" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">Plan next step</text>
+
+                  <line x1="325" y1="92" x2="365" y2="52" stroke="#0066cc" stroke-width="1.8" marker-end="url(#arrow-ag)"/>
+
+                  <!-- 2. Action -->
+                  <rect x="370" y="20" width="150" height="54" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.6"/>
+                  <text x="445" y="44" font-size="12" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">2. Action (Tool)</text>
+                  <text x="445" y="61" font-size="11" fill="#7e22ce" text-anchor="middle" font-family="-apple-system, sans-serif">Search / SQL / Code</text>
+
+                  <line x1="445" y1="74" x2="445" y2="132" stroke="#0066cc" stroke-width="1.8" marker-end="url(#arrow-ag)"/>
+
+                  <!-- 3. Observation -->
+                  <rect x="370" y="136" width="150" height="54" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.6"/>
+                  <text x="445" y="160" font-size="12" font-weight="700" fill="#92400e" text-anchor="middle" font-family="-apple-system, sans-serif">3. Observation</text>
+                  <text x="445" y="177" font-size="11" fill="#b45309" text-anchor="middle" font-family="-apple-system, sans-serif">Append tool output</text>
+
+                  <!-- Loop back to Thought -->
+                  <line x1="370" y1="163" x2="252" y2="136" stroke="#0066cc" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#arrow-ag)"/>
+
+                  <!-- Exit to Final Answer -->
+                  <line x1="325" y1="104" x2="555" y2="104" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow-ag)"/>
+                  <rect x="560" y="75" width="120" height="58" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+                  <text x="620" y="100" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Final Answer</text>
+                  <text x="620" y="118" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">Goal satisfied!</text>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> If Tool Call #1 returns an error or partial info, the Agent sees that in the <strong>Observation</strong> step and can try a different tool on the next iteration.</figcaption>
+            </figure>
+
+            <h3>Step-by-Step Code: Multi-Step ReAct Agent Loop</h3>
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">react_agent_loop.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>from langchain_core.tools import tool
+from langchain_core.messages import HumanMessage, ToolMessage
+from langchain_groq import ChatGroq
+
+@tool
+def lookup_order_total(order_id: str) -> float:
+    """Return the USD order total for an order ID."""
+    return {"ORD-101": 250.0, "ORD-102": 80.0}.get(order_id, 0.0)
+
+@tool
+def calculate_refund_fee(amount: float) -> float:
+    """Calculate the 5 percent restocking fee for a given USD amount."""
+    return round(amount * 0.05, 2)
+
+tools = {"lookup_order_total": lookup_order_total, "calculate_refund_fee": calculate_refund_fee}
+llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0).bind_tools(list(tools.values()))
+
+# Run the Autonomous Agent Loop (up to 5 reasoning steps)
+messages = [HumanMessage(content="Find the total for ORD-101 and compute its restocking fee.")]
+for step in range(5):
+    ai_msg = llm.invoke(messages)
+    messages.append(ai_msg)
+    if not ai_msg.tool_calls:          # Goal reached -> exit loop!
+        print("Agent Final Answer:", ai_msg.content)
+        break
+    for call in ai_msg.tool_calls:     # Execute requested tool & feed Observation back
+        obs = tools[call["name"]].invoke(call["args"])
+        print(f"Step {step+1} | Tool {call['name']}({call['args']}) -> {obs}")
+        messages.append(ToolMessage(content=str(obs), tool_call_id=call["id"]))</code></pre>
+            </div>
+            <p><strong>What to notice:</strong> The agent automatically calls `lookup_order_total("ORD-101")` on Step 1, observes `250.0`, calls `calculate_refund_fee(250.0)` on Step 2, observes `12.5`, and then writes the final answer.</p>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 4: MODEL CONTEXT PROTOCOL (MCP)    -->
+          <!-- ========================================== -->
+          <section id="mcp-protocol">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">Pillar 5: MCP</span>
+              <span class="badge badge-regression">Universal Agent Standard</span>
+            </div>
+            <h2>4. Model Context Protocol (MCP)</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p><strong>MCP (Model Context Protocol)</strong> is the "USB-C port for AI Agents": an open JSON-RPC 2.0 standard that lets any AI application (**Host/Client**) plug into any external tool or data source (**MCP Server**) without custom glue code.</p>
+            </div>
+
+            <!-- Figure 4.1: MCP Triad -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 4.1</span>
+                <span class="figure-title">MCP Architecture: Host &rarr; Client &harr; JSON-RPC 2.0 &harr; FastMCP Server</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 720 250" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MCP Host containing LLM and MCP Client connected via JSON-RPC 2.0 over Stdio or Streamable HTTP to MCP Server exposing Tools, Resources, and Prompts">
+                  <defs>
+                    <marker id="arrow-mcp" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7"/>
+                    </marker>
+                  </defs>
+                  <!-- Host -->
+                  <rect x="20" y="15" width="290" height="215" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+                  <text x="35" y="40" font-size="12" font-weight="700" fill="#0f172a" font-family="-apple-system, sans-serif">1. MCP HOST (IDE / Agent App)</text>
+
+                  <rect x="38" y="55" width="254" height="65" rx="6" fill="#eff6ff" stroke="#2563eb"/>
+                  <text x="165" y="80" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">LLM Reasoning Engine</text>
+                  <text x="165" y="100" font-size="11" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">Decides which tool to invoke</text>
+
+                  <rect x="38" y="135" width="254" height="75" rx="6" fill="#f0fdf4" stroke="#16a34a"/>
+                  <text x="165" y="162" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">2. MCP CLIENT</text>
+                  <text x="165" y="182" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">1:1 Session with Server</text>
+
+                  <!-- Transport -->
+                  <line x1="292" y1="172" x2="415" y2="172" stroke="#0284c7" stroke-width="2.2" marker-start="url(#arrow-mcp)" marker-end="url(#arrow-mcp)"/>
+                  <rect x="312" y="135" width="85" height="26" rx="4" fill="#e0f2fe" stroke="#38bdf8"/>
+                  <text x="354" y="152" font-size="11" font-weight="700" fill="#0369a1" text-anchor="middle" font-family="-apple-system, sans-serif">JSON-RPC</text>
+                  <text x="354" y="195" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">Stdio / HTTP</text>
+
+                  <!-- Server -->
+                  <rect x="420" y="15" width="280" height="215" rx="8" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+                  <text x="435" y="40" font-size="12" font-weight="700" fill="#6b21a8" font-family="-apple-system, sans-serif">3. MCP SERVER (FastMCP)</text>
+
+                  <rect x="438" y="55" width="244" height="46" rx="5" fill="#ffffff" stroke="#c084fc"/>
+                  <text x="450" y="75" font-size="11" font-weight="700" fill="#6b21a8" font-family="-apple-system, sans-serif">Tools (@mcp.tool)</text>
+                  <text x="450" y="92" font-size="11" fill="#7e22ce" font-family="-apple-system, sans-serif">Actions (SQL queries, API calls)</text>
+
+                  <rect x="438" y="110" width="244" height="46" rx="5" fill="#ffffff" stroke="#c084fc"/>
+                  <text x="450" y="130" font-size="11" font-weight="700" fill="#6b21a8" font-family="-apple-system, sans-serif">Resources (@mcp.resource)</text>
+                  <text x="450" y="147" font-size="11" fill="#7e22ce" text-anchor="middle" font-family="-apple-system, sans-serif"></text>
+                  <text x="450" y="147" font-size="11" fill="#7e22ce" font-family="-apple-system, sans-serif">Read-only schemas, files &amp; logs</text>
+
+                  <rect x="438" y="165" width="244" height="46" rx="5" fill="#ffffff" stroke="#c084fc"/>
+                  <text x="450" y="185" font-size="11" font-weight="700" fill="#6b21a8" font-family="-apple-system, sans-serif">Prompts (@mcp.prompt)</text>
+                  <text x="450" y="202" font-size="11" fill="#7e22ce" font-family="-apple-system, sans-serif">Reusable prompt templates</text>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Write an MCP Server once (over `stdio` locally or `Streamable HTTP` remotely), and every MCP-compatible agent (Claude Desktop, Cursor, custom Python agents) can discover and call its tools automatically.</figcaption>
+            </figure>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 5: FASTMCP SERVER & CLIENT CODE    -->
+          <!-- ========================================== -->
+          <section id="mcp-code">
+            <h2>5. Step-by-Step: Build a FastMCP Server &amp; Client</h2>
+
+            <div class="code-container" data-lang="bash">
+              <div class="code-header">
+                <span class="code-filename">terminal</span>
+                <span class="code-lang-tag">Bash</span>
+              </div>
+              <pre><code>pip install mcp groq</code></pre>
+            </div>
+
+            <h3>Step 5A: The MCP Server (`server.py`)</h3>
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">server.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>from mcp.server.fastmcp import FastMCP
+
+# 1. Create the FastMCP server
+mcp = FastMCP("Customer-DB-Server")
+
+# 2. Register a read-only Resource
+@mcp.resource("schema://customers")
+def get_schema() -> str:
+    """Return the SQL schema for the customers table."""
+    return "CREATE TABLE customers (id INT PRIMARY KEY, name TEXT, tier TEXT);"
+
+# 3. Register an executable Tool
+@mcp.tool()
+def get_customer_tier(customer_id: int) -> dict:
+    """Look up a customer's tier and YTD spend by integer ID."""
+    db = {101: {"name": "Acme Corp", "tier": "Enterprise", "spend_usd": 48500}}
+    return db.get(customer_id, {"error": "Not found"})
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")</code></pre>
+            </div>
+
+            <h3>Step 5B: The MCP Client Agent (`client_agent.py`)</h3>
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">client_agent.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import asyncio
+import json
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+from groq import Groq
+
+async def main():
+    params = StdioServerParameters(command="python3", args=["server.py"])
+    async with stdio_client(params) as (read, write):
+        async with ClientSession(read, write) as session:
+            # 1. Initialize handshake & discover tools from MCP Server
+            await session.initialize()
+            mcp_tools = (await session.list_tools()).tools
+            llm_tools = [{
+                "type": "function",
+                "function": {"name": t.name, "description": t.description, "parameters": t.inputSchema}
+            } for t in mcp_tools]
+
+            # 2. Ask LLM using discovered MCP tools
+            groq = Groq()
+            messages = [{"role": "user", "content": "What tier is customer 101?"}]
+            res = groq.chat.completions.create(
+                model="llama-3.3-70b-versatile", messages=messages, tools=llm_tools
+            )
+            msg = res.choices[0].message
+
+            # 3. Execute tool over MCP protocol & return final answer
+            if msg.tool_calls:
+                call = msg.tool_calls[0]
+                out = await session.call_tool(call.function.name, json.loads(call.function.arguments))
+                messages.append(msg)
+                messages.append({"role": "tool", "tool_call_id": call.id, "content": out.content[0].text})
+                final = groq.chat.completions.create(model="llama-3.3-70b-versatile", messages=messages)
+                print(final.choices[0].message.content)
+
+asyncio.run(main())</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 6: COMPLETE 5-PILLAR MATRIX        -->
+          <!-- ========================================== -->
+          <section id="summary">
+            <h2>6. Complete 5-Pillar GenAI Architecture Matrix</h2>
+            <p>Here is how all five pillars—<strong>[LLM, Vector Storage, RAG, Agents, MCP]</strong>—fit together in a production system:</p>
+
+            <div class="table-wrapper wide-breakout">
+              <table>
+                <thead>
+                  <tr>
+                    <th>GenAI Pillar</th>
+                    <th>Core Responsibility</th>
+                    <th>When You Need It</th>
+                    <th>Module Link</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>1. LLM</strong></td>
+                    <td>Reasoning, summarization, and token generation</td>
+                    <td>Every generative AI task (the core engine)</td>
+                    <td><a href="genai.html#llm-mechanics">Module 5 &sect;1–3</a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Vector Storage</strong></td>
+                    <td>Storing embeddings for semantic similarity search</td>
+                    <td>Searching across thousands of docs by meaning</td>
+                    <td><a href="genai.html#vector-storage">Module 5 &sect;4</a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. RAG</strong></td>
+                    <td>Grounding LLM answers in retrieved Vector DB chunks</td>
+                    <td>Answering questions over private or changing data</td>
+                    <td><a href="genai.html#rag-pipeline">Module 5 &sect;5</a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Agents</strong></td>
+                    <td>Multi-step ReAct loops that plan and call tools</td>
+                    <td>Tasks requiring dynamic multi-step actions</td>
+                    <td><a href="#autonomous-agents">Module 6 &sect;3</a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>5. MCP</strong></td>
+                    <td>Universal protocol connecting Clients to Tool/Data Servers</td>
+                    <td>Sharing tools cleanly across IDEs, apps, and agents</td>
+                    <td><a href="#mcp-protocol">Module 6 &sect;4–5</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Prev / Next Navigation -->
+          <nav class="page-nav" aria-label="Curriculum Pagination">
+            <a class="prev" href="genai.html">
+              <span class="page-nav-label">&larr; Previous Module (GenAI Part 1)</span>
+              <span class="page-nav-title">5. LLMs, Vector Storage &amp; RAG</span>
+            </a>
+            <a class="next" href="research.html">
+              <span class="page-nav-label">Next Module &rarr;</span>
+              <span class="page-nav-title">7. Frontier Research: JEPA, Mamba, MoE &amp; Test-Time Compute</span>
+            </a>
+          </nav>
+
+          <footer class="article-footer">
+            <p>AI Engineering Curriculum &bull; Module 6: LangChain, Agents &amp; MCP</p>
+          </footer>
+
+        </article>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

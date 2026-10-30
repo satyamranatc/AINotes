@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4. OpenCV &amp; Computer Vision — AI Engineering Curriculum</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body>
+  <!-- Top Global Navigation Bar -->
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <a href="index.html" class="top-nav-brand">AI Engineering Curriculum</a>
+      <ul class="top-nav-links">
+        <li><a href="index.html" class="nav-pill">1. ML</a></li>
+        <li><a href="dl.html" class="nav-pill">2. Deep Learning &amp; FNN</a></li>
+        <li><a href="nlp.html" class="nav-pill">3. NLP</a></li>
+        <li><a href="cv.html" class="nav-pill active">4. OpenCV &amp; Vision</a></li>
+        <li><a href="genai.html" class="nav-pill">5. LLMs &amp; RAG</a></li>
+        <li><a href="agents.html" class="nav-pill">6. Agents &amp; MCP</a></li>
+        <li><a href="research.html" class="nav-pill">7. JEPA &amp; Research</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="site-wrapper">
+    <div class="site-container">
+      
+      <!-- Table of Contents Sidebar -->
+      <aside class="toc-sidebar">
+        <nav class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li class="toc-group-label">Image Foundations</li>
+            <li class="toc-item"><a href="#image-tensors">1. Images as Tensors &amp; Color Spaces</a></li>
+            <li class="toc-item"><a href="#convolution-kernels">2. Spatial Filtering &amp; 2D Convolution</a></li>
+            <li class="toc-group-label">OpenCV Core Pipeline</li>
+            <li class="toc-item"><a href="#edges-contours">3. Thresholding, Canny Edges &amp; Contours</a></li>
+            <li class="toc-item"><a href="#opencv-code">4. Step-by-Step OpenCV Python Pipeline</a></li>
+            <li class="toc-group-label">Deep Vision</li>
+            <li class="toc-item"><a href="#cnn-vit">5. From OpenCV Kernels to CNNs &amp; ViT</a></li>
+            <li class="toc-item"><a href="#summary">6. Cheat Sheet</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Article Stream -->
+      <main class="main-content">
+        <article>
+          
+          <!-- Article Header -->
+          <header class="article-header">
+            <div class="article-category">Module 4 &middot; Computer Vision &amp; Image Processing</div>
+            <h1 class="article-title">OpenCV &amp; Computer Vision: Pixels, Kernels, Edges &amp; CNNs</h1>
+            <p class="article-subtitle">Understand how computers see images as 3D NumPy arrays, how sliding kernels blur noise or sharpen edges in OpenCV, and how Convolutional Neural Networks (CNNs) learn those kernels automatically.</p>
+            <div class="article-meta">
+              <span>Level: Beginner &rarr; Intermediate</span>
+              <span class="meta-divider">&bull;</span>
+              <span>3 Visual Diagrams</span>
+              <span class="meta-divider">&bull;</span>
+              <span>Reading Time: 14 min</span>
+            </div>
+          </header>
+
+          <div class="learn-grid">
+            <div class="learn-box">
+              <h4>What You'll Learn</h4>
+              <ul>
+                <li>How digital images are stored as $(H, W, C)$ NumPy arrays—and why OpenCV loads them in <strong>BGR</strong> order instead of RGB.</li>
+                <li>How a $3 \times 3$ <strong>Convolution Kernel</strong> slides across pixels to blur noise or highlight edges.</li>
+                <li>How the <strong>Canny Edge Detector</strong> and <strong>Contours</strong> isolate objects in real time.</li>
+                <li>How <strong>CNNs</strong> and <strong>Vision Transformers (ViT)</strong> build on classical OpenCV operations.</li>
+              </ul>
+            </div>
+            <div class="learn-box">
+              <h4>Before You Start</h4>
+              <ul>
+                <li>Basic Python and NumPy arrays.</li>
+                <li>Element-wise multiplication and addition.</li>
+              </ul>
+            </div>
+          </div>
+
+          <ol class="roadmap">
+            <li><a href="#image-tensors">
+              <span class="roadmap-step">Step 1</span>
+              <span class="roadmap-title">Image Tensors</span>
+              <span class="roadmap-desc">Height &times; Width &times; Channels (BGR/RGB/HSV)</span>
+            </a></li>
+            <li><a href="#convolution-kernels">
+              <span class="roadmap-step">Step 2</span>
+              <span class="roadmap-title">2D Convolution</span>
+              <span class="roadmap-desc">Slide a 3&times;3 filter across the image</span>
+            </a></li>
+            <li><a href="#edges-contours">
+              <span class="roadmap-step">Step 3</span>
+              <span class="roadmap-title">Canny &amp; Contours</span>
+              <span class="roadmap-desc">Detect sharp boundaries and object shapes</span>
+            </a></li>
+            <li><a href="#opencv-code">
+              <span class="roadmap-step">Step 4</span>
+              <span class="roadmap-title">OpenCV Code</span>
+              <span class="roadmap-desc">Complete cv2 inspection &amp; edge pipeline</span>
+            </a></li>
+          </ol>
+
+          <!-- ========================================== -->
+          <!-- SECTION 1: IMAGES AS TENSORS               -->
+          <!-- ========================================== -->
+          <section id="image-tensors">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Representation</span>
+              <span class="badge badge-neutral">NumPy Arrays</span>
+            </div>
+            <h2>1. Images as Tensors &amp; Color Spaces (BGR vs. RGB vs. HSV)</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>To a computer, an image is just a 3D grid of numbers shaped $(\text{Height}, \text{Width}, \text{Channels})$ where each number ranges from $0$ (black) to $255$ (bright).</p>
+            </div>
+
+            <!-- Figure 1.1: Image Tensor -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 1.1</span>
+                <span class="figure-title">An Image is a 3D Tensor: Height (H) &times; Width (W) &times; 3 Color Channels</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 680 220" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pixel grid 0 to 255 and stacked Blue Green Red channel planes">
+                  <!-- Left: Grayscale Grid -->
+                  <g transform="translate(35, 25)">
+                    <text x="80" y="0" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">1. Grayscale (H &times; W)</text>
+                    <rect x="10" y="15" width="45" height="45" fill="#1e293b" stroke="#cbd5e1" /><text x="32" y="42" font-size="11" fill="#ffffff" text-anchor="middle" font-family="SF Mono, monospace">12</text>
+                    <rect x="55" y="15" width="45" height="45" fill="#64748b" stroke="#cbd5e1" /><text x="77" y="42" font-size="11" fill="#ffffff" text-anchor="middle" font-family="SF Mono, monospace">118</text>
+                    <rect x="100" y="15" width="45" height="45" fill="#f1f5f9" stroke="#cbd5e1" /><text x="122" y="42" font-size="11" fill="#0f172a" text-anchor="middle" font-family="SF Mono, monospace">245</text>
+
+                    <rect x="10" y="60" width="45" height="45" fill="#475569" stroke="#cbd5e1" /><text x="32" y="87" font-size="11" fill="#ffffff" text-anchor="middle" font-family="SF Mono, monospace">80</text>
+                    <rect x="55" y="60" width="45" height="45" fill="#cbd5e1" stroke="#94a3b8" /><text x="77" y="87" font-size="11" fill="#0f172a" text-anchor="middle" font-family="SF Mono, monospace">204</text>
+                    <rect x="100" y="60" width="45" height="45" fill="#ffffff" stroke="#cbd5e1" /><text x="122" y="87" font-size="11" fill="#0f172a" text-anchor="middle" font-family="SF Mono, monospace">255</text>
+
+                    <rect x="10" y="105" width="45" height="45" fill="#0f172a" stroke="#cbd5e1" /><text x="32" y="132" font-size="11" fill="#ffffff" text-anchor="middle" font-family="SF Mono, monospace">0</text>
+                    <rect x="55" y="105" width="45" height="45" fill="#94a3b8" stroke="#cbd5e1" /><text x="77" y="132" font-size="11" fill="#0f172a" text-anchor="middle" font-family="SF Mono, monospace">160</text>
+                    <rect x="100" y="105" width="45" height="45" fill="#e2e8f0" stroke="#cbd5e1" /><text x="122" y="132" font-size="11" fill="#0f172a" text-anchor="middle" font-family="SF Mono, monospace">230</text>
+                    <text x="80" y="172" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">uint8 values: 0 (Black) &ndash; 255 (White)</text>
+                  </g>
+
+                  <!-- Right: Stacked BGR Channels -->
+                  <g transform="translate(330, 25)">
+                    <text x="150" y="0" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">2. Color Image (H &times; W &times; 3 Channels)</text>
+                    <rect x="110" y="20" width="120" height="95" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.8" />
+                    <text x="200" y="42" font-size="11" font-weight="700" fill="#dc2626" font-family="-apple-system, sans-serif">Red Channel</text>
+
+                    <rect x="80" y="42" width="120" height="95" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8" />
+                    <text x="165" y="64" font-size="11" font-weight="700" fill="#166534" font-family="-apple-system, sans-serif">Green Channel</text>
+
+                    <rect x="50" y="64" width="120" height="95" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8" />
+                    <text x="110" y="115" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Blue Channel</text>
+                    <text x="150" y="180" font-size="11" font-weight="600" fill="#dc2626" text-anchor="middle" font-family="-apple-system, sans-serif">OpenCV Default Order: [Blue, Green, Red]</text>
+                  </g>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Calling `cv2.imread("photo.jpg")` returns a NumPy array of shape `(H, W, 3)` in <strong>BGR</strong> order. Always convert with `cv2.cvtColor(img, cv2.COLOR_BGR2RGB)` before displaying in Matplotlib or passing to PyTorch.</figcaption>
+            </figure>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Color Space</th>
+                    <th>OpenCV Conversion Flag</th>
+                    <th>When to Use It</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>BGR / RGB</strong></td>
+                    <td><code>cv2.COLOR_BGR2RGB</code></td>
+                    <td>Standard display, web images, and deep learning models.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Grayscale (1 channel)</strong></td>
+                    <td><code>cv2.COLOR_BGR2GRAY</code></td>
+                    <td>Edge detection, thresholding, and barcode/document scanning ($3\times$ faster).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>HSV (Hue, Saturation, Value)</strong></td>
+                    <td><code>cv2.COLOR_BGR2HSV</code></td>
+                    <td>Color tracking under changing lighting (Hue isolates pure color regardless of shadows).</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 2: 2D CONVOLUTION & KERNELS        -->
+          <!-- ========================================== -->
+          <section id="convolution-kernels">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Core Operator</span>
+              <span class="badge badge-neutral">Sliding Window</span>
+            </div>
+            <h2>2. Spatial Filtering &amp; 2D Convolution</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>A <strong>2D Convolution</strong> slides a small grid of weights (a <strong>kernel</strong>, usually $3 \times 3$) across every pixel, multiplying overlapping numbers and adding them up to create a filtered output pixel.</p>
+            </div>
+
+            <!-- Figure 2.1: 2D Convolution -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 2.1</span>
+                <span class="figure-title">2D Convolution: 3&times;3 Kernel Multiplies a Patch and Sums to One Output Pixel</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 680 210" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3x3 patch in input image multiplied element-wise by 3x3 Sobel kernel to produce single output value">
+                  <!-- Input Patch -->
+                  <g transform="translate(45, 30)">
+                    <text x="60" y="-8" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Input Patch (3&times;3)</text>
+                    <rect x="0" y="0" width="120" height="120" fill="#eff6ff" stroke="#2563eb" stroke-width="2" />
+                    <line x1="40" y1="0" x2="40" y2="120" stroke="#93c5fd" /><line x1="80" y1="0" x2="80" y2="120" stroke="#93c5fd" />
+                    <line x1="0" y1="40" x2="120" y2="40" stroke="#93c5fd" /><line x1="0" y1="80" x2="120" y2="80" stroke="#93c5fd" />
+                    <text x="20" y="25" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">10</text><text x="60" y="25" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">10</text><text x="100" y="25" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">80</text>
+                    <text x="20" y="65" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">10</text><text x="60" y="65" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">10</text><text x="100" y="65" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">80</text>
+                    <text x="20" y="105" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">10</text><text x="60" y="105" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">10</text><text x="100" y="105" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">80</text>
+                  </g>
+
+                  <text x="210" y="95" font-size="18" font-weight="700" fill="#475569" text-anchor="middle">&lowast;</text>
+
+                  <!-- Kernel -->
+                  <g transform="translate(255, 30)">
+                    <text x="60" y="-8" font-size="12" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Vertical Edge Kernel</text>
+                    <rect x="0" y="0" width="120" height="120" fill="#faf5ff" stroke="#a855f7" stroke-width="2" />
+                    <line x1="40" y1="0" x2="40" y2="120" stroke="#d8b4fe" /><line x1="80" y1="0" x2="80" y2="120" stroke="#d8b4fe" />
+                    <line x1="0" y1="40" x2="120" y2="40" stroke="#d8b4fe" /><line x1="0" y1="80" x2="120" y2="80" stroke="#d8b4fe" />
+                    <text x="20" y="25" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">-1</text><text x="60" y="25" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">0</text><text x="100" y="25" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">+1</text>
+                    <text x="20" y="65" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">-1</text><text x="60" y="65" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">0</text><text x="100" y="65" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">+1</text>
+                    <text x="20" y="105" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">-1</text><text x="60" y="105" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">0</text><text x="100" y="105" font-size="12" text-anchor="middle" font-family="SF Mono, monospace">+1</text>
+                  </g>
+
+                  <text x="420" y="95" font-size="18" font-weight="700" fill="#475569" text-anchor="middle">=</text>
+
+                  <!-- Output -->
+                  <g transform="translate(460, 50)">
+                    <rect x="0" y="0" width="180" height="80" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" />
+                    <text x="90" y="30" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Output Pixel = +210</text>
+                    <text x="90" y="50" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">(80&minus;10) &times; 3 = 210</text>
+                    <text x="90" y="68" font-size="11" font-weight="600" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Strong Vertical Edge!</text>
+                  </g>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Because the left column of the kernel is $-1$ and the right column is $+1$, flat regions cancel out to $0$, while a jump from $10$ to $80$ produces a bright $+210$ edge response.</figcaption>
+            </figure>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 3: CANNY EDGES & CONTOURS          -->
+          <!-- ========================================== -->
+          <section id="edges-contours">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">Classical Vision</span>
+              <span class="badge badge-neutral">Feature Extraction</span>
+            </div>
+            <h2>3. Thresholding, Canny Edge Detection &amp; Contours</h2>
+
+            <ol class="steps">
+              <li><strong>Gaussian Blur (<code>cv2.GaussianBlur</code>).</strong> Smooth out sensor speckle noise first so tiny speckles aren't mistaken for edges.</li>
+              <li><strong>Sobel Gradients.</strong> Measure horizontal ($G_x$) and vertical ($G_y$) brightness jumps at every pixel.</li>
+              <li><strong>Non-Maximum Suppression &amp; Hysteresis (<code>cv2.Canny</code>).</strong> Thin wide blurry edges down to 1-pixel ridges and keep weak edges only if they touch strong edges.</li>
+              <li><strong>Find Contours (<code>cv2.findContours</code>).</strong> Link connected edge pixels into closed polygons so you can measure area, bounding boxes, and object counts.</li>
+            </ol>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 4: OPENCV CODE                     -->
+          <!-- ========================================== -->
+          <section id="opencv-code">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Hands-On Code</span>
+              <span class="badge badge-neutral">opencv-python</span>
+            </div>
+            <h2>4. Step-by-Step OpenCV Pipeline in Python</h2>
+
+            <div class="code-container" data-lang="bash">
+              <div class="code-header">
+                <span class="code-filename">terminal</span>
+                <span class="code-lang-tag">Bash</span>
+              </div>
+              <pre><code>pip install opencv-python numpy</code></pre>
+            </div>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">opencv_vision_pipeline.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import cv2
+import numpy as np
+
+# 1. Create a synthetic 200x200 image with a bright rectangle & circle
+img = np.zeros((200, 200, 3), dtype=np.uint8)
+cv2.rectangle(img, (30, 40), (110, 150), (255, 180, 50), -1)
+cv2.circle(img, (155, 100), 30, (50, 220, 100), -1)
+
+# 2. Convert BGR -> Grayscale and apply Gaussian Blur to remove noise
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+blurred = cv2.GaussianBlur(gray, (5, 5), sigmaX=1.0)
+
+# 3. Run Canny Edge Detection (low=50, high=150 threshold)
+edges = cv2.Canny(blurred, threshold1=50, threshold2=150)
+
+# 4. Find object contours and print bounding boxes
+contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+print(f"Detected {len(contours)} objects:")
+for i, cnt in enumerate(contours, 1):
+    x, y, w, h = cv2.boundingRect(cnt)
+    print(f" - Object {i}: Box=(x={x}, y={y}, w={w}, h={h}), Area={cv2.contourArea(cnt):.0f}px")</code></pre>
+            </div>
+            <p><strong>What to notice:</strong> This exact 4-step sequence (`cvtColor` &rarr; `GaussianBlur` &rarr; `Canny` &rarr; `findContours`) is the workhorse of industrial inspection, document scanners, and robotics.</p>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 5: FROM OPENCV TO CNN & VIT        -->
+          <!-- ========================================== -->
+          <section id="cnn-vit">
+            <h2>5. From Hand-Crafted Kernels to CNNs &amp; Vision Transformers (ViT)</h2>
+            <p>
+              In classical OpenCV, a human engineer picks the $3 \times 3$ kernel numbers by hand (like the Sobel edge filter). In a <strong>Convolutional Neural Network (CNN)</strong>, the network starts with random $3 \times 3$ kernels and learns the best filter numbers automatically via backpropagation!
+            </p>
+
+            <!-- Figure 5.1: CNN Hierarchy -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 5.1</span>
+                <span class="figure-title">Visual Hierarchy: Early Layers Learn Edges, Deep Layers Learn Whole Objects</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 680 150" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Progression from Raw Pixels to Edges to Textures/Parts to Object Classification">
+                  <defs>
+                    <marker id="arrow-cv" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+                    </marker>
+                  </defs>
+                  <rect x="20" y="35" width="130" height="75" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.5" />
+                  <text x="85" y="65" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Raw Image</text>
+                  <text x="85" y="85" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">(H &times; W &times; 3)</text>
+
+                  <line x1="150" y1="72" x2="185" y2="72" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow-cv)" />
+
+                  <rect x="190" y="35" width="135" height="75" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" />
+                  <text x="257" y="65" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Layer 1: Edges</text>
+                  <text x="257" y="85" font-size="11" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">Lines &amp; Gradients</text>
+
+                  <line x1="325" y1="72" x2="360" y2="72" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow-cv)" />
+
+                  <rect x="365" y="35" width="135" height="75" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5" />
+                  <text x="432" y="65" font-size="12" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Mid Layers: Parts</text>
+                  <text x="432" y="85" font-size="11" fill="#7e22ce" text-anchor="middle" font-family="-apple-system, sans-serif">Wheels, Eyes, Corners</text>
+
+                  <line x1="500" y1="72" x2="535" y2="72" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow-cv)" />
+
+                  <rect x="540" y="35" width="120" height="75" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
+                  <text x="600" y="65" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Final Layer</text>
+                  <text x="600" y="85" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">Object Class / Box</text>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Modern <strong>Vision Transformers (ViT)</strong> go one step further: they slice an image into $16 \times 16$ pixel patches, treat each patch like a word token, and run standard Transformer Self-Attention across the image.</figcaption>
+            </figure>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 6: CHEAT SHEET                     -->
+          <!-- ========================================== -->
+          <section id="summary">
+            <h2>6. Cheat Sheet</h2>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>OpenCV Function</th>
+                    <th>What It Does</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>cv2.imread(path)</code></td>
+                    <td>Loads image as `(H, W, 3)` uint8 NumPy array in <strong>BGR</strong> order.</td>
+                  </tr>
+                  <tr>
+                    <td><code>cv2.cvtColor(img, flag)</code></td>
+                    <td>Converts between BGR, RGB, Grayscale, and HSV.</td>
+                  </tr>
+                  <tr>
+                    <td><code>cv2.GaussianBlur(img, (k,k), s)</code></td>
+                    <td>Smooths high-frequency noise using a Gaussian kernel.</td>
+                  </tr>
+                  <tr>
+                    <td><code>cv2.Canny(gray, t1, t2)</code></td>
+                    <td>Extracts crisp 1-pixel-wide binary edges.</td>
+                  </tr>
+                  <tr>
+                    <td><code>cv2.findContours(edges, ...)</code></td>
+                    <td>Finds closed object boundaries for area and bounding-box measurement.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Prev / Next Navigation -->
+          <nav class="page-nav" aria-label="Curriculum Pagination">
+            <a class="prev" href="nlp.html">
+              <span class="page-nav-label">&larr; Previous Module</span>
+              <span class="page-nav-title">3. Natural Language Processing (NLP)</span>
+            </a>
+            <a class="next" href="genai.html">
+              <span class="page-nav-label">Next Module &rarr;</span>
+              <span class="page-nav-title">5. LLMs, Vector Storage &amp; RAG (GenAI Part 1)</span>
+            </a>
+          </nav>
+
+          <footer class="article-footer">
+            <p>AI Engineering Curriculum &bull; Module 4: OpenCV &amp; Computer Vision</p>
+          </footer>
+
+        </article>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

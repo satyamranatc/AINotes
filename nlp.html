@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3. Natural Language Processing (NLP) — AI Engineering Curriculum</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body>
+  <!-- Top Global Navigation Bar -->
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <a href="index.html" class="top-nav-brand">AI Engineering Curriculum</a>
+      <ul class="top-nav-links">
+        <li><a href="index.html" class="nav-pill">1. ML</a></li>
+        <li><a href="dl.html" class="nav-pill">2. Deep Learning &amp; FNN</a></li>
+        <li><a href="nlp.html" class="nav-pill active">3. NLP</a></li>
+        <li><a href="cv.html" class="nav-pill">4. OpenCV &amp; Vision</a></li>
+        <li><a href="genai.html" class="nav-pill">5. LLMs &amp; RAG</a></li>
+        <li><a href="agents.html" class="nav-pill">6. Agents &amp; MCP</a></li>
+        <li><a href="research.html" class="nav-pill">7. JEPA &amp; Research</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="site-wrapper">
+    <div class="site-container">
+      
+      <!-- Table of Contents Sidebar -->
+      <aside class="toc-sidebar">
+        <nav class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li class="toc-group-label">Text to Numbers</li>
+            <li class="toc-item"><a href="#tokenization">1. Text Normalization &amp; Tokenization</a></li>
+            <li class="toc-item"><a href="#tfidf-sparse">2. Bag-of-Words &amp; TF-IDF</a></li>
+            <li class="toc-item"><a href="#word-embeddings">3. Dense Embeddings &amp; Cosine Similarity</a></li>
+            <li class="toc-group-label">Sequence &amp; Attention</li>
+            <li class="toc-item"><a href="#self-attention">4. Self-Attention (Q, K, V) &amp; Transformers</a></li>
+            <li class="toc-group-label">Hands-On Code</li>
+            <li class="toc-item"><a href="#nlp-code">5. NLP Pipeline in Python</a></li>
+            <li class="toc-item"><a href="#summary">6. Cheat Sheet</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Article Stream -->
+      <main class="main-content">
+        <article>
+          
+          <!-- Article Header -->
+          <header class="article-header">
+            <div class="article-category">Module 3 &middot; Natural Language Processing</div>
+            <h1 class="article-title">Natural Language Processing: From Tokens to Transformers</h1>
+            <p class="article-subtitle">How machines turn human language into numbers, measure meaning in vector space, and use Self-Attention ($Q, K, V$) to understand context across whole documents.</p>
+            <div class="article-meta">
+              <span>Level: Beginner &rarr; Intermediate</span>
+              <span class="meta-divider">&bull;</span>
+              <span>3 Visual Diagrams</span>
+              <span class="meta-divider">&bull;</span>
+              <span>Reading Time: 14 min</span>
+            </div>
+          </header>
+
+          <div class="learn-grid">
+            <div class="learn-box">
+              <h4>What You'll Learn</h4>
+              <ul>
+                <li>How <strong>Subword Tokenization (BPE)</strong> splits text into token IDs without ever failing on unknown words.</li>
+                <li>Why <strong>TF-IDF</strong> beats simple word counts for keyword search.</li>
+                <li>How <strong>Dense Embeddings</strong> place similar meanings close together in vector space.</li>
+                <li>How <strong>Scaled Dot-Product Self-Attention</strong> resolves ambiguous words like "bank" or "it".</li>
+              </ul>
+            </div>
+            <div class="learn-box">
+              <h4>Before You Start</h4>
+              <ul>
+                <li>Dot product of two vectors ($\mathbf{a} \cdot \mathbf{b}$).</li>
+                <li>Basic FNN concepts from <a href="dl.html">Module 2</a>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <ol class="roadmap">
+            <li><a href="#tokenization">
+              <span class="roadmap-step">Step 1</span>
+              <span class="roadmap-title">Tokenization</span>
+              <span class="roadmap-desc">Break raw text into subword chunks &amp; IDs</span>
+            </a></li>
+            <li><a href="#tfidf-sparse">
+              <span class="roadmap-step">Step 2</span>
+              <span class="roadmap-title">TF-IDF</span>
+              <span class="roadmap-desc">Reward rare, informative keywords</span>
+            </a></li>
+            <li><a href="#word-embeddings">
+              <span class="roadmap-step">Step 3</span>
+              <span class="roadmap-title">Embeddings</span>
+              <span class="roadmap-desc">Map meaning into dense geometric vectors</span>
+            </a></li>
+            <li><a href="#self-attention">
+              <span class="roadmap-step">Step 4</span>
+              <span class="roadmap-title">Self-Attention</span>
+              <span class="roadmap-desc">Connect every word to every other word via Q, K, V</span>
+            </a></li>
+          </ol>
+
+          <!-- ========================================== -->
+          <!-- SECTION 1: TOKENIZATION                    -->
+          <!-- ========================================== -->
+          <section id="tokenization">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Step 1</span>
+              <span class="badge badge-neutral">Text &rarr; Token IDs</span>
+            </div>
+            <h2>1. Text Normalization &amp; Subword Tokenization (BPE)</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>Neural networks cannot read letters—a <strong>Tokenizer</strong> chops text into frequent sub-word pieces (tokens) and replaces each piece with its integer ID in a fixed vocabulary.</p>
+            </div>
+
+            <div class="callout callout-analogy">
+              <div class="callout-title">Think of it like this</div>
+              <p>If you memorize whole words only, a new word like <em>"unhappiness"</em> stumps you. If you split by single letters (`u-n-h-a-p...`), every word is tiny and meaningless. <strong>Subword tokenization (Byte-Pair Encoding, BPE)</strong> hits the sweet spot: it keeps common words whole and splits rare words into meaningful LEGO bricks (`"un"`, `"happi"`, `"ness"`).</p>
+            </div>
+
+            <!-- Figure 1.1: Tokenization Pipeline -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 1.1</span>
+                <span class="figure-title">Subword Tokenization (BPE): Raw Sentence &rarr; Subword Chunks &rarr; Integer IDs</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 700 200" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tokenization diagram splitting 'Tokenizing embeddings!' into colored subword tokens and integer IDs">
+                  <rect x="140" y="15" width="420" height="38" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.5" />
+                  <text x="350" y="39" font-size="13" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Raw Input: "unbelievably fast models"</text>
+
+                  <!-- Colored Token Chunks -->
+                  <rect x="65" y="80" width="90" height="44" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" />
+                  <text x="110" y="100" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="SF Mono, monospace">"un"</text>
+                  <text x="110" y="116" font-size="11" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">ID: 403</text>
+
+                  <rect x="170" y="80" width="115" height="44" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
+                  <text x="227" y="100" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="SF Mono, monospace">"believ"</text>
+                  <text x="227" y="116" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">ID: 14820</text>
+
+                  <rect x="300" y="80" width="105" height="44" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5" />
+                  <text x="352" y="100" font-size="12" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="SF Mono, monospace">"ably"</text>
+                  <text x="352" y="116" font-size="11" fill="#7e22ce" text-anchor="middle" font-family="-apple-system, sans-serif">ID: 2891</text>
+
+                  <rect x="420" y="80" width="95" height="44" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" />
+                  <text x="467" y="100" font-size="12" font-weight="700" fill="#92400e" text-anchor="middle" font-family="SF Mono, monospace">" fast"</text>
+                  <text x="467" y="116" font-size="11" fill="#b45309" text-anchor="middle" font-family="-apple-system, sans-serif">ID: 5042</text>
+
+                  <rect x="530" y="80" width="105" height="44" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" />
+                  <text x="582" y="100" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="SF Mono, monospace">" models"</text>
+                  <text x="582" y="116" font-size="11" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">ID: 6219</text>
+
+                  <rect x="170" y="148" width="360" height="34" rx="6" fill="#0f172a" />
+                  <text x="350" y="170" font-size="12" font-weight="600" fill="#e2e8f0" text-anchor="middle" font-family="SF Mono, monospace">Token Tensor: [403, 14820, 2891, 5042, 6219]</text>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Common words (`" fast"`, `" models"`) stay intact as single tokens, while `"unbelievably"` splits into three reusable subword pieces (`"un" + "believ" + "ably"`).</figcaption>
+            </figure>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 2: BAG OF WORDS & TF-IDF           -->
+          <!-- ========================================== -->
+          <section id="tfidf-sparse">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Sparse Vectors</span>
+              <span class="badge badge-neutral">Keyword Representation</span>
+            </div>
+            <h2>2. Bag-of-Words &amp; TF-IDF</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p><strong>TF-IDF</strong> scores how important a word is to a document by boosting words that appear often in <em>this</em> document (TF) while penalizing filler words that appear in <em>every</em> document (IDF).</p>
+            </div>
+
+            <div class="math-card">
+              <div class="math-display">$$\boxed{\text{TF-IDF}(t, d) = \text{TF}(t, d) \times \log\left(\frac{N}{\text{DF}(t)}\right)}$$</div>
+            </div>
+            <p><strong>In words:</strong> multiply how often term $t$ appears in document $d$ by the log of total documents $N$ divided by how many documents contain $t$. If a word like `"the"` is in all $N$ documents, $\log(N/N) = \log(1) = 0$.</p>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 3: DENSE EMBEDDINGS                -->
+          <!-- ========================================== -->
+          <section id="word-embeddings">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">Dense Vectors</span>
+              <span class="badge badge-neutral">Semantic Space</span>
+            </div>
+            <h2>3. Dense Embeddings &amp; Cosine Similarity</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>An <strong>Embedding</strong> turns a word or sentence into a compact list of real numbers (e.g. 384 or 1536 coordinates) so that items with similar meaning point in the same direction.</p>
+            </div>
+
+            <!-- Figure 3.1: Embedding Space -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 3.1</span>
+                <span class="figure-title">Semantic Embedding Space: Meaning Measured by Angle (Cosine Similarity)</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 680 250" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2D projection of embedding vectors showing 'puppy' and 'dog' pointing closely together while 'GPU' points far away">
+                  <defs>
+                    <marker id="arrow-emb" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563eb"/>
+                    </marker>
+                    <marker id="arrow-emb2" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706"/>
+                    </marker>
+                  </defs>
+                  <line x1="90" y1="210" x2="600" y2="210" stroke="#94a3b8" stroke-width="1.5" />
+                  <line x1="90" y1="210" x2="90" y2="25" stroke="#94a3b8" stroke-width="1.5" />
+
+                  <!-- Vector 1: Dog -->
+                  <line x1="90" y1="210" x2="360" y2="60" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-emb)" />
+                  <text x="370" y="58" font-size="12" font-weight="700" fill="#1d4ed8" font-family="-apple-system, sans-serif">"dog" [0.82, 0.55, ...]</text>
+
+                  <!-- Vector 2: Puppy (Small Angle) -->
+                  <line x1="90" y1="210" x2="400" y2="92" stroke="#2563eb" stroke-width="2.4" marker-end="url(#arrow-emb)" />
+                  <text x="410" y="95" font-size="12" font-weight="700" fill="#1d4ed8" font-family="-apple-system, sans-serif">"puppy" [0.86, 0.48, ...]</text>
+
+                  <!-- Small angle arc -->
+                  <path d="M 195 152 A 120 120 0 0 1 206 165" fill="none" stroke="#16a34a" stroke-width="2" />
+                  <text x="245" y="150" font-size="11" font-weight="700" fill="#166534" font-family="-apple-system, sans-serif">Small angle &theta; &rarr; cos(&theta;) &approx; 0.96</text>
+
+                  <!-- Vector 3: Database (Orthogonal/Far) -->
+                  <line x1="90" y1="210" x2="500" y2="195" stroke="#d97706" stroke-width="2.4" marker-end="url(#arrow-emb2)" />
+                  <text x="510" y="198" font-size="12" font-weight="700" fill="#b45309" font-family="-apple-system, sans-serif">"SQL database" [0.99, 0.04, ...]</text>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> `"dog"` and `"puppy"` share zero letters, so TF-IDF sees $0$ overlap—yet their embedding vectors point in almost the same direction ($\cos\theta \approx 0.96$).</figcaption>
+            </figure>
+
+            <h3>Cosine Similarity Formula</h3>
+            <div class="math-card">
+              <div class="math-display">$$\boxed{\text{similarity}(\mathbf{a}, \mathbf{b}) = \cos(\theta) = \frac{\mathbf{a} \cdot \mathbf{b}}{\|\mathbf{a}\|\,\|\mathbf{b}\|}}$$</div>
+            </div>
+            <p><strong>In words:</strong> take the dot product of the two vectors and divide by their lengths. $+1$ means identical direction, $0$ means unrelated ($90^\circ$), and $-1$ means opposite.</p>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 4: SELF-ATTENTION & TRANSFORMERS   -->
+          <!-- ========================================== -->
+          <section id="self-attention">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">Modern NLP Engine</span>
+              <span class="badge badge-neutral">Self-Attention</span>
+            </div>
+            <h2>4. Self-Attention ($Q, K, V$) &amp; Transformers</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p><strong>Self-Attention</strong> lets every token look at every other token in the sentence at the same time and blend in context from the words that matter most.</p>
+            </div>
+
+            <div class="callout callout-analogy">
+              <div class="callout-title">Think of it like this</div>
+              <p>Read the sentence: <em>"The animal didn't cross the street because <strong>it</strong> was too tired."</em> What does <strong>"it"</strong> refer to? Your brain instantly links <strong>"it"</strong> + <strong>"tired"</strong> back to <strong>"animal"</strong>. Self-Attention computes those exact relevance weights using three vectors per token: <strong>Query ($Q$)</strong> ("what I am looking for"), <strong>Key ($K$)</strong> ("what label I advertise"), and <strong>Value ($V$)</strong> ("the actual meaning I pass along").</p>
+            </div>
+
+            <!-- Figure 4.1: Self Attention -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 4.1</span>
+                <span class="figure-title">Scaled Dot-Product Self-Attention: Query Matches Keys to Weight Values</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 700 220" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Self-Attention flow from Query Q and Key K dot product to Softmax attention weights to weighted sum of Values V">
+                  <defs>
+                    <marker id="arrow-att" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+                    </marker>
+                  </defs>
+                  <rect x="30" y="30" width="110" height="42" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" />
+                  <text x="85" y="55" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Query (Q)</text>
+
+                  <rect x="30" y="90" width="110" height="42" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" />
+                  <text x="85" y="115" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Keys (K^T)</text>
+
+                  <rect x="30" y="150" width="110" height="42" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5" />
+                  <text x="85" y="175" font-size="12" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Values (V)</text>
+
+                  <line x1="140" y1="51" x2="205" y2="75" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow-att)" />
+                  <line x1="140" y1="111" x2="205" y2="87" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow-att)" />
+
+                  <rect x="210" y="55" width="135" height="52" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.5" />
+                  <text x="277" y="78" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">1. Score &amp; Scale</text>
+                  <text x="277" y="95" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">(Q &middot; K^T) / &radic;d_k</text>
+
+                  <line x1="345" y1="81" x2="385" y2="81" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow-att)" />
+
+                  <rect x="390" y="55" width="125" height="52" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
+                  <text x="452" y="78" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">2. Softmax</text>
+                  <text x="452" y="95" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">Attention Weights</text>
+
+                  <line x1="515" y1="81" x2="555" y2="115" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow-att)" />
+                  <line x1="140" y1="171" x2="555" y2="135" stroke="#a855f7" stroke-width="1.5" marker-end="url(#arrow-att)" />
+
+                  <rect x="560" y="98" width="115" height="56" rx="6" fill="#0066cc" />
+                  <text x="617" y="122" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="-apple-system, sans-serif">3. Blend (&times; V)</text>
+                  <text x="617" y="140" font-size="11" fill="#dbeafe" text-anchor="middle" font-family="-apple-system, sans-serif">Context Output</text>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Every token compares its Query ($Q$) against all Keys ($K$), turns the scores into probabilities that sum to $1.0$ via Softmax, and takes a weighted average of the Values ($V$).</figcaption>
+            </figure>
+
+            <div class="math-card">
+              <div class="math-display">$$\boxed{\operatorname{Attention}(Q, K, V) = \operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V}$$</div>
+            </div>
+            <p><strong>In words:</strong> divide the dot products $QK^T$ by $\sqrt{d_k}$ so large vectors don't push Softmax into flat regions, convert to weights with Softmax, and multiply by $V$.</p>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 5: PYTHON NLP CODE                 -->
+          <!-- ========================================== -->
+          <section id="nlp-code">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Hands-On Code</span>
+              <span class="badge badge-neutral">Python</span>
+            </div>
+            <h2>5. Step-by-Step Code: TF-IDF &amp; Self-Attention in Python</h2>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">self_attention_numpy.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import numpy as np
+
+def softmax(x: np.ndarray) -> np.ndarray:
+    e_x = np.exp(x - np.max(x, axis=-1, keepdims=True))
+    return e_x / e_x.sum(axis=-1, keepdims=True)
+
+# 1. Three tokens ("The", "bank", "river"), each with a 4D Q, K, V vector
+Q = np.array([[1.0, 0.0, 0.0, 0.0],
+              [0.0, 1.0, 1.0, 0.0],   # "bank" looking for water/finance context
+              [0.0, 1.0, 0.8, 0.0]])  # "river"
+K = Q.copy()
+V = np.eye(3, 4)
+
+# 2. Compute Scaled Dot-Product Attention: softmax(Q @ K.T / sqrt(d_k)) @ V
+d_k = Q.shape[-1]
+scores = (Q @ K.T) / np.sqrt(d_k)
+weights = softmax(scores)
+context_out = weights @ V
+
+print("Attention weights for 'bank' across [The, bank, river]:")
+print(np.round(weights[1], 3))</code></pre>
+            </div>
+            <p><strong>What to notice:</strong> The entire core mechanism of modern Transformers is just two matrix multiplications (`Q @ K.T` and `weights @ V`) separated by a scale and Softmax.</p>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 6: CHEAT SHEET                     -->
+          <!-- ========================================== -->
+          <section id="summary">
+            <h2>6. Cheat Sheet</h2>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Method</th>
+                    <th>Vector Type</th>
+                    <th>Best Use Case</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>BPE Tokenizer</strong></td>
+                    <td>Token ID sequence</td>
+                    <td>Splitting any text into fixed-vocabulary integer IDs for LLMs.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>TF-IDF</strong></td>
+                    <td>High-dim sparse</td>
+                    <td>Fast exact keyword matching and classical text classification.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Dense Embeddings</strong></td>
+                    <td>384–1536D float</td>
+                    <td>Semantic search, clustering, and RAG vector databases.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Self-Attention ($Q,K,V$)</strong></td>
+                    <td>Contextual dense</td>
+                    <td>Capturing long-range word dependencies in Transformers.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Prev / Next Navigation -->
+          <nav class="page-nav" aria-label="Curriculum Pagination">
+            <a class="prev" href="dl.html">
+              <span class="page-nav-label">&larr; Previous Module</span>
+              <span class="page-nav-title">2. Deep Learning &amp; FNN</span>
+            </a>
+            <a class="next" href="cv.html">
+              <span class="page-nav-label">Next Module &rarr;</span>
+              <span class="page-nav-title">4. OpenCV &amp; Computer Vision</span>
+            </a>
+          </nav>
+
+          <footer class="article-footer">
+            <p>AI Engineering Curriculum &bull; Module 3: Natural Language Processing</p>
+          </footer>
+
+        </article>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
