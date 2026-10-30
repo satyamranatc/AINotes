@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7. Frontier AI Research: JEPA, Mamba, MoE &amp; World Models — AI Engineering Curriculum</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body>
+  <!-- Top Global Navigation Bar -->
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <a href="index.html" class="top-nav-brand">AI Engineering Curriculum</a>
+      <ul class="top-nav-links">
+        <li><a href="index.html" class="nav-pill">1. ML</a></li>
+        <li><a href="dl.html" class="nav-pill">2. Deep Learning &amp; FNN</a></li>
+        <li><a href="nlp.html" class="nav-pill">3. NLP</a></li>
+        <li><a href="cv.html" class="nav-pill">4. OpenCV &amp; Vision</a></li>
+        <li><a href="genai.html" class="nav-pill">5. LLMs &amp; RAG</a></li>
+        <li><a href="agents.html" class="nav-pill">6. Agents &amp; MCP</a></li>
+        <li><a href="research.html" class="nav-pill active">7. JEPA &amp; Research</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="site-wrapper">
+    <div class="site-container">
+      
+      <!-- Clear Grouped Sidebar TOC -->
+      <aside class="toc-sidebar">
+        <nav class="toc-sticky">
+          <div class="toc-title">Frontier Research</div>
+          <ul class="toc-list">
+            <li class="toc-group-label">World Models &amp; JEPA</li>
+            <li class="toc-item"><a href="#jepa-architecture">1. JEPA (I-JEPA &amp; V-JEPA)</a></li>
+            <li class="toc-item"><a href="#jepa-code">2. JEPA Predictor in PyTorch</a></li>
+            <li class="toc-group-label">Beyond Transformers</li>
+            <li class="toc-item"><a href="#mamba-ssm">3. Mamba &amp; Selective SSMs</a></li>
+            <li class="toc-item"><a href="#mixture-of-experts">4. Mixture of Experts (MoE)</a></li>
+            <li class="toc-group-label">Reasoning &amp; Generation</li>
+            <li class="toc-item"><a href="#test-time-compute">5. Test-Time Compute &amp; Flow Matching</a></li>
+            <li class="toc-item"><a href="#summary">6. Frontier Comparison Matrix</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Article Stream -->
+      <main class="main-content">
+        <article>
+          
+          <!-- Article Header -->
+          <header class="article-header">
+            <div class="article-category">Module 7 &middot; Frontier AI Architectures &amp; Research</div>
+            <h1 class="article-title">JEPA World Models, Mamba SSMs, Mixture of Experts &amp; Test-Time Compute</h1>
+            <p class="article-subtitle">A visual, plain-English guide to the architectures shaping post-Transformer AI: why Joint-Embedding Predictive Architectures (JEPA / I-JEPA / V-JEPA) predict in representation space instead of pixel space, how Mamba achieves linear-time sequences, and how Sparse MoE scales model capacity.</p>
+            <div class="article-meta">
+              <span>Level: Intermediate &rarr; Frontier</span>
+              <span class="meta-divider">&bull;</span>
+              <span>4 Bespoke Vector Diagrams</span>
+              <span class="meta-divider">&bull;</span>
+              <span>Reading Time: 16 min</span>
+            </div>
+          </header>
+
+          <div class="learn-grid">
+            <div class="learn-box">
+              <h4>What You'll Learn</h4>
+              <ul>
+                <li><strong>JEPA (I-JEPA &amp; V-JEPA):</strong> Why predicting abstract embeddings beats reconstructing noisy pixels—and how EMA Target Encoders prevent collapse.</li>
+                <li><strong>Mamba (Selective SSMs):</strong> How to process million-token sequences in $O(L)$ linear time instead of $O(L^2)$ Transformer attention.</li>
+                <li><strong>Sparse Mixture of Experts (MoE):</strong> How a router activates only 2 out of $N$ expert FNNs per token.</li>
+                <li><strong>Test-Time Compute &amp; Flow Matching:</strong> How modern reasoning and generative models scale accuracy.</li>
+              </ul>
+            </div>
+            <div class="learn-box">
+              <h4>Before You Start</h4>
+              <ul>
+                <li>Feedforward Neural Networks (<a href="dl.html">Module 2</a>) and Self-Attention (<a href="nlp.html">Module 3</a>).</li>
+              </ul>
+            </div>
+          </div>
+
+          <ol class="roadmap">
+            <li><a href="#jepa-architecture">
+              <span class="roadmap-step">Frontier 1</span>
+              <span class="roadmap-title">JEPA (I-JEPA / V-JEPA)</span>
+              <span class="roadmap-desc">Predict representations, not pixels</span>
+            </a></li>
+            <li><a href="#mamba-ssm">
+              <span class="roadmap-step">Frontier 2</span>
+              <span class="roadmap-title">Mamba (SSM)</span>
+              <span class="roadmap-desc">O(L) linear-time sequence modeling</span>
+            </a></li>
+            <li><a href="#mixture-of-experts">
+              <span class="roadmap-step">Frontier 3</span>
+              <span class="roadmap-title">Sparse MoE</span>
+              <span class="roadmap-desc">Route each token to Top-K specialists</span>
+            </a></li>
+            <li><a href="#test-time-compute">
+              <span class="roadmap-step">Frontier 4</span>
+              <span class="roadmap-title">Test-Time Compute</span>
+              <span class="roadmap-desc">Reason longer at inference + Flow Matching</span>
+            </a></li>
+          </ol>
+
+          <!-- ========================================== -->
+          <!-- SECTION 1: JEPA ARCHITECTURE               -->
+          <!-- ========================================== -->
+          <section id="jepa-architecture">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">World Models</span>
+              <span class="badge badge-regression">Self-Supervised Learning</span>
+            </div>
+            <h2>1. JEPA: Joint-Embedding Predictive Architecture (I-JEPA &amp; V-JEPA)</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>Proposed by Yann LeCun, <strong>JEPA</strong> learns a World Model by predicting the <strong>abstract embedding</strong> of a missing image patch or future video frame ($\hat{s}_y$) from the visible context ($s_x$)—instead of wasting capacity trying to predict every blade of grass or pixel texture ($y$).</p>
+            </div>
+
+            <div class="callout callout-analogy">
+              <div class="callout-title">Think of it like this</div>
+              <p>If a car drives behind a bus, you can easily predict the <em>high-level concept</em>: "in 2 seconds, the car will emerge on the left side at the same speed." You <strong>cannot</strong> predict the exact reflection on every raindrop on its windshield. Generative models (like pixel autoencoders or video diffusion) force the network to guess every raindrop pixel. <strong>JEPA</strong> predicts in <em>representation space</em>, where unpredictable pixel noise is filtered out and only high-level meaning remains.</p>
+            </div>
+
+            <!-- Figure 1.1: Generative vs JEPA Comparison -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 1.1</span>
+                <span class="figure-title">Why JEPA Wins: Generative Pixel Prediction vs. Joint-Embedding Prediction</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 720 280" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison between Generative Architecture predicting raw target y directly and JEPA predicting target embedding s_y in abstract representation space">
+                  <defs>
+                    <marker id="arrow-jepa" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+                    </marker>
+                    <marker id="arrow-jepa-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0066cc"/>
+                    </marker>
+                  </defs>
+
+                  <!-- Left Panel: Generative (Pixel/Token Prediction) -->
+                  <g transform="translate(15, 15)">
+                    <rect x="0" y="0" width="320" height="250" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4" />
+                    <text x="160" y="24" font-size="12" font-weight="700" fill="#dc2626" text-anchor="middle" font-family="-apple-system, sans-serif">A. Generative (MAE / Pixel Prediction)</text>
+                    <text x="160" y="42" font-size="11" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">Predicts every noisy pixel/detail in y</text>
+
+                    <rect x="30" y="185" width="95" height="40" rx="5" fill="#ffffff" stroke="#64748b" />
+                    <text x="77" y="209" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Context x</text>
+
+                    <line x1="77" y1="185" x2="77" y2="145" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow-jepa)" />
+
+                    <rect x="30" y="100" width="95" height="40" rx="5" fill="#eff6ff" stroke="#2563eb" />
+                    <text x="77" y="124" font-size="11" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Encoder (s_x)</text>
+
+                    <line x1="125" y1="120" x2="180" y2="120" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow-jepa)" />
+
+                    <rect x="185" y="100" width="110" height="40" rx="5" fill="#fef2f2" stroke="#ef4444" />
+                    <text x="240" y="124" font-size="11" font-weight="700" fill="#991b1b" text-anchor="middle" font-family="-apple-system, sans-serif">Heavy Decoder</text>
+
+                    <line x1="240" y1="140" x2="240" y2="180" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow-jepa)" />
+
+                    <rect x="185" y="185" width="110" height="40" rx="5" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+                    <text x="240" y="204" font-size="11" font-weight="700" fill="#dc2626" text-anchor="middle" font-family="-apple-system, sans-serif">Pixel Loss ||&ycirc; &minus; y||</text>
+                    <text x="240" y="218" font-size="11" fill="#b91c1c" text-anchor="middle" font-family="-apple-system, sans-serif">Wastes capacity!</text>
+                  </g>
+
+                  <!-- Right Panel: JEPA (Representation Space Prediction) -->
+                  <g transform="translate(355, 15)">
+                    <rect x="0" y="0" width="350" height="250" rx="8" fill="#ffffff" stroke="#0066cc" stroke-width="1.8" />
+                    <text x="175" y="24" font-size="12" font-weight="700" fill="#0066cc" text-anchor="middle" font-family="-apple-system, sans-serif">B. JEPA (I-JEPA / V-JEPA Architecture)</text>
+                    <text x="175" y="42" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">Predicts abstract representation s_y (No pixel decoder!)</text>
+
+                    <!-- Context x -> Context Encoder -->
+                    <rect x="20" y="185" width="95" height="40" rx="5" fill="#f8fafc" stroke="#64748b" />
+                    <text x="67" y="209" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Visible x</text>
+                    <line x1="67" y1="185" x2="67" y2="150" stroke="#0066cc" stroke-width="1.6" marker-end="url(#arrow-jepa-blue)" />
+
+                    <rect x="20" y="105" width="95" height="40" rx="5" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" />
+                    <text x="67" y="129" font-size="11" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Encoder f_&theta;(x)</text>
+
+                    <!-- Predictor with z -->
+                    <line x1="115" y1="125" x2="140" y2="125" stroke="#0066cc" stroke-width="1.6" marker-end="url(#arrow-jepa-blue)" />
+                    <rect x="145" y="95" width="85" height="58" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.6" />
+                    <text x="187" y="118" font-size="11" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Predictor</text>
+                    <text x="187" y="136" font-size="11" fill="#7e22ce" text-anchor="middle" font-family="-apple-system, sans-serif">+ Mask Pos z</text>
+
+                    <!-- Target y -> EMA Target Encoder -->
+                    <rect x="245" y="185" width="90" height="40" rx="5" fill="#f8fafc" stroke="#64748b" />
+                    <text x="290" y="209" font-size="11" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Masked y</text>
+                    <line x1="290" y1="185" x2="290" y2="150" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow-jepa)" />
+
+                    <rect x="245" y="105" width="90" height="40" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
+                    <text x="290" y="124" font-size="11" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">EMA Target</text>
+                    <text x="290" y="138" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">s_y (Stop-Grad)</text>
+
+                    <!-- Top Embedding Loss -->
+                    <rect x="95" y="52" width="165" height="28" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6" />
+                    <text x="177" y="70" font-size="11" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Embedding Loss: ||&scirc;_y &minus; s_y||^2</text>
+                  </g>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> In JEPA (right), the loss is computed at the top in <strong>abstract embedding space</strong> ($\|\hat{s}_y - s_y\|_2^2$), never down at the pixel level. The Target Encoder is updated via an Exponential Moving Average (EMA) of the Context Encoder with `stop_gradient` so the embeddings cannot collapse to zero.</figcaption>
+            </figure>
+
+            <h3>How I-JEPA (Images) &amp; V-JEPA (Video) Work Step by Step</h3>
+            <ol class="steps">
+              <li><strong>Mask large semantic blocks.</strong> Take an image (I-JEPA) or video clip (V-JEPA) and mask out large contiguous regions $y$ (e.g., an entire object or future frames), leaving visible context $x$.</li>
+              <li><strong>Encode visible context ($s_x$).</strong> Pass only the visible patches $x$ through the Context Encoder $f_\theta$ to get context representations $s_x$.</li>
+              <li><strong>Encode masked targets ($s_y$) with EMA.</strong> Pass the hidden target patches $y$ through the Target Encoder $f_{\bar{\theta}}$ (whose weights $\bar{\theta}$ are a slow moving average of $\theta$, with gradients turned off) to get target representations $s_y$.</li>
+              <li><strong>Predict in latent space.</strong> Give the lightweight Predictor $g_\phi$ both $s_x$ and positional mask tokens $z$ (telling it <em>where</em> in space/time to predict) to output $\hat{s}_y = g_\phi(s_x, z)$.</li>
+              <li><strong>Minimize representation distance.</strong> Train $\theta$ and $\phi$ to minimize $\|\hat{s}_y - \operatorname{sg}(s_y)\|_2^2$, then update $\bar{\theta} \leftarrow \tau \bar{\theta} + (1-\tau)\theta$.</li>
+            </ol>
+
+            <div class="math-card">
+              <div class="math-display">$$\boxed{\mathcal{L}_{\text{JEPA}}(\theta, \phi) = \Big\| g_\phi\big(f_\theta(x),\, z\big) - \operatorname{sg}\big(f_{\bar{\theta}}(y)\big) \Big\|_2^2}$$</div>
+            </div>
+            <p><strong>In words:</strong> $\operatorname{sg}(\cdot)$ means <strong>stop-gradient</strong>. Why is stop-gradient + EMA needed? Without it, both encoders would cheat by outputting a constant vector $\mathbf{0}$ for every image (giving $0$ loss without learning anything!).</p>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 2: JEPA PYTORCH CODE               -->
+          <!-- ========================================== -->
+          <section id="jepa-code">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Hands-On Code</span>
+              <span class="badge badge-neutral">PyTorch JEPA Step</span>
+            </div>
+            <h2>2. Step-by-Step Code: Minimal JEPA Training Step in PyTorch</h2>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">jepa_training_step.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import copy
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+# 1. Context Encoder, EMA Target Encoder (cloned, no gradients), and Predictor
+context_encoder = nn.Sequential(nn.Linear(64, 128), nn.GELU(), nn.Linear(128, 128))
+target_encoder = copy.deepcopy(context_encoder).requires_grad_(False)
+predictor = nn.Sequential(nn.Linear(128 + 16, 128), nn.GELU(), nn.Linear(128, 128))
+
+optimizer = torch.optim.AdamW(
+    list(context_encoder.parameters()) + list(predictor.parameters()), lr=1e-3
+)
+
+# 2. Simulated visible patch (x), masked target patch (y), and mask position token (z)
+x_visible = torch.randn(32, 64)
+y_masked = torch.randn(32, 64)
+z_pos_token = torch.randn(32, 16)
+
+# 3. Forward pass in Representation Space (no pixel reconstruction!)
+s_x = context_encoder(x_visible)
+s_y_hat = predictor(torch.cat([s_x, z_pos_token], dim=-1))
+
+with torch.no_grad():               # Stop-gradient on Target Encoder
+    s_y_target = target_encoder(y_masked)
+
+# 4. L2 loss in embedding space + Backprop
+loss = F.mse_loss(s_y_hat, s_y_target)
+optimizer.zero_grad()
+loss.backward()
+optimizer.step()
+
+# 5. EMA update of Target Encoder weights (tau = 0.996)
+tau = 0.996
+with torch.no_grad():
+    for p_ctx, p_tgt in zip(context_encoder.parameters(), target_encoder.parameters()):
+        p_tgt.data.mul_(tau).add_(p_ctx.data, alpha=1.0 - tau)
+
+print(f"JEPA Representation Loss: {loss.item():.4f}")</code></pre>
+            </div>
+            <p><strong>What to notice:</strong> Look at lines 24–38: `target_encoder` never receives gradients from `loss.backward()`. Instead, it smoothly tracks `context_encoder` via the Exponential Moving Average (`tau = 0.996`), preventing representation collapse.</p>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 3: MAMBA & SELECTIVE SSMS          -->
+          <!-- ========================================== -->
+          <section id="mamba-ssm">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Sequence Architecture</span>
+              <span class="badge badge-neutral">O(L) Linear Scaling</span>
+            </div>
+            <h2>3. Mamba &amp; Selective State Space Models (SSMs)</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>Standard Transformers compare every token against every other token ($O(L^2)$ quadratic cost), whereas <strong>Mamba (Selective SSM)</strong> compresses history into a fixed-size state $h_t$ using input-dependent gates—achieving <strong>$O(L)$ linear scaling</strong> and $5\times$ faster long-context inference.</p>
+            </div>
+
+            <!-- Figure 3.1: Transformer vs Mamba -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 3.1</span>
+                <span class="figure-title">Transformer O(L&sup2;) All-to-All Attention vs. Mamba O(L) Selective State Space</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 700 215" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison of quadratic all-to-all Transformer attention grid vs Mamba linear state recurrence">
+                  <!-- Left: Transformer O(L^2) -->
+                  <g transform="translate(20, 15)">
+                    <rect x="0" y="0" width="305" height="185" rx="8" fill="#fef2f2" stroke="#fca5a5" />
+                    <text x="152" y="24" font-size="12" font-weight="700" fill="#991b1b" text-anchor="middle" font-family="-apple-system, sans-serif">Transformer Attention: O(L&sup2;) Cost</text>
+                    <text x="152" y="42" font-size="11" fill="#b91c1c" text-anchor="middle" font-family="-apple-system, sans-serif">Every new token attends to ALL past tokens</text>
+                    <circle cx="65" cy="95" r="14" fill="#ffffff" stroke="#ef4444" stroke-width="1.5" /><text x="65" y="99" font-size="11" text-anchor="middle">x1</text>
+                    <circle cx="125" cy="95" r="14" fill="#ffffff" stroke="#ef4444" stroke-width="1.5" /><text x="125" y="99" font-size="11" text-anchor="middle">x2</text>
+                    <circle cx="185" cy="95" r="14" fill="#ffffff" stroke="#ef4444" stroke-width="1.5" /><text x="185" y="99" font-size="11" text-anchor="middle">x3</text>
+                    <circle cx="245" cy="95" r="14" fill="#ffffff" stroke="#ef4444" stroke-width="1.5" /><text x="245" y="99" font-size="11" text-anchor="middle">x4</text>
+                    <path d="M 245 81 Q 155 45, 65 81" fill="none" stroke="#ef4444" stroke-width="1.4" />
+                    <path d="M 245 81 Q 185 55, 125 81" fill="none" stroke="#ef4444" stroke-width="1.4" />
+                    <path d="M 245 81 Q 215 65, 185 81" fill="none" stroke="#ef4444" stroke-width="1.4" />
+                    <text x="152" y="160" font-size="11" font-weight="600" fill="#991b1b" text-anchor="middle" font-family="-apple-system, sans-serif">KV Cache grows with sequence length L</text>
+                  </g>
+
+                  <!-- Right: Mamba O(L) -->
+                  <g transform="translate(365, 15)">
+                    <rect x="0" y="0" width="315" height="185" rx="8" fill="#f0fdf4" stroke="#86efac" />
+                    <text x="157" y="24" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Mamba (Selective SSM): O(L) Cost</text>
+                    <text x="157" y="42" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">Selection gate keeps relevant info in fixed state h_t</text>
+                    <rect x="35" y="80" width="60" height="36" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1.5" /><text x="65" y="102" font-size="11" font-weight="700" fill="#166534" text-anchor="middle">h_t-1</text>
+                    <line x1="95" y1="98" x2="128" y2="98" stroke="#16a34a" stroke-width="1.8" />
+                    <rect x="128" y="80" width="60" height="36" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1.5" /><text x="158" y="102" font-size="11" font-weight="700" fill="#166534" text-anchor="middle">h_t</text>
+                    <line x1="188" y1="98" x2="221" y2="98" stroke="#16a34a" stroke-width="1.8" />
+                    <rect x="221" y="80" width="60" height="36" rx="5" fill="#ffffff" stroke="#16a34a" stroke-width="1.5" /><text x="251" y="102" font-size="11" font-weight="700" fill="#166534" text-anchor="middle">h_t+1</text>
+                    <text x="157" y="160" font-size="11" font-weight="600" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Constant O(1) memory per step at inference!</text>
+                  </g>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Mamba makes the state transition matrices $(\bar{\mathbf{A}}_t, \bar{\mathbf{B}}_t, \mathbf{C}_t)$ depend on the current token $x_t$—so it can <em>selectively remember</em> key facts and ignore filler words while keeping a fixed state size.</figcaption>
+            </figure>
+
+            <div class="math-card">
+              <div class="math-display">$$\boxed{h_t = \bar{\mathbf{A}}(x_t)\, h_{t-1} + \bar{\mathbf{B}}(x_t)\, x_t, \qquad y_t = \mathbf{C}(x_t)\, h_t}$$</div>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 4: MIXTURE OF EXPERTS (MOE)        -->
+          <!-- ========================================== -->
+          <section id="mixture-of-experts">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">Sparse Scaling</span>
+              <span class="badge badge-neutral">Top-K Routing</span>
+            </div>
+            <h2>4. Sparse Mixture of Experts (MoE)</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>Instead of running every token through one giant FNN layer, a <strong>Mixture of Experts (MoE)</strong> layer splits the FNN into $N$ specialized experts (e.g. 8 or 64) and uses a lightweight <strong>Router</strong> to send each token to only the <strong>Top-$K$</strong> (usually 2) experts.</p>
+            </div>
+
+            <!-- Figure 4.1: MoE Routing -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 4.1</span>
+                <span class="figure-title">Sparse Mixture of Experts (MoE): Top-2 Router Activates Only 2 Experts per Token</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 680 220" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Token x passing into Router which activates Expert 1 and Expert 3 while Expert 2 and Expert 4 stay idle">
+                  <rect x="25" y="82" width="105" height="50" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.5" />
+                  <text x="77" y="111" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Token x</text>
+
+                  <line x1="130" y1="107" x2="175" y2="107" stroke="#475569" stroke-width="1.6" />
+
+                  <rect x="175" y="75" width="120" height="64" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6" />
+                  <text x="235" y="102" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Gating Router</text>
+                  <text x="235" y="120" font-size="11" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">Top-K (K = 2)</text>
+
+                  <!-- Active lines -->
+                  <line x1="295" y1="95" x2="365" y2="38" stroke="#16a34a" stroke-width="2.2" />
+                  <line x1="295" y1="102" x2="365" y2="90" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3,3" />
+                  <line x1="295" y1="112" x2="365" y2="140" stroke="#16a34a" stroke-width="2.2" />
+                  <line x1="295" y1="119" x2="365" y2="190" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="3,3" />
+
+                  <!-- Experts -->
+                  <rect x="365" y="18" width="145" height="38" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8" />
+                  <text x="437" y="41" font-size="11" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Expert 1 (Active: 0.65)</text>
+
+                  <rect x="365" y="68" width="145" height="38" rx="5" fill="#f8fafc" stroke="#cbd5e1" />
+                  <text x="437" y="91" font-size="11" fill="#94a3b8" text-anchor="middle" font-family="-apple-system, sans-serif">Expert 2 (Skipped: 0)</text>
+
+                  <rect x="365" y="118" width="145" height="38" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8" />
+                  <text x="437" y="141" font-size="11" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Expert 3 (Active: 0.35)</text>
+
+                  <rect x="365" y="168" width="145" height="38" rx="5" fill="#f8fafc" stroke="#cbd5e1" />
+                  <text x="437" y="191" font-size="11" fill="#94a3b8" text-anchor="middle" font-family="-apple-system, sans-serif">Expert 4 (Skipped: 0)</text>
+
+                  <!-- Combine -->
+                  <line x1="510" y1="37" x2="565" y2="98" stroke="#16a34a" stroke-width="1.8" />
+                  <line x1="510" y1="137" x2="565" y2="115" stroke="#16a34a" stroke-width="1.8" />
+
+                  <rect x="565" y="82" width="95" height="50" rx="6" fill="#0066cc" />
+                  <text x="612" y="111" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="-apple-system, sans-serif">Weighted Sum</text>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> A model with 47B total parameters (like Mixtral 8x7B) only activates ~13B parameters per token—giving flagship accuracy at small-model inference speed.</figcaption>
+            </figure>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 5: TEST-TIME COMPUTE & FLOW        -->
+          <!-- ========================================== -->
+          <section id="test-time-compute">
+            <h2>5. Test-Time Compute &amp; Flow Matching</h2>
+            <ul>
+              <li><strong>Test-Time Compute (Reasoning Models):</strong> Instead of emitting an immediate answer, reasoning models generate an internal chain of thought—exploring hypotheses, checking intermediate math, and backtracking before producing the final response. Spending more compute at <em>inference time</em> on hard math/coding problems often beats scaling pre-training size by $10\times$.</li>
+              <li><strong>Flow Matching &amp; Diffusion Transformers (DiT):</strong> Modern image/video generators replace curved multi-step diffusion schedules with <strong>Rectified Flow Matching</strong>—training a Transformer to predict a straight-line velocity vector from pure Gaussian noise $\epsilon$ directly to clean data $x_1$ in just a few steps.</li>
+            </ul>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 6: COMPARISON MATRIX               -->
+          <!-- ========================================== -->
+          <section id="summary">
+            <h2>6. Frontier Architecture Cheat Sheet</h2>
+            <div class="table-wrapper wide-breakout">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Architecture</th>
+                    <th>What Problem It Solves</th>
+                    <th>Key Innovation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>JEPA (I-JEPA / V-JEPA)</strong></td>
+                    <td>Pixel/token prediction wastes capacity on random surface noise</td>
+                    <td>Predicts abstract embeddings $\hat{s}_y$ in representation space with an EMA Target Encoder.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mamba (Selective SSM)</strong></td>
+                    <td>Transformer Self-Attention is $O(L^2)$ slow on million-token inputs</td>
+                    <td>Input-dependent state space recurrence with $O(L)$ linear compute and constant memory.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sparse MoE</strong></td>
+                    <td>Dense models must fire 100% of weights for every single token</td>
+                    <td>Top-$K$ router activates only 2 specialist FNN experts per token.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Test-Time Compute</strong></td>
+                    <td>Single-pass decoding fails on multi-step math, logic, and code</td>
+                    <td>Allocates dynamic thinking tokens and verification search at inference time.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Prev / Next Navigation -->
+          <nav class="page-nav" aria-label="Curriculum Pagination">
+            <a class="prev" href="agents.html">
+              <span class="page-nav-label">&larr; Previous Module</span>
+              <span class="page-nav-title">6. LangChain, Autonomous Agents &amp; MCP</span>
+            </a>
+            <a class="next" href="index.html">
+              <span class="page-nav-label">Back to Start &rarr;</span>
+              <span class="page-nav-title">1. Machine Learning Models</span>
+            </a>
+          </nav>
+
+          <footer class="article-footer">
+            <p>AI Engineering Curriculum &bull; Module 7: Frontier AI Research &amp; Architectures</p>
+          </footer>
+
+        </article>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

@@ -121,6 +121,12 @@ function highlightBlock(container) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // 0. Ensure active top-nav pill is scrolled into view on smaller screens
+  const activeNavPill = document.querySelector('.top-nav-links .nav-pill.active');
+  if (activeNavPill) {
+    activeNavPill.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }
+
   // 1. Reading Progress Bar
   const progressBar = document.createElement('div');
   progressBar.className = 'reading-progress-bar';

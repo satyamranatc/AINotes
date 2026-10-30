@@ -1,33 +1,37 @@
 # AI Engineering Curriculum
 
-A free, simple and fast way to learn core Machine Learning and modern Generative AI engineering. Each topic is explained in plain language first, with a diagram, a worked example and a recap. The math and deeper theory come after that.
+A clear, visual, step-by-step learning resource covering Machine Learning, Deep Learning & FNNs, NLP, OpenCV & Computer Vision, Generative AI (`[LLM, Vector Storage, RAG, Agents, MCP]`), and Frontier Research (`JEPA, Mamba, Sparse MoE, Test-Time Compute`).
 
-## Pages
+Every page follows **[`WRITING_RULES.md`](WRITING_RULES.md)**: plain-English one-liner first, real-life analogy, numbered steps, custom inline SVG diagrams, math explained in words with worked numbers, syntax-highlighted runnable code, and a quick cheat sheet.
 
-| # | Page | Topics | Notes (Markdown) |
-|---|---|---|---|
-| 1 | [`index.html`](index.html): Machine Learning Models | Linear Regression, KNN, SVM, Logistic Regression, Decision Trees, Random Forest, metrics, model selection, core concepts | [`ML_NOTES.md`](ML_NOTES.md) |
-| 2 | [`genai.html`](genai.html): LLMs, LangChain & MCP | Tokens & sampling, Gemini/Groq APIs, roles & chat history, LangChain LCEL, tool calling, Model Context Protocol | [`GENAI_NOTES.md`](GENAI_NOTES.md) |
+---
 
-## How every topic is structured
+## Curriculum Modules (7 Interactive Web Guides)
 
-`In one line` → `Analogy` → `How it works (steps)` → `Diagram` → `Key terms` → `Math in words + worked example` → `Code` → `When to use / avoid` → `Common mistakes` → `Recap`
+| Module | File | Topics Covered |
+|---|---|---|
+| **1. Machine Learning** | [`index.html`](index.html) | Regression vs. Classification, Linear Regression, KNN, SVM, Logistic Regression, Decision Trees, Random Forest, Gradient Descent, Feature Scaling & Bias-Variance |
+| **2. Deep Learning & FNN** | [`dl.html`](dl.html) | Perceptrons, Feedforward Neural Networks (FNN / MLP), Activation Functions (ReLU, GELU, Sigmoid, Softmax), Backpropagation Chain Rule, Adam, Dropout & PyTorch loop |
+| **3. Natural Language Processing** | [`nlp.html`](nlp.html) | Subword Tokenization (BPE), Bag-of-Words & TF-IDF, Dense Embeddings & Cosine Similarity, Scaled Dot-Product Self-Attention ($Q, K, V$) & Transformers |
+| **4. OpenCV & Computer Vision** | [`cv.html`](cv.html) | Image Tensors `(H, W, C)` & Color Spaces (BGR/RGB/HSV), 2D Convolution Kernels, Gaussian Blur, Canny Edge Detection, Contours, CNNs & Vision Transformers (ViT) |
+| **5. GenAI Part 1: LLMs & RAG** | [`genai.html`](genai.html) | **[LLM]** Autoregressive decoding, Temperature/Top-P, Gemini & Groq APIs, Roles & Sliding Window Memory; **[Vector Storage]** HNSW & ChromaDB; **[RAG]** Two-phase grounded generation |
+| **6. GenAI Part 2: Agents & MCP** | [`agents.html`](agents.html) | **[LCEL]** `prompt \| model \| parser` & Pydantic schemas; **[Tool Calling]** 4-step handshake; **[Agents]** ReAct loop (`Thought -> Action -> Observation`); **[MCP]** Host/Client/Server & FastMCP |
+| **7. Frontier Research & JEPA** | [`research.html`](research.html) | **JEPA** (Joint-Embedding Predictive Architecture: I-JEPA & V-JEPA World Models), **Mamba** (Selective State Space Models), **Sparse Mixture of Experts (MoE)**, **Test-Time Compute** & Flow Matching |
 
-The full writing and design rules are in **[`WRITING_RULES.md`](WRITING_RULES.md)**. Read it before you add or edit content.
+### Companion Markdown Notes & Style Guide
+- **[`WRITING_RULES.md`](WRITING_RULES.md)**: The 10 Golden Rules, component library, diagram standards, and pre-publish checklist.
+- **[`ML_NOTES.md`](ML_NOTES.md)**: Markdown summary of Classical Machine Learning.
+- **[`GENAI_NOTES.md`](GENAI_NOTES.md)**: Markdown summary of `[LLM, Vector Storage, RAG, Agents, MCP]`.
 
-## Features
+---
 
-- **Plain vanilla stack:** `styles.css` + `script.js`. No frameworks and no build step.
-- **Easy navigation:** a roadmap at the top of each page, a sticky sidebar that highlights where you are, a "Contents" sheet on mobile, linkable headings, and prev/next page links.
-- **Readable code:** zero-dependency syntax highlighting ("Calm Night" theme), line numbers and one-click copy.
-- **Math:** KaTeX rendering. Heavy derivations sit inside collapsible "Deep dive" panels.
-- **Diagrams:** hand-drawn inline SVG for every topic.
-- **Print-friendly:** navigation is hidden and deep dives expand when you print.
-
-## View locally
+## Viewing Locally
 
 ```bash
-open index.html            # macOS
-# or
-python3 -m http.server 8000   # then visit http://localhost:8000
+# Open directly in macOS browser:
+open index.html
+
+# Or run a local HTTP server:
+python3 -m http.server 8000
+# Visit http://localhost:8000
 ```
