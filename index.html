@@ -34,7 +34,8 @@
         <li><a href="genai.html" class="nav-pill">6. LLMs &amp; RAG</a></li>
         <li><a href="agents.html" class="nav-pill">7. Agents &amp; MCP</a></li>
         <li><a href="research.html" class="nav-pill">8. Research</a></li>
-        <li><a href="interview.html" class="nav-pill">9. 100 Q&amp;A</a></li>
+        <li><a href="systems.html" class="nav-pill">9. COA &amp; Net</a></li>
+        <li><a href="interview.html" class="nav-pill">10. 100 Q&amp;A</a></li>
       </ul>
     </div>
   </nav>
@@ -390,14 +391,14 @@
         </div>
       </a>
 
-      <!-- Module 7: Frontier Research & JEPA -->
-      <a href="research.html" class="aw-bento-card aw-bento-span-6">
+      <!-- Module 8: Frontier Research & JEPA -->
+      <a href="research.html" class="aw-bento-card aw-bento-span-4">
         <div>
           <div class="aw-bento-top">
-            <span class="aw-bento-num">Module 07 &middot; Frontier Research</span>
+            <span class="aw-bento-num">Module 08 &middot; Frontier Research</span>
             <span class="aw-bento-formula">JEPA &middot; Mamba SSM &middot; Sparse MoE</span>
           </div>
-          <h3 class="aw-bento-title">7. Frontier Architectures: JEPA, Mamba &amp; Sparse MoE</h3>
+          <h3 class="aw-bento-title">8. Frontier Architectures: JEPA, Mamba &amp; Sparse MoE</h3>
           <p class="aw-bento-desc">
             Why Yann LeCun's Joint-Embedding Predictive Architecture (I-JEPA &amp; V-JEPA) predicts in abstract representation space instead of pixel/token space, plus Mamba Selective State Space Models, Mixture of Experts, and Test-Time Compute.
           </p>
@@ -408,14 +409,32 @@
         </div>
       </a>
 
-      <!-- Module 8: Top 100 Interview Q&A -->
-      <a href="interview.html" class="aw-bento-card aw-bento-span-6 aw-bento-featured">
+      <!-- Module 9: COA & Networking for AI Engineers -->
+      <a href="systems.html" class="aw-bento-card aw-bento-span-4">
         <div>
           <div class="aw-bento-top">
-            <span class="aw-bento-num">Module 08 &middot; 2026 Interview Bank</span>
+            <span class="aw-bento-num">Module 09 &middot; AI Systems</span>
+            <span class="aw-bento-formula">SRAM/HBM &middot; BF16 &middot; SSE/gRPC &middot; RDMA</span>
+          </div>
+          <h3 class="aw-bento-title">9. COA &amp; Networking for AI Engineers</h3>
+          <p class="aw-bento-desc">
+            The exact hardware and networking topics an AI engineer must know: GPU SIMT Warps, Tensor Cores, SRAM vs. HBM Memory Wall, `BF16`/`INT4`, Roofline model, `SSE` vs. `WebSockets` vs. `gRPC`, GPUDirect RDMA, and NCCL Ring-AllReduce.
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Explore COA &amp; Networking</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Module 10: Top 100 Interview Q&A -->
+      <a href="interview.html" class="aw-bento-card aw-bento-span-4 aw-bento-featured">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Module 10 &middot; 2026 Interview Bank</span>
             <span class="aw-bento-formula">100 Verified Q&amp;As &middot; Live Filter</span>
           </div>
-          <h3 class="aw-bento-title">8. Top 100 Data Science, ML &amp; GenAI Interview Questions</h3>
+          <h3 class="aw-bento-title">10. Top 100 Data Science, ML &amp; GenAI Interview Questions</h3>
           <p class="aw-bento-desc">
             Curated from 2026 technical loops across Indore's IT corridor (Persistent, Impetus, Yash, InfoBeans, TCS, Infosys) and global AI teams—with instant keyword search and 8 topic filter pills.
           </p>
@@ -425,6 +444,71 @@
           <span>&rarr;</span>
         </div>
       </a>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- 3B. COA & NETWORKING MUST-KNOW TOPICS FOR AN AI ENGINEER              -->
+  <!-- ===================================================================== -->
+  <section id="coa-networking-checklist" class="aw-section">
+    <div class="aw-section-header">
+      <div>
+        <span class="aw-index-tag">[ MODULE 09 // SYSTEMS SYLLABUS FOR AI ENGINEERS ]</span>
+        <h2 class="aw-section-title">Networking &amp; COA: What an AI Engineer Must Know.</h2>
+      </div>
+      <p class="aw-section-desc">
+        Skip obsolete hardware trivia. These are the exact Computer Organization &amp; Architecture (COA) and Networking topics that directly govern LLM inference speed, GPU VRAM sizing, and distributed training.
+      </p>
+    </div>
+
+    <div class="aw-bento-grid">
+      <!-- COA Checklist Card -->
+      <div class="aw-bento-card aw-bento-span-6">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">[COA] Computer Organization &amp; Architecture</span>
+            <span class="aw-bento-formula">8 Core Topics</span>
+          </div>
+          <h3 class="aw-bento-title">Silicon, Memory Hierarchy &amp; Precision</h3>
+          <ol class="steps">
+            <li><strong>CPU vs. GPU Architecture (SIMD vs. SIMT Warps):</strong> Why 32-thread GPU Warps and Streaming Multiprocessors (SMs) crush sequential CPU cores on matrix math.</li>
+            <li><strong>Tensor Cores &amp; Systolic Arrays:</strong> Hardware matrix engines computing $\mathbf{D} = \mathbf{A}\mathbf{B} + \mathbf{C}$ in one cycle (and why dimensions must be multiples of $8$ or $16$).</li>
+            <li><strong>The AI Memory Hierarchy (SRAM vs. HBM3 VRAM):</strong> Why on-chip SRAM ($19\text{ TB/s}$) is $6\times$ faster than GPU HBM VRAM ($3.35\text{ TB/s}$), and how <strong>FlashAttention</strong> avoids the Memory Wall.</li>
+            <li><strong>Number Representation (`FP32`, `FP16`, `BF16`, `INT8`, `INT4/NF4`):</strong> Sign + Exponent + Mantissa bits, why `BF16` prevents gradient underflow, and the $16\text{ bytes/param}$ AdamW VRAM rule.</li>
+            <li><strong>The Roofline Model &amp; Arithmetic Intensity:</strong> Why LLM Prompt Prefill is <em>Compute-Bound</em> while Token Decoding is <em>Memory-Bandwidth-Bound</em>.</li>
+            <li><strong>PCIe Bus, Pinned Memory (`pin_memory=True`), DMA &amp; NVLink:</strong> Direct Memory Access over PCIe vs. $900\text{ GB/s}$ GPU-to-GPU NVLink.</li>
+            <li><strong>Cache Locality, Row-Major Contiguity &amp; Strides:</strong> Physical 1D memory layout of N-D tensors and PyTorch `.contiguous()`.</li>
+            <li><strong>Processes, Threads, Python GIL &amp; Multiprocessing:</strong> Why `DataLoader(num_workers=4)` uses OS processes to feed GPUs without GIL bottlenecks.</li>
+          </ol>
+        </div>
+        <div class="aw-bento-footer">
+          <a href="systems.html#part-1-cpu-gpu">Read Full COA Guide in Module 09 &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Networking Checklist Card -->
+      <div class="aw-bento-card aw-bento-span-6">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">[NETWORKING] AI Protocols &amp; Cluster Fabrics</span>
+            <span class="aw-bento-formula">8 Core Topics</span>
+          </div>
+          <h3 class="aw-bento-title">Token Streaming, RPCs &amp; Multi-GPU Fabrics</h3>
+          <ol class="steps">
+            <li><strong>TCP vs. UDP &amp; HTTP/1.1 vs. HTTP/2 vs. HTTP/3 (QUIC):</strong> Connection pooling (`keep-alive`), TLS 1.3 handshake overhead, and WebRTC/UDP for real-time Voice AI.</li>
+            <li><strong>`REST` vs. `SSE (Server-Sent Events)` vs. `WebSockets`:</strong> Why LLM chat APIs use one-way `SSE` (`text/event-stream`) to minimize <strong>TTFT (Time-To-First-Token)</strong> while Voice Agents use bidirectional `WebSockets`.</li>
+            <li><strong>`gRPC` &amp; Binary Protocol Buffers (Protobuf):</strong> High-throughput `HTTP/2` binary serialization powering **Triton Inference Server** and Vector DBs (**Qdrant, Milvus, Pinecone**).</li>
+            <li><strong>`JSON-RPC 2.0` &amp; MCP Transports (`stdio` vs. `HTTP+SSE`):</strong> How **Model Context Protocol (MCP)** connects LLM hosts to local and remote tool servers.</li>
+            <li><strong>Async Non-Blocking I/O (`asyncio`, Event Loop, `httpx`):</strong> Running 100+ concurrent RAG/Agent API requests on a single thread without blocking on network sockets.</li>
+            <li><strong>RDMA, InfiniBand, RoCEv2 &amp; GPUDirect:</strong> Moving tensors directly from Server A's GPU VRAM to Server B's GPU VRAM at $400\text{ Gbps}$ while bypassing the CPU and OS kernel.</li>
+            <li><strong>Collective Communication (`NCCL`: `AllReduce`, `AllGather`, `AllToAll`):</strong> How **Ring-AllReduce** synchronizes gradients in DDP/FSDP and routes tokens in Mixture-of-Experts (MoE).</li>
+            <li><strong>Rate Limiting (`HTTP 429`), Retries with Jitter &amp; KV-Cache Load Balancing:</strong> Prefix-aware routing so requests sharing a system prompt hit the same GPU replica's KV-Cache.</li>
+          </ol>
+        </div>
+        <div class="aw-bento-footer">
+          <a href="systems.html#part-5-ai-protocols">Read Full Networking Guide in Module 09 &rarr;</a>
+        </div>
+      </div>
     </div>
   </section>
 

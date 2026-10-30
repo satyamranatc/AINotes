@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COA &amp; Networking for AI Engineers — AI Engineering Curriculum</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body>
+  <!-- Top Global Navigation Bar -->
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <a href="index.html" class="top-nav-brand">AI Engineering</a>
+      <ul class="top-nav-links">
+        <li><a href="index.html" class="nav-pill">Home</a></li>
+        <li><a href="story.html" class="nav-pill">0. Story</a></li>
+        <li><a href="ds.html" class="nav-pill">1. Data Science</a></li>
+        <li><a href="ml.html" class="nav-pill">2. ML</a></li>
+        <li><a href="dl.html" class="nav-pill">3. Deep Learning</a></li>
+        <li><a href="nlp.html" class="nav-pill">4. NLP</a></li>
+        <li><a href="cv.html" class="nav-pill">5. Vision</a></li>
+        <li><a href="genai.html" class="nav-pill">6. LLMs &amp; RAG</a></li>
+        <li><a href="agents.html" class="nav-pill">7. Agents &amp; MCP</a></li>
+        <li><a href="research.html" class="nav-pill">8. Research</a></li>
+        <li><a href="systems.html" class="nav-pill active">9. COA &amp; Net</a></li>
+        <li><a href="interview.html" class="nav-pill">10. 100 Q&amp;A</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="site-wrapper">
+    <div class="site-container">
+      
+      <!-- Table of Contents Sidebar -->
+      <aside class="toc-sidebar">
+        <nav class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li class="toc-group-label">Topic Roadmaps</li>
+            <li class="toc-item"><a href="#topic-checklist">0. Master Checklist: What an AI Engineer Must Know</a></li>
+            <li class="toc-group-label">[COA] Hardware &amp; Silicon</li>
+            <li class="toc-item"><a href="#part-1-cpu-gpu">1. CPU vs. GPU, SIMT Warps &amp; Tensor Cores</a></li>
+            <li class="toc-item"><a href="#part-2-memory-wall">2. Memory Hierarchy: SRAM, HBM &amp; FlashAttention</a></li>
+            <li class="toc-item"><a href="#part-3-precision">3. Precision Bits: FP32, FP16, BF16 &amp; INT4</a></li>
+            <li class="toc-item"><a href="#part-4-roofline-interconnect">4. Roofline Model, PCIe, DMA &amp; NVLink</a></li>
+            <li class="toc-group-label">[Networking] AI Protocols &amp; Clusters</li>
+            <li class="toc-item"><a href="#part-5-ai-protocols">5. AI Protocols: REST, SSE, WebSockets &amp; gRPC</a></li>
+            <li class="toc-item"><a href="#part-6-distributed-net">6. Cluster Networking: RDMA, RoCE &amp; NCCL AllReduce</a></li>
+            <li class="toc-item"><a href="#part-7-code">7. Practical Python: Async Streaming &amp; Hardware Checks</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Article Stream -->
+      <main class="main-content">
+        <article>
+          
+          <!-- Article Header -->
+          <header class="article-header">
+            <div class="article-category">Module 9 &middot; Systems Foundations for AI Engineers</div>
+            <h1 class="article-title">Computer Organization &amp; Architecture (COA) and Networking for AI Engineers</h1>
+            <p class="article-subtitle">You do not need to memorize legacy printer interrupts or old telephone routing tables—you need the exact 20% of Computer Architecture and Networking that explains 99% of GPU out-of-memory crashes, token streaming latency, FlashAttention, quantization, and multi-GPU training.</p>
+            <div class="article-meta">
+              <span>Level: Intermediate &rarr; Production Systems</span>
+              <span class="meta-divider">&bull;</span>
+              <span>3 Visual Diagrams</span>
+              <span class="meta-divider">&bull;</span>
+              <span>Reading Time: 18 min</span>
+            </div>
+          </header>
+
+          <!-- Page Intro: What You'll Learn & Prerequisites -->
+          <div class="learn-grid">
+            <div class="learn-box">
+              <h4>What You'll Learn</h4>
+              <ul>
+                <li>The exact <strong>COA &amp; Networking Topic Checklist</strong> every AI, ML, and GenAI engineer is expected to know in 2026 interviews and production teams.</li>
+                <li><strong>[COA]</strong> Why GPUs crush CPUs at matrix math (SIMT Warps &amp; Systolic Tensor Cores), the <strong>Memory Hierarchy</strong> (SRAM vs. HBM VRAM vs. PCIe), and why <strong>BFloat16 (`BF16`)</strong> replaced `FP16`.</li>
+                <li><strong>[COA]</strong> Why LLM Prompt Prefill is <em>compute-bound</em> while Token Decoding is <em>memory-bandwidth-bound</em> (the <strong>Roofline Model</strong>).</li>
+                <li><strong>[Networking]</strong> When to use <strong>REST</strong>, <strong>SSE (Server-Sent Events)</strong>, <strong>WebSockets</strong>, or <strong>gRPC (Protobuf)</strong>, plus how <strong>GPUDirect RDMA</strong> and <strong>NCCL Ring-AllReduce</strong> synchronize multi-GPU clusters.</li>
+              </ul>
+            </div>
+            <div class="learn-box">
+              <h4>Why AI Engineers Must Know This</h4>
+              <ul>
+                <li>When a 7B LLM runs out of VRAM or generates only 4 tokens/sec, the bottleneck is almost always <strong>memory bandwidth or data type precision (COA)</strong>.</li>
+                <li>When a RAG or Agent pipeline takes 8 seconds to reply, the bottleneck is almost always <strong>blocking HTTP calls, missing SSE streaming, or lack of gRPC/connection pooling (Networking)</strong>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- SECTION 0: MASTER TOPIC CHECKLIST          -->
+          <!-- ========================================== -->
+          <section id="topic-checklist">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Must-Know Syllabus</span>
+              <span class="badge badge-neutral">COA + Networking for AI</span>
+            </div>
+            <h2>0. The Complete Topic Checklist an AI Engineer Should Know</h2>
+            <p>If you are studying <strong>Computer Organization &amp; Architecture (COA)</strong> and <strong>Computer Networking</strong> specifically for Data Science, Deep Learning, and GenAI engineering, focus 100% of your energy on the topics in the two tables below:</p>
+
+            <h3>Table A: Computer Organization &amp; Architecture (COA) Topics for AI Engineers</h3>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>COA Topic Name</th>
+                    <th>Core Concept to Understand</th>
+                    <th>Where It Shows Up in AI / ML</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>1</strong></td>
+                    <td><strong>CPU vs. GPU Architecture (SIMD vs. SIMT)</strong></td>
+                    <td>CPUs have a few big cores with branch prediction &amp; deep caches (low latency); GPUs have thousands of tiny ALU cores grouped into <strong>Streaming Multiprocessors (SMs)</strong> executing 32-thread <strong>Warps</strong> in lockstep (massive throughput).</td>
+                    <td>Why training a Transformer on a CPU takes weeks vs. hours on a GPU.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2</strong></td>
+                    <td><strong>Tensor Cores &amp; Systolic Arrays</strong></td>
+                    <td>Dedicated hardware matrix engines that compute a $4 \times 4$ or $16 \times 16$ Fused Multiply-Add ($\mathbf{D} = \mathbf{A}\mathbf{B} + \mathbf{C}$) in a single clock cycle.</td>
+                    <td>Accelerates `nn.Linear`, `Conv2D`, and Attention $Q K^\top$ by $8\times\text{–}16\times$ when tensor dimensions are multiples of $8$ or $16$.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3</strong></td>
+                    <td><strong>Memory Hierarchy &amp; The Memory Wall</strong></td>
+                    <td>Registers &rarr; GPU L1 / Shared <strong>SRAM</strong> (~$19\text{ TB/s}$, ~20–50 MB) &rarr; GPU <strong>HBM3 VRAM</strong> (~$3.35\text{ TB/s}$, 80 GB) &rarr; Host <strong>DDR5 RAM</strong> (~$100\text{ GB/s}$) &rarr; <strong>NVMe SSD</strong> (~$7\text{ GB/s}$).</td>
+                    <td>Explains why <strong>FlashAttention</strong> tiles $Q, K, V$ inside on-chip SRAM to avoid slow reads/writes to HBM VRAM.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4</strong></td>
+                    <td><strong>Floating-Point &amp; Integer Bit Formats</strong></td>
+                    <td>Sign bit + Exponent (range) + Mantissa (precision): <strong>`FP32`</strong> (1+8+23), <strong>`FP16`</strong> (1+5+10), <strong>`BF16`</strong> (1+8+7), <strong>`FP8`</strong>, <strong>`INT8`</strong>, and <strong>`INT4 / NF4`</strong>.</td>
+                    <td>Mixed-precision training (`torch.bfloat16`) and 4-bit LLM quantization (QLoRA, AWQ, GGUF).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>5</strong></td>
+                    <td><strong>The Roofline Model &amp; Arithmetic Intensity</strong></td>
+                    <td>$\text{Arithmetic Intensity} = \text{FLOPs} / \text{Bytes Moved}$. Determines whether a workload is <strong>Compute-Bound</strong> (waiting on math units) or <strong>Memory-Bandwidth-Bound</strong> (waiting on HBM wires).</td>
+                    <td>LLM <strong>Prefill</strong> (prompt processing) is compute-bound; LLM <strong>Decode</strong> (generating 1 token at a time) is memory-bandwidth-bound.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>6</strong></td>
+                    <td><strong>PCIe Bus, Pinned Memory, DMA &amp; NVLink</strong></td>
+                    <td>The CPU talks to the GPU over <strong>PCIe</strong> (~32–64 GB/s). <strong>DMA (Direct Memory Access)</strong> copies page-locked (pinned) host RAM directly to GPU VRAM without waking the CPU. <strong>NVLink</strong> ($900\text{ GB/s}$) links GPUs directly.</td>
+                    <td>Why `DataLoader(pin_memory=True)` speeds up training and why multi-GPU Tensor Parallelism needs NVLink.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>7</strong></td>
+                    <td><strong>Cache Locality, Row-Major Contiguity &amp; Strides</strong></td>
+                    <td>How 2D/3D tensors are laid out in flat 1D physical memory (C row-major order in NumPy/PyTorch) and why jumping across non-contiguous addresses causes cache misses.</td>
+                    <td>Why PyTorch requires `.contiguous()` after `.transpose()` or `.permute()` before `.view()`.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>8</strong></td>
+                    <td><strong>Processes, Threads, Python GIL &amp; Multiprocessing</strong></td>
+                    <td>OS threads share memory space (locked by Python's GIL for bytecode), whereas OS processes have isolated memory spaces and run on separate CPU cores.</td>
+                    <td>Why `DataLoader(num_workers=4)` uses multiprocessing to decode images/tokenize text in parallel while the GPU trains.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Table B: Computer Networking Topics for AI Engineers</h3>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Networking Topic Name</th>
+                    <th>Core Concept to Understand</th>
+                    <th>Where It Shows Up in AI / ML</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>1</strong></td>
+                    <td><strong>TCP vs. UDP &amp; HTTP/1.1 vs. HTTP/2 vs. HTTP/3</strong></td>
+                    <td>TCP guarantees ordered delivery via 3-way handshake &amp; retransmissions; UDP sends low-latency datagrams without head-of-line blocking. HTTP/2 multiplexes many streams over one TCP connection.</td>
+                    <td>API latency overhead, connection pooling (`keep-alive`), and low-latency Voice AI over WebRTC/UDP.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2</strong></td>
+                    <td><strong>Server-Sent Events (`SSE`) vs. `REST` vs. `WebSockets`</strong></td>
+                    <td>`REST` waits for the full reply; **`SSE` (`text/event-stream`)** streams chunks one way from server to client over standard HTTP; **`WebSockets`** open a two-way full-duplex pipe.</td>
+                    <td>Every LLM API (OpenAI, Gemini, Claude, vLLM) uses **SSE** to stream tokens live (`stream=True`) so **TTFT (Time-To-First-Token)** stays under $300\text{ ms}$.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3</strong></td>
+                    <td><strong>`gRPC` &amp; Binary Protocol Buffers (Protobuf)</strong></td>
+                    <td>High-speed RPC framework built on `HTTP/2` that serializes typed schemas into compact binary bytes instead of bulky text JSON.</td>
+                    <td>Used by **Triton Inference Server**, **Qdrant**, **Milvus**, **Pinecone**, and internal ML microservices ($5\times$ lower serialization latency).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4</strong></td>
+                    <td><strong>`JSON-RPC 2.0` &amp; MCP Transports (`stdio` / `HTTP+SSE`)</strong></td>
+                    <td>Lightweight stateless RPC protocol using JSON `{"jsonrpc": "2.0", "method": "...", "params": ...}` over standard input/output pipes or HTTP.</td>
+                    <td>The wire protocol powering the **Model Context Protocol (MCP)** between AI hosts and tool servers.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>5</strong></td>
+                    <td><strong>Async Non-Blocking I/O (`asyncio`, Event Loop, `httpx`)</strong></td>
+                    <td>A single thread dispatches hundreds of network requests concurrently and yields control (`await`) while waiting for network sockets to respond.</td>
+                    <td>Essential for AI Agents and RAG pipelines calling 20+ LLM/Vector DB endpoints in parallel.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>6</strong></td>
+                    <td><strong>RDMA, InfiniBand, RoCEv2 &amp; GPUDirect</strong></td>
+                    <td>**Remote Direct Memory Access (RDMA)** allows a network card (NIC) on Server A to read/write directly into the GPU VRAM of Server B without touching the OS kernel or CPU TCP/IP stack.</td>
+                    <td>The backbone of multi-node LLM training clusters (H100/B200 pods running over 400 Gbps InfiniBand or RoCEv2).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>7</strong></td>
+                    <td><strong>Collective Communication (`NCCL`: `AllReduce`, `AllGather`, `AllToAll`)</strong></td>
+                    <td>Network topologies (like **Ring-AllReduce** and Tree-AllReduce) that synchronize tensors across $N$ GPUs with optimal bandwidth utilization.</td>
+                    <td>Used every backward pass in **DDP** (`AllReduce` gradients), **FSDP / ZeRO** (`AllGather` weights, `ReduceScatter` grads), and **MoE** (`AllToAll` token routing).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>8</strong></td>
+                    <td><strong>Rate Limiting, Retries with Jitter &amp; KV-Cache Load Balancing</strong></td>
+                    <td>Token-bucket rate limits (`HTTP 429`), exponential backoff ($2^k + \text{random jitter}$), and prefix-aware routing.</td>
+                    <td>Keeping production LLM gateways resilient and routing shared system prompts to the same GPU replica's KV-Cache.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 1: CPU VS GPU & TENSOR CORES       -->
+          <!-- ========================================== -->
+          <section id="part-1-cpu-gpu">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">COA Pillar 1</span>
+              <span class="badge badge-neutral">Compute Architecture</span>
+            </div>
+            <h2>1. CPU vs. GPU Architecture, SIMT Warps &amp; Tensor Cores</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>A <strong>CPU</strong> is a sports car built to finish one complex task with branches (`if/else`) as fast as possible (<strong>low latency</strong>), while a <strong>GPU</strong> is a fleet of 10,000 cargo buses moving along the exact same highway in lockstep to multiply giant matrices (<strong>high throughput</strong>).</p>
+            </div>
+
+            <h3>How a GPU Executes a Neural Network Layer</h3>
+            <ol class="steps">
+              <li><strong>Streaming Multiprocessors (SMs):</strong> An NVIDIA GPU (like an A100 or H100) is divided into over $100$ independent blocks called <strong>SMs</strong>.</li>
+              <li><strong>SIMT Warps (32 Threads in Lockstep):</strong> Inside each SM, threads are grouped into squads of $32$ called a <strong>Warp</strong>. Under <strong>SIMT (Single Instruction, Multiple Threads)</strong>, all $32$ threads execute the <em>exact same math instruction</em> at the same instant on $32$ different elements of your tensor.</li>
+              <li><strong>Tensor Cores (Systolic Matrix Engines):</strong> Modern GPUs include specialized <strong>Tensor Cores</strong> alongside standard CUDA cores. While a standard core multiplies two single numbers ($a \times b + c$), a Tensor Core multiplies and accumulates entire $4 \times 4$ or $16 \times 16$ matrix tiles ($\mathbf{D} = \mathbf{A} \times \mathbf{B} + \mathbf{C}$) in a single hardware instruction.</li>
+            </ol>
+
+            <div class="callout callout-tip">
+              <div class="callout-title">Practical Engineering Rule: Multiples of 8 and 16</div>
+              <p>Because Tensor Cores operate on $8$-wide or $16$-wide tiles in `FP16`/`BF16`, always choose batch sizes, hidden dimensions (`d_model`), and vocabulary sizes (e.g., padding vocab size from $50,257$ to $50,304$) that are <strong>divisible by 64 or 128</strong> so the GPU never falls back to slow unaligned memory paths!</p>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 2: THE MEMORY HIERARCHY & WALL     -->
+          <!-- ========================================== -->
+          <section id="part-2-memory-wall">
+            <h2>2. The AI Memory Hierarchy: Why Moving Data Costs More Than Math</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>Modern GPUs can multiply numbers <strong>$100\times$ faster</strong> than they can fetch those numbers from memory—making <strong>memory bandwidth</strong> (moving bytes between GPU HBM VRAM and on-chip SRAM) the #1 bottleneck in modern AI.</p>
+            </div>
+
+            <!-- Figure 1.1: COA Memory Hierarchy & Precision Formats -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 2.1</span>
+                <span class="figure-title">The AI Memory Hierarchy Pyramid (Left) &amp; Floating-Point Bit Layouts (Right)</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 880 310" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="880" height="310" fill="#f8fafc" rx="8"/>
+
+                  <!-- LEFT PANEL: MEMORY PYRAMID -->
+                  <rect x="18" y="16" width="425" height="278" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="230" y="38" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#1e293b">THE AI MEMORY HIERARCHY (NVIDIA H100 SCALE)</text>
+
+                  <!-- Level 1: On-Chip SRAM / L1 / Shared Memory -->
+                  <polygon points="230,52 155,105 305,105" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                  <text x="230" y="84" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" font-weight="700" fill="#1e40af">GPU SRAM / Registers</text>
+                  <text x="230" y="98" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#1d4ed8">~50 MB | ~19 TB/s</text>
+
+                  <!-- Level 2: GPU HBM3 VRAM -->
+                  <polygon points="150,111 105,165 355,165 310,111" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+                  <text x="230" y="136" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#5b21b6">GPU HBM3e (VRAM)</text>
+                  <text x="230" y="153" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6d28d9">80–141 GB | ~3.35–4.8 TB/s</text>
+
+                  <!-- Level 3: Host CPU DDR5 RAM -->
+                  <polygon points="100,171 60,225 400,225 360,171" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                  <text x="230" y="196" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#92400e">Host CPU DDR5 RAM (over PCIe Gen5)</text>
+                  <text x="230" y="213" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#b45309">512 GB – 2 TB | ~64 GB/s PCIe</text>
+
+                  <!-- Level 4: NVMe SSD -->
+                  <polygon points="55,231 28,280 432,280 405,231" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+                  <text x="230" y="254" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#334155">NVMe SSD Disk (Checkpoints &amp; Datasets)</text>
+                  <text x="230" y="271" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#475569">Multi-TB | ~7 GB/s</text>
+
+                  <!-- RIGHT PANEL: FLOATING POINT BIT LAYOUTS -->
+                  <rect x="457" y="16" width="405" height="278" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="660" y="38" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#1e293b">NUMBER FORMATS: SIGN + EXPONENT + MANTISSA</text>
+
+                  <!-- FP32 -->
+                  <text x="475" y="66" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#0f172a">FP32 (4 Bytes) — Full Precision</text>
+                  <rect x="475" y="74" width="28" height="28" fill="#fecaca" stroke="#dc2626"/>
+                  <text x="489" y="92" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#991b1b">1S</text>
+                  <rect x="503" y="74" width="110" height="28" fill="#bfdbfe" stroke="#2563eb"/>
+                  <text x="558" y="92" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#1e40af">8 Exponent (Range)</text>
+                  <rect x="613" y="74" width="230" height="28" fill="#bbf7d0" stroke="#059669"/>
+                  <text x="728" y="92" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#065f46">23 Mantissa (Precision)</text>
+
+                  <!-- FP16 -->
+                  <text x="475" y="126" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#0f172a">FP16 (2 Bytes) — Narrow Range (Can Overflow!)</text>
+                  <rect x="475" y="134" width="28" height="28" fill="#fecaca" stroke="#dc2626"/>
+                  <text x="489" y="152" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#991b1b">1S</text>
+                  <rect x="503" y="134" width="70" height="28" fill="#fde68a" stroke="#d97706"/>
+                  <text x="538" y="152" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#92400e">5 Exp</text>
+                  <rect x="573" y="134" width="115" height="28" fill="#bbf7d0" stroke="#059669"/>
+                  <text x="630" y="152" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#065f46">10 Mantissa</text>
+
+                  <!-- BF16 -->
+                  <text x="475" y="186" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#1d4ed8">BF16 (2 Bytes) — Same 8-Bit Range as FP32 (AI Standard!)</text>
+                  <rect x="475" y="194" width="28" height="28" fill="#fecaca" stroke="#dc2626"/>
+                  <text x="489" y="212" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#991b1b">1S</text>
+                  <rect x="503" y="194" width="110" height="28" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+                  <text x="558" y="212" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#1e40af">8 Exponent (Safe!)</text>
+                  <rect x="613" y="194" width="75" height="28" fill="#bbf7d0" stroke="#059669"/>
+                  <text x="650" y="212" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#065f46">7 Mant</text>
+
+                  <!-- INT8 / INT4 -->
+                  <text x="475" y="246" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#0f172a">INT8 (1 Byte) &amp; INT4 / NF4 (0.5 Bytes) — Inference Quantization</text>
+                  <rect x="475" y="254" width="105" height="26" fill="#e0e7ff" stroke="#4f46e5"/>
+                  <text x="527" y="271" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#312e81">INT8 (8 bits)</text>
+                  <rect x="595" y="254" width="65" height="26" fill="#ede9fe" stroke="#7c3aed"/>
+                  <text x="627" y="271" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#5b21b6">INT4</text>
+                </svg>
+              </div>
+              <figcaption class="figure-caption">Left: On-chip GPU SRAM is ~6&times; faster than off-chip HBM VRAM, which in turn is ~50&times; faster than copying tensors over PCIe from CPU RAM. Right: `BF16` keeps all 8 exponent bits of `FP32`, preventing gradient overflow/underflow while cutting memory in half.</figcaption>
+            </figure>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 3: PRECISION & VRAM MATH           -->
+          <!-- ========================================== -->
+          <section id="part-3-precision">
+            <h2>3. Number Precision &amp; How to Calculate LLM GPU Memory in 10 Seconds</h2>
+
+            <p>Every interview for an ML Systems or GenAI Engineer role asks: <strong>"How much GPU VRAM do you need to load or train a $7\text{ Billion}$ parameter LLM?"</strong> Use the byte size of each data type:</p>
+            <ul>
+              <li><strong>`FP32` (4 bytes / param):</strong> $7\text{B} \times 4\text{ bytes} = \mathbf{28\text{ GB}}$ just to hold the weights.</li>
+              <li><strong>`BF16` or `FP16` (2 bytes / param):</strong> $7\text{B} \times 2\text{ bytes} = \mathbf{14\text{ GB}}$ for inference weights (+ ~20% overhead for the <strong>KV-Cache</strong> and activations).</li>
+              <li><strong>`INT8` (1 byte / param):</strong> $7\text{B} \times 1\text{ byte} = \mathbf{7\text{ GB}}$.</li>
+              <li><strong>`INT4 / NF4` (0.5 bytes / param):</strong> $7\text{B} \times 0.5\text{ bytes} = \mathbf{3.5\text{ GB}}$ (fits easily on a laptop GPU!).</li>
+            </ul>
+            <p><strong>What about Full Training with AdamW?</strong> During training, for every parameter you must store: Weights (2 bytes in `BF16`) + Gradients (2 bytes in `BF16`) + Master FP32 Weights (4 bytes) + Adam Momentum $m$ (4 bytes) + Adam Variance $v$ (4 bytes) = <strong>$16\text{ bytes per parameter}$</strong> (plus activations), so a $7\text{B}$ model needs $\approx 112\text{ GB}+$ of VRAM for full fine-tuning (which is why **LoRA / QLoRA** freezes the base weights and only trains $1\%$ adapter weights!).</p>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 4: ROOFLINE, PCIE, DMA & NVLINK    -->
+          <!-- ========================================== -->
+          <section id="part-4-roofline-interconnect">
+            <h2>4. The Roofline Model, PCIe, Pinned Memory (DMA) &amp; NVLink</h2>
+
+            <dl class="terms">
+              <dt>1. Compute-Bound (LLM Prefill) vs. Memory-Bandwidth-Bound (LLM Decode)</dt>
+              <dd>When a user sends a 2,000-token prompt (**Prefill phase**), the GPU processes all 2,000 tokens in parallel using huge Matrix-Matrix multiplications (`GEMM`)—each weight loaded from HBM VRAM is reused 2,000 times, so the GPU is **Compute-Bound** (limited by TeraFLOPs). When generating the reply (**Decode phase**), the LLM generates **1 token at a time** sequentially—it must load all $14\text{ GB}$ of model weights from HBM VRAM just to produce 1 token! Thus LLM decoding speed ($\text{tokens/sec}$) is **Memory-Bandwidth-Bound** ($\approx \frac{\text{HBM Bandwidth (GB/s)}}{\text{Model Size (GB)}}$).</dd>
+              <dt>2. Pinned (Page-Locked) Memory &amp; DMA (`pin_memory=True`)</dt>
+              <dd>By default, OS CPU RAM is *pageable* (the OS can swap it to disk). A GPU's **DMA (Direct Memory Access)** engine cannot safely read pageable RAM directly, so the CPU must first copy your batch into a temporary page-locked buffer before DMA can transfer it over PCIe. Setting `DataLoader(..., pin_memory=True)` allocates batches directly in page-locked RAM, cutting CPU $\to$ GPU transfer time in half and enabling asynchronous `tensor.to("cuda", non_blocking=True)`.</dd>
+            </dl>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 5: AI NETWORKING PROTOCOLS         -->
+          <!-- ========================================== -->
+          <section id="part-5-ai-protocols">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Networking Pillar 1</span>
+              <span class="badge badge-neutral">REST, SSE, WebSockets &amp; gRPC</span>
+            </div>
+            <h2>5. AI Application Protocols: REST vs. SSE vs. WebSockets vs. gRPC</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>Use <strong>REST</strong> for simple one-shot JSON calls, <strong>Server-Sent Events (`SSE`)</strong> to stream LLM tokens from server to browser, <strong>WebSockets</strong> for two-way live voice/multimodal agents, and <strong>gRPC (Protobuf)</strong> for ultra-fast internal Vector DB and model-server calls.</p>
+            </div>
+
+            <!-- Figure 5.1: AI Networking Protocols Comparison -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 5.1</span>
+                <span class="figure-title">The 4 Application Protocols Powering Modern AI Systems</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 880 230" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="880" height="230" fill="#f8fafc" rx="8"/>
+
+                  <!-- 1. REST -->
+                  <rect x="20" y="20" width="200" height="190" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="120" y="44" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#1e293b">1. REST (HTTP + JSON)</text>
+                  <text x="120" y="64" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#475569">POST /v1/embeddings</text>
+                  <line x1="45" y1="95" x2="185" y2="95" stroke="#2563eb" stroke-width="2"/>
+                  <polygon points="190,95 182,90 182,100" fill="#2563eb"/>
+                  <text x="118" y="88" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#2563eb">1 Request</text>
+                  <line x1="190" y1="130" x2="50" y2="130" stroke="#059669" stroke-width="2"/>
+                  <polygon points="45,130 53,125 53,135" fill="#059669"/>
+                  <text x="118" y="123" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#059669">1 Full JSON Reply</text>
+                  <text x="120" y="170" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">Best for: Embeddings,</text>
+                  <text x="120" y="186" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">Batch Classification</text>
+
+                  <!-- 2. SSE (Server-Sent Events) -->
+                  <rect x="233" y="20" width="200" height="190" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                  <text x="333" y="44" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#1e40af">2. SSE (Token Stream)</text>
+                  <text x="333" y="64" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1d4ed8">text/event-stream</text>
+                  <line x1="258" y1="90" x2="398" y2="90" stroke="#2563eb" stroke-width="2"/>
+                  <polygon points="403,90 395,85 395,95" fill="#2563eb"/>
+                  <!-- Multiple streamed token arrows back -->
+                  <line x1="403" y1="112" x2="265" y2="112" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5,3"/>
+                  <polygon points="260,112 268,108 268,116" fill="#7c3aed"/>
+                  <line x1="403" y1="128" x2="265" y2="128" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5,3"/>
+                  <polygon points="260,128 268,124 268,132" fill="#7c3aed"/>
+                  <line x1="403" y1="144" x2="265" y2="144" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5,3"/>
+                  <polygon points="260,144 268,140 268,148" fill="#7c3aed"/>
+                  <text x="333" y="170" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#1e40af">Best for: LLM Chat</text>
+                  <text x="333" y="186" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">(Fast Time-to-First-Token)</text>
+
+                  <!-- 3. WebSockets -->
+                  <rect x="446" y="20" width="200" height="190" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="546" y="44" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#5b21b6">3. WebSockets (wss://)</text>
+                  <text x="546" y="64" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#6d28d9">Full-Duplex 2-Way Pipe</text>
+                  <line x1="472" y1="102" x2="612" y2="102" stroke="#7c3aed" stroke-width="2.5"/>
+                  <polygon points="617,102 609,97 609,107" fill="#7c3aed"/>
+                  <line x1="617" y1="126" x2="477" y2="126" stroke="#7c3aed" stroke-width="2.5"/>
+                  <polygon points="472,126 480,121 480,131" fill="#7c3aed"/>
+                  <text x="546" y="170" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">Best for: Live Voice AI,</text>
+                  <text x="546" y="186" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">Barge-In Audio Agents</text>
+
+                  <!-- 4. gRPC -->
+                  <rect x="659" y="20" width="200" height="190" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+                  <text x="759" y="44" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#065f46">4. gRPC (Protobuf)</text>
+                  <text x="759" y="64" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#047857">HTTP/2 Binary Streams</text>
+                  <rect x="690" y="92" width="138" height="44" rx="5" fill="#d1fae5" stroke="#059669"/>
+                  <text x="759" y="112" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#065f46">010110 Protobuf</text>
+                  <text x="759" y="127" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#065f46">5x smaller than JSON</text>
+                  <text x="759" y="170" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#065f46">Best for: Vector DBs</text>
+                  <text x="759" y="186" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&amp; Triton Inference Server</text>
+                </svg>
+              </div>
+              <figcaption class="figure-caption">Choosing the right protocol: `SSE` solves LLM perceived latency by streaming tokens over standard HTTP; `WebSockets` enable simultaneous talking and listening in Voice Agents; `gRPC` eliminates JSON parsing overhead when transferring large float embedding vectors.</figcaption>
+            </figure>
+
+            <h3>Two Latency Metrics Every GenAI Engineer Tracks</h3>
+            <ul>
+              <li><strong>TTFT (Time-To-First-Token):</strong> How many milliseconds pass between the user pressing "Send" and the first streamed token arriving via SSE (determined by network RTT + queuing + **Prefill compute time**).</li>
+              <li><strong>ITL / TPOT (Inter-Token Latency / Time-Per-Output-Token):</strong> How many milliseconds pass between each subsequent token (determined by **GPU HBM memory bandwidth**). Human reading speed is ~5 tokens/sec ($200\text{ ms/token}$), so an ITL of $20\text{–}40\text{ ms}$ ($25\text{–}50\text{ tokens/sec}$) feels instantaneous.</li>
+            </ul>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 6: DISTRIBUTED GPU NETWORKING      -->
+          <!-- ========================================== -->
+          <section id="part-6-distributed-net">
+            <h2>6. Cluster Networking: GPUDirect RDMA, InfiniBand &amp; NCCL AllReduce</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>When training across multiple servers, standard TCP/IP wastes time copying tensors through the CPU and OS kernel—<strong>GPUDirect RDMA</strong> lets network cards move gradients directly from GPU VRAM on Server 1 to GPU VRAM on Server 2 at $400\text{ Gbps}$ using <strong>NCCL Ring-AllReduce</strong>.</p>
+            </div>
+
+            <!-- Figure 6.1: GPUDirect RDMA & Ring-AllReduce -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 6.1</span>
+                <span class="figure-title">Traditional TCP/IP Path vs. GPUDirect RDMA (Left) &amp; NCCL Ring-AllReduce (Right)</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 880 225" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="880" height="225" fill="#f8fafc" rx="8"/>
+
+                  <!-- Left Panel: TCP/IP vs GPUDirect RDMA -->
+                  <rect x="20" y="16" width="465" height="193" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="252" y="38" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#1e293b">WHY GPUDIRECT RDMA BYPASSES THE CPU &amp; OS KERNEL</text>
+
+                  <!-- Node A GPU -->
+                  <rect x="38" y="62" width="110" height="52" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+                  <text x="93" y="85" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" font-weight="700" fill="#5b21b6">Server 1 GPU</text>
+                  <text x="93" y="101" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6d28d9">HBM VRAM</text>
+
+                  <!-- Node A CPU/OS (Slow path) -->
+                  <rect x="38" y="138" width="110" height="46" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-dasharray="4,3"/>
+                  <text x="93" y="158" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#991b1b">CPU RAM / OS</text>
+                  <text x="93" y="173" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#b91c1c">(Slow TCP Copy)</text>
+
+                  <!-- Node B GPU -->
+                  <rect x="355" y="62" width="110" height="52" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+                  <text x="410" y="85" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" font-weight="700" fill="#5b21b6">Server 2 GPU</text>
+                  <text x="410" y="101" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#6d28d9">HBM VRAM</text>
+
+                  <!-- Fast Green Direct RDMA Arrow -->
+                  <line x1="148" y1="88" x2="348" y2="88" stroke="#059669" stroke-width="3"/>
+                  <polygon points="354,88 345,83 345,93" fill="#059669"/>
+                  <rect x="175" y="66" width="152" height="20" rx="4" fill="#ecfdf5"/>
+                  <text x="251" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="#065f46">GPUDirect RDMA (400G)</text>
+                  <text x="251" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#047857">Zero CPU Copy &bull; Zero Kernel Context Switch</text>
+
+                  <!-- Right Panel: Ring-AllReduce -->
+                  <rect x="500" y="16" width="360" height="193" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="680" y="38" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#1e293b">NCCL RING-ALLREDUCE (GRADIENT SYNC)</text>
+
+                  <!-- 4 GPUs in a Ring -->
+                  <rect x="545" y="60" width="76" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                  <text x="583" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#1e40af">GPU 0</text>
+
+                  <rect x="735" y="60" width="76" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                  <text x="773" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#1e40af">GPU 1</text>
+
+                  <rect x="735" y="140" width="76" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                  <text x="773" y="164" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#1e40af">GPU 2</text>
+
+                  <rect x="545" y="140" width="76" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+                  <text x="583" y="164" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#1e40af">GPU 3</text>
+
+                  <!-- Ring Arrows -->
+                  <line x1="621" y1="80" x2="728" y2="80" stroke="#2563eb" stroke-width="2"/>
+                  <polygon points="734,80 726,75 726,85" fill="#2563eb"/>
+                  <line x1="773" y1="100" x2="773" y2="133" stroke="#2563eb" stroke-width="2"/>
+                  <polygon points="773,139 768,131 778,131" fill="#2563eb"/>
+                  <line x1="735" y1="160" x2="628" y2="160" stroke="#2563eb" stroke-width="2"/>
+                  <polygon points="622,160 630,155 630,165" fill="#2563eb"/>
+                  <line x1="583" y1="140" x2="583" y2="107" stroke="#2563eb" stroke-width="2"/>
+                  <polygon points="583,101 578,109 588,109" fill="#2563eb"/>
+                  <text x="678" y="124" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#334155">$\frac{1}{N}\sum_{i=0}^{N-1} \nabla \mathcal{L}_i$</text>
+                </svg>
+              </div>
+              <figcaption class="figure-caption">Left: GPUDirect RDMA over InfiniBand/RoCEv2 transfers tensors directly between GPU memories across servers without bouncing through CPU RAM or the OS TCP kernel. Right: NCCL Ring-AllReduce passes gradient shards around a logical ring so every GPU ends up with the exact averaged gradient in $2(N-1)$ steps.</figcaption>
+            </figure>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 7: HANDS-ON PYTHON SYSTEMS CODE    -->
+          <!-- ========================================== -->
+          <section id="part-7-code">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Hands-On Code</span>
+              <span class="badge badge-neutral">COA + Async Networking in Python</span>
+            </div>
+            <h2>7. Practical Code: Hardware/Precision Setup &amp; High-Speed Async Networking</h2>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">ai_systems_coa_and_networking.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import asyncio
+import torch
+from torch.utils.data import DataLoader, TensorDataset
+
+# =====================================================================
+# PART 1: COA IN PRACTICE — PINNED DMA MEMORY, BF16 &amp; TENSOR CORES
+# =====================================================================
+# Enable TF32 / Tensor Core math on Ampere/Hopper GPUs
+torch.set_float32_matmul_precision("high")
+
+dataset = TensorDataset(torch.randn(1024, 128), torch.randint(0, 2, (1024,)))
+
+# pin_memory=True allocates page-locked host RAM for fast DMA over PCIe;
+# num_workers=2 spawns 2 OS processes to bypass Python's GIL during data loading
+loader = DataLoader(dataset, batch_size=64, shuffle=True, pin_memory=True, num_workers=0)
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model = torch.nn.Linear(128, 2).to(device)
+
+for x_batch, y_batch in loader:
+    # non_blocking=True overlaps PCIe DMA transfer with GPU computation
+    x_batch = x_batch.to(device, non_blocking=True)
+    
+    # Mixed Precision with BFloat16 (halves HBM memory traffic, uses Tensor Cores)
+    with torch.autocast(device_type=device, dtype=torch.bfloat16):
+        logits = model(x_batch)
+    break
+
+# =====================================================================
+# PART 2: NETWORKING IN PRACTICE — NON-BLOCKING ASYNC I/O FOR AGENTS/RAG
+# =====================================================================
+async def fetch_embedding_async(doc_id: int) -> dict:
+    """Simulates a non-blocking network call (e.g., httpx.AsyncClient or gRPC)."""
+    await asyncio.sleep(0.05)  # Yields event loop while waiting on network socket
+    return {"doc_id": doc_id, "vector_dim": 768}
+
+async def run_parallel_rag_ingestion():
+    # Fires 50 network calls concurrently on 1 thread in ~50ms instead of 50 * 50ms = 2.5s!
+    tasks = [fetch_embedding_async(i) for i in range(50)]
+    results = await asyncio.gather(*tasks)
+    print(f"Completed {len(results)} concurrent network requests!")
+
+asyncio.run(run_parallel_rag_ingestion())</code></pre>
+            </div>
+          </section>
+
+          <!-- Prev / Next Navigation -->
+          <nav class="page-nav" aria-label="Curriculum Pagination">
+            <a class="prev" href="research.html">
+              <span class="page-nav-label">&larr; Previous Module</span>
+              <span class="page-nav-title">8. Frontier Research: JEPA, Mamba &amp; Sparse MoE</span>
+            </a>
+            <a class="next" href="interview.html">
+              <span class="page-nav-label">Next Module &rarr;</span>
+              <span class="page-nav-title">10. Top 100 Data Science, ML &amp; GenAI Interview Q&amp;A</span>
+            </a>
+          </nav>
+
+          <footer class="article-footer">
+            <p>AI Engineering Curriculum &bull; Module 9: Computer Organization &amp; Architecture (COA) &amp; Networking for AI</p>
+          </footer>
+
+        </article>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
