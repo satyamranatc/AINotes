@@ -1,47 +1,33 @@
-# AI Engineering Curriculum: Editorial Publications
+# AI Engineering Curriculum
 
-An editorial publication and reference architecture designed for deep, distraction-free technical reading across core Machine Learning and modern Generative AI engineering.
+A free, simple and fast way to learn core Machine Learning and modern Generative AI engineering. Each topic is explained in plain language first, with a diagram, a worked example and a recap. The math and deeper theory come after that.
 
-## Architecture & Design Principles
+## Pages
 
-- **Pure Vanilla CSS (`styles.css`)**: Built with custom properties (`:root`), modular layout tokens, responsive typography, and Apple-inspired restraint. No external UI frameworks or heavy runtimes.
-- **Strictly Static Reading Experience**: Non-interactive, publication-grade reading flow.
-- **Zero Emojis**: Replaced with clean typographic hierarchy, metadata pills, and structured comparison tables.
-- **Mathematical Typography**: Formulated with KaTeX for publication-quality rendering of equations.
-- **Integrated High-Precision Vector Diagrams**: Crisp, scalable inline SVGs for algorithmic mechanics and protocol handshakes.
+| # | Page | Topics | Notes (Markdown) |
+|---|---|---|---|
+| 1 | [`index.html`](index.html): Machine Learning Models | Linear Regression, KNN, SVM, Logistic Regression, Decision Trees, Random Forest, metrics, model selection, core concepts | [`ML_NOTES.md`](ML_NOTES.md) |
+| 2 | [`genai.html`](genai.html): LLMs, LangChain & MCP | Tokens & sampling, Gemini/Groq APIs, roles & chat history, LangChain LCEL, tool calling, Model Context Protocol | [`GENAI_NOTES.md`](GENAI_NOTES.md) |
 
----
+## How every topic is structured
 
-## Curriculum Pillars & Files
+`In one line` → `Analogy` → `How it works (steps)` → `Diagram` → `Key terms` → `Math in words + worked example` → `Code` → `When to use / avoid` → `Common mistakes` → `Recap`
 
-### Pillar 1: Machine Learning Foundations
-- **Web Article**: [`index.html`](file:///Users/satyamrana/Desktop/Projects/AI/index.html)
-- **Markdown Notes**: [`ML_NOTES.md`](file:///Users/satyamrana/Desktop/Projects/AI/ML_NOTES.md)
-- **Topics**: Linear Regression, K-Nearest Neighbors, Support Vector Machines, Logistic Regression, Decision Trees, and Random Forests. Includes 7 bespoke vector diagrams and complete mathematical formulations.
+The full writing and design rules are in **[`WRITING_RULES.md`](WRITING_RULES.md)**. Read it before you add or edit content.
 
-### Pillar 2: LLMs, LangChain, Tool Calling & MCP
-- **Web Article**: [`genai.html`](file:///Users/satyamrana/Desktop/Projects/AI/genai.html)
-- **Markdown Notes**: [`GENAI_NOTES.md`](file:///Users/satyamrana/Desktop/Projects/AI/GENAI_NOTES.md)
-- **Topics**: 
-  - **LLM Autoregressive Generation**: Temperature, Top-$P$, logit scaling, and sampling loops.
-  - **Direct SDK API Invocations**: Google Gemini (`google-genai`) and Groq (`groq`) with streaming and system instructions.
-  - **Role Assignment & Chat State**: `system`, `user`, and `assistant` role lifecycle, token budgeting, and sliding window pruning.
-  - **LangChain & LCEL**: Runnables, pipe operator composition (`prompt | model | parser`), and structured Pydantic outputs.
-  - **Tool Calling (Function Calling)**: The 4-step protocol handshake between model and client execution environments.
-  - **Model Context Protocol (MCP)**: Host/Client/Server triad, JSON-RPC 2.0 communication over Stdio/SSE, building FastMCP servers and client agents in Python.
+## Features
 
----
+- **Plain vanilla stack:** `styles.css` + `script.js`. No frameworks and no build step.
+- **Easy navigation:** a roadmap at the top of each page, a sticky sidebar that highlights where you are, a "Contents" sheet on mobile, linkable headings, and prev/next page links.
+- **Readable code:** zero-dependency syntax highlighting ("Calm Night" theme), line numbers and one-click copy.
+- **Math:** KaTeX rendering. Heavy derivations sit inside collapsible "Deep dive" panels.
+- **Diagrams:** hand-drawn inline SVG for every topic.
+- **Print-friendly:** navigation is hidden and deep dives expand when you print.
 
-## Viewing in Browser
-
-You can open either [`index.html`](file:///Users/satyamrana/Desktop/Projects/AI/index.html) or [`genai.html`](file:///Users/satyamrana/Desktop/Projects/AI/genai.html) directly in any modern browser:
+## View locally
 
 ```bash
-# Direct launch on macOS:
-open index.html
-open genai.html
-
-# Or serve locally:
-python3 -m http.server 8000
-# Then visit: http://localhost:8000
+open index.html            # macOS
+# or
+python3 -m http.server 8000   # then visit http://localhost:8000
 ```
