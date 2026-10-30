@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Science Toolkit: Pandas, NumPy, Matplotlib &amp; Streamlit — AI Engineering Curriculum</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body>
+  <!-- Top Global Navigation Bar -->
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <a href="story.html" class="top-nav-brand">AI Engineering Curriculum</a>
+      <ul class="top-nav-links">
+        <li><a href="story.html" class="nav-pill">0. Story &amp; Ethics</a></li>
+        <li><a href="ds.html" class="nav-pill active">Data Science</a></li>
+        <li><a href="index.html" class="nav-pill">1. ML</a></li>
+        <li><a href="dl.html" class="nav-pill">2. Deep Learning &amp; FNN</a></li>
+        <li><a href="nlp.html" class="nav-pill">3. NLP</a></li>
+        <li><a href="cv.html" class="nav-pill">4. OpenCV &amp; Vision</a></li>
+        <li><a href="genai.html" class="nav-pill">5. LLMs &amp; RAG</a></li>
+        <li><a href="agents.html" class="nav-pill">6. Agents &amp; MCP</a></li>
+        <li><a href="research.html" class="nav-pill">7. JEPA &amp; Research</a></li>
+        <li><a href="interview.html" class="nav-pill">8. 100 Interview Q&amp;A</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="site-wrapper">
+    <div class="site-container">
+      
+      <!-- Table of Contents Sidebar -->
+      <aside class="toc-sidebar">
+        <nav class="toc-sticky">
+          <div class="toc-title">Contents</div>
+          <ul class="toc-list">
+            <li class="toc-group-label">[NumPy] Array Engine</li>
+            <li class="toc-item"><a href="#part-1-numpy">1. NumPy Arrays &amp; Vectorization</a></li>
+            <li class="toc-item"><a href="#part-2-numpy-ops">2. Shapes, Axes &amp; Broadcasting</a></li>
+            <li class="toc-group-label">[Pandas] Complete ML Tutorial</li>
+            <li class="toc-item"><a href="#part-3-pandas-core">3. DataFrames, Selection &amp; loc vs. iloc</a></li>
+            <li class="toc-item"><a href="#part-4-pandas-cleaning">4. Cleaning: NaNs, Outliers &amp; Leakage</a></li>
+            <li class="toc-item"><a href="#part-5-pandas-ml">5. Feature Engineering: GroupBy, Merge &amp; Encoding</a></li>
+            <li class="toc-group-label">[Matplotlib] Visual EDA</li>
+            <li class="toc-item"><a href="#part-6-matplotlib">6. Matplotlib: Subplots &amp; 4 Core ML Charts</a></li>
+            <li class="toc-group-label">[Streamlit] Interactive AI Apps</li>
+            <li class="toc-item"><a href="#part-7-streamlit">7. Streamlit: Ship ML Apps in Pure Python</a></li>
+            <li class="toc-group-label">Reference</li>
+            <li class="toc-item"><a href="#summary">8. Data Science Cheat Sheet</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Article Stream -->
+      <main class="main-content">
+        <article>
+          
+          <!-- Article Header -->
+          <header class="article-header">
+            <div class="article-category">Data Science Foundations &middot; NumPy, Pandas, Matplotlib &amp; Streamlit</div>
+            <h1 class="article-title">The Data Science Toolkit: Everything You Need Before Training a Model</h1>
+            <p class="article-subtitle">Real-world Machine Learning is 80% data preparation and 20% modeling. Master fast array math with NumPy, complete end-to-end data wrangling with Pandas, diagnostic plotting with Matplotlib, and interactive web deployment with Streamlit.</p>
+            <div class="article-meta">
+              <span>Level: Beginner &rarr; Production</span>
+              <span class="meta-divider">&bull;</span>
+              <span>4 Visual Diagrams</span>
+              <span class="meta-divider">&bull;</span>
+              <span>Reading Time: 20 min</span>
+            </div>
+          </header>
+
+          <!-- Page Intro: What You'll Learn & Prerequisites -->
+          <div class="learn-grid">
+            <div class="learn-box">
+              <h4>What You'll Learn</h4>
+              <ul>
+                <li><strong>[NumPy]</strong> Why vectorized C arrays run $100\times$ faster than Python loops, plus <code>reshape(-1, 1)</code>, <code>axis=0</code> vs. <code>axis=1</code>, and broadcasting.</li>
+                <li><strong>[Pandas for ML]</strong> Everything needed to turn a raw CSV into a clean feature matrix $\mathbf{X}$: <code>loc</code> vs. <code>iloc</code>, missing-value imputation without data leakage, outlier clipping, <code>groupby</code> aggregations, <code>merge</code>, and categorical encoding.</li>
+                <li><strong>[Matplotlib]</strong> The clean <code>fig, ax = plt.subplots()</code> pattern for distributions, scatter plots, and loss curves.</li>
+                <li><strong>[Streamlit]</strong> How to wrap any trained ML or LLM pipeline into a live browser dashboard in 30 lines of Python.</li>
+              </ul>
+            </div>
+            <div class="learn-box">
+              <h4>Before You Start</h4>
+              <ul>
+                <li>Basic Python syntax (lists, dictionaries, functions).</li>
+                <li>Install the four libraries in one command: <code>pip install numpy pandas matplotlib streamlit</code>.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Clickable 4-Pillar Roadmap -->
+          <ol class="roadmap">
+            <li><a href="#part-1-numpy">
+              <span class="roadmap-step">Pillar 1</span>
+              <span class="roadmap-title">NumPy</span>
+              <span class="roadmap-desc">Fast C-backed arrays, shapes &amp; matrix math</span>
+            </a></li>
+            <li><a href="#part-3-pandas-core">
+              <span class="roadmap-step">Pillar 2</span>
+              <span class="roadmap-title">Pandas for ML</span>
+              <span class="roadmap-desc">Clean, filter, group, merge &amp; encode tables</span>
+            </a></li>
+            <li><a href="#part-6-matplotlib">
+              <span class="roadmap-step">Pillar 3</span>
+              <span class="roadmap-title">Matplotlib</span>
+              <span class="roadmap-desc">Visualize distributions, correlations &amp; loss</span>
+            </a></li>
+            <li><a href="#part-7-streamlit">
+              <span class="roadmap-step">Pillar 4</span>
+              <span class="roadmap-title">Streamlit</span>
+              <span class="roadmap-desc">Turn models into live web apps in minutes</span>
+            </a></li>
+          </ol>
+
+          <!-- ========================================== -->
+          <!-- SECTION 1: NUMPY ARRAYS & VECTORIZATION    -->
+          <!-- ========================================== -->
+          <section id="part-1-numpy">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Pillar 1 &middot; NumPy</span>
+              <span class="badge badge-neutral">Numerical Computing</span>
+            </div>
+            <h2>1. NumPy: Fast N-Dimensional Arrays &amp; Vectorization</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p><strong>NumPy</strong> replaces slow Python <code>for</code> loops with contiguous C-memory arrays (<code>ndarray</code>) that apply math operations to millions of numbers simultaneously (<strong>vectorization</strong>).</p>
+            </div>
+
+            <div class="callout callout-analogy">
+              <div class="callout-title">Think of it like this</div>
+              <p>A standard Python list is like a scavenger hunt where every item is stored in a different room with a paper clue pointing to its address. A <strong>NumPy array</strong> packs every number of the exact same data type (like <code>float32</code>) shoulder-to-shoulder in one single hallway, allowing your CPU's SIMD vector instructions to multiply 8 or 16 numbers in a single clock cycle.</p>
+            </div>
+
+            <h3>Why Scikit-Learn &amp; Deep Learning Depend on NumPy</h3>
+            <p>Every machine learning model expects its input features $\mathbf{X}$ as a 2D numeric grid of shape <code>(n_samples, n_features)</code> and its target labels $\mathbf{y}$ as a 1D array of shape <code>(n_samples,)</code>. NumPy is the universal language that powers Scikit-Learn, Pandas, OpenCV images, and PyTorch/TensorFlow tensors.</p>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 2: NUMPY SHAPES, AXES & BROADCAST  -->
+          <!-- ========================================== -->
+          <section id="part-2-numpy-ops">
+            <h2>2. NumPy Shapes, Axes, <code>reshape(-1, 1)</code> &amp; Broadcasting</h2>
+
+            <p>Three concepts trip up almost every beginner in NumPy. Master them once and you will never fight a <code>ValueError: shapes not aligned</code> error again:</p>
+
+            <dl class="terms">
+              <dt>1. <code>axis=0</code> vs. <code>axis=1</code> (Which way does the operation collapse?)</dt>
+              <dd>In a 2D table of shape <code>(rows, columns)</code>, <strong><code>axis=0</code></strong> runs vertically <em>down the rows</em> (giving you one summary number per column, such as the mean of each feature). <strong><code>axis=1</code></strong> runs horizontally <em>across the columns</em> (giving you one number per row/sample).</dd>
+              <dt>2. <code>reshape(-1, 1)</code> (The "-1" Wildcard Dimension)</dt>
+              <dd>Scikit-Learn models refuse 1D feature arrays of shape <code>(100,)</code> because they expect a 2D matrix <code>(n_samples, n_features)</code>. Calling <code>x.reshape(-1, 1)</code> tells NumPy: <em>"Put 1 column in the second dimension, and automatically calculate how many rows are needed (100) for the <code>-1</code> dimension."</em></dd>
+              <dt>3. Broadcasting (Math Between Different-Shaped Arrays)</dt>
+              <dd>When you subtract a 1D mean vector of shape <code>(3,)</code> from a 2D dataset of shape <code>(1000, 3)</code>, NumPy virtually stretches ("broadcasts") those 3 numbers across all 1,000 rows without duplicating memory.</dd>
+            </dl>
+
+            <!-- Figure 1.1: NumPy Axes, Reshape & Broadcasting -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 1.1</span>
+                <span class="figure-title">NumPy Visual Mental Model: <code>axis=0</code> vs. <code>axis=1</code>, <code>reshape(-1, 1)</code> &amp; Broadcasting</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 880 230" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="880" height="230" fill="#f8fafc" rx="8"/>
+
+                  <!-- Panel 1: axis=0 vs axis=1 -->
+                  <rect x="20" y="18" width="275" height="194" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="157" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#1e293b">1. AXIS DIRECTIONS IN 2D (3, 3)</text>
+                  <!-- 3x3 Grid -->
+                  <g stroke="#94a3b8" stroke-width="1.2" fill="#f1f5f9">
+                    <rect x="95" y="65" width="105" height="90"/>
+                    <line x1="130" y1="65" x2="130" y2="155"/>
+                    <line x1="165" y1="65" x2="165" y2="155"/>
+                    <line x1="95" y1="95" x2="200" y2="95"/>
+                    <line x1="95" y1="125" x2="200" y2="125"/>
+                  </g>
+                  <!-- axis=0 arrow (Down rows) -->
+                  <line x1="72" y1="70" x2="72" y2="150" stroke="#2563eb" stroke-width="2.5"/>
+                  <polygon points="72,155 67,146 77,146" fill="#2563eb"/>
+                  <text x="50" y="110" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#2563eb" transform="rotate(-90 50 110)">axis=0 (down)</text>
+                  <!-- axis=1 arrow (Across cols) -->
+                  <line x1="100" y1="175" x2="195" y2="175" stroke="#059669" stroke-width="2.5"/>
+                  <polygon points="200,175 191,170 191,180" fill="#059669"/>
+                  <text x="148" y="196" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#059669">axis=1 (across cols)</text>
+
+                  <!-- Panel 2: reshape(-1, 1) -->
+                  <rect x="310" y="18" width="255" height="194" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="437" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#1e293b">2. x.reshape(-1, 1)</text>
+                  <!-- 1D array (4,) -->
+                  <text x="372" y="75" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#475569">Shape (4,)</text>
+                  <rect x="328" y="85" width="88" height="24" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+                  <text x="372" y="101" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#1e40af">[10, 20, 30, 40]</text>
+                  <!-- Arrow -->
+                  <line x1="424" y1="97" x2="458" y2="97" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="463,97 455,92 455,102" fill="#64748b"/>
+                  <!-- 2D Column (4, 1) -->
+                  <text x="505" y="65" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#5b21b6">Shape (4, 1)</text>
+                  <rect x="482" y="74" width="46" height="96" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+                  <g font-family="JetBrains Mono, monospace" font-size="10.5" fill="#4c1d95" text-anchor="middle">
+                    <text x="505" y="92">[10]</text>
+                    <text x="505" y="115">[20]</text>
+                    <text x="505" y="138">[30]</text>
+                    <text x="505" y="161">[40]</text>
+                  </g>
+                  <text x="437" y="196" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#475569">Required by Scikit-Learn X</text>
+
+                  <!-- Panel 3: Broadcasting -->
+                  <rect x="580" y="18" width="280" height="194" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="720" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#1e293b">3. BROADCASTING: (3, 3) + (1, 3)</text>
+                  <!-- Matrix (3,3) -->
+                  <rect x="605" y="68" width="84" height="84" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                  <text x="647" y="114" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#1e40af">X (3, 3)</text>
+                  <text x="712" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#0f172a">+</text>
+                  <!-- Vector (1,3) + Ghost rows -->
+                  <rect x="735" y="68" width="96" height="28" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                  <text x="783" y="86" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#92400e">bias (1, 3)</text>
+                  <rect x="735" y="96" width="96" height="28" fill="#fef3c7" fill-opacity="0.35" stroke="#d97706" stroke-dasharray="3,3"/>
+                  <rect x="735" y="124" width="96" height="28" fill="#fef3c7" fill-opacity="0.35" stroke="#d97706" stroke-dasharray="3,3"/>
+                  <text x="783" y="176" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#92400e">Stretched virtually</text>
+                  <text x="783" y="191" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#92400e">with zero RAM copy!</text>
+                </svg>
+              </div>
+              <figcaption class="figure-caption">Left: `axis=0` aggregates down each column; `axis=1` aggregates across each row. Center: `reshape(-1, 1)` turns a flat list into a 2D column matrix. Right: Broadcasting adds a 1-row bias vector to every row of a matrix automatically.</figcaption>
+            </figure>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">numpy_essentials_for_ml.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import numpy as np
+
+# 1. Create arrays &amp; inspect shapes
+X = np.array([[10.0, 200.0],
+              [20.0, 400.0],
+              [30.0, 600.0]])             # Shape: (3, 2) -> 3 samples, 2 features
+print("Shape:", X.shape, "| Dtype:", X.dtype)
+
+# 2. Axis aggregations + Broadcasting (Standardizing features to mean=0, std=1)
+col_means = X.mean(axis=0)                # Shape: (2,) -> [20.0, 400.0] (mean of each column)
+col_stds  = X.std(axis=0)                 # Shape: (2,) -> [8.16, 163.3]
+X_scaled  = (X - col_means) / col_stds    # Broadcasting subtracts (2,) from every row of (3, 2)!
+
+# 3. Boolean Masking (Fast filtering without loops)
+scores = np.array([45, 82, 91, 38, 76])
+passed = scores[scores >= 60]             # Returns array([82, 91, 76])
+
+# 4. Reshaping 1D -> 2D for Scikit-Learn &amp; Matrix Multiplication (@)
+feature_1d = np.array([1.5, 2.5, 3.5])    # Shape: (3,)
+X_col = feature_1d.reshape(-1, 1)         # Shape: (3, 1) -> ready for model.fit(X_col, y)
+
+weights = np.array([[0.4], [-0.2]])       # Shape: (2, 1)
+predictions = X_scaled @ weights + 0.5    # Matrix dot product: (3, 2) @ (2, 1) -> (3, 1)</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 3: PANDAS CORE & LOC VS ILOC       -->
+          <!-- ========================================== -->
+          <section id="part-3-pandas-core">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Pillar 2 &middot; Pandas for ML</span>
+              <span class="badge badge-neutral">Tabular Wrangling</span>
+            </div>
+            <h2>3. Pandas Core: Series, DataFrames &amp; <code>loc</code> vs. <code>iloc</code></h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p><strong>Pandas</strong> wraps NumPy arrays into a labeled table called a <strong><code>DataFrame</code></strong> (with named columns and an index) where each column is a 1D <strong><code>Series</code></strong> that can hold numbers, strings, categories, or timestamps.</p>
+            </div>
+
+            <h3>The Golden Rule of Indexing: <code>df.loc</code> vs. <code>df.iloc</code></h3>
+            <ul>
+              <li><strong><code>df.loc[row_label, col_name]</code> is Label-Based (Inclusive):</strong> Looks up rows and columns by their actual names/index labels. Slicing <code>df.loc[0:5, "age":"salary"]</code> <strong>includes</strong> row <code>5</code> and column <code>"salary"</code>.</li>
+              <li><strong><code>df.iloc[row_pos, col_pos]</code> is Integer-Position-Based (Half-Open):</strong> Looks up rows and columns by $0$-based integer position just like a Python list. Slicing <code>df.iloc[0:5, 0:2]</code> stops <strong>before</strong> index <code>5</code> and column <code>2</code>.</li>
+            </ul>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">pandas_core_indexing.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import pandas as pd
+
+# 1. Load data (CSV or fast Parquet) &amp; run the 4 mandatory inspection checks
+df = pd.DataFrame({
+    "customer_id": [101, 102, 103, 104, 105],
+    "city":        ["Indore", "Pune", "Indore", "Bengaluru", "Pune"],
+    "tenure_mo":   [2, 24, 14, 36, 5],
+    "monthly_inr": [799.0, 1499.0, 999.0, 2499.0, 799.0],
+    "churned":     [1, 0, 0, 0, 1]
+})
+
+print(df.head(3))              # Preview first 3 rows
+print(df.info())               # Check column data types &amp; non-null counts
+print(df.describe())           # Summary stats: mean, std, min, 25%, 50% (median), 75%, max
+print(df["city"].value_counts())  # Frequency count of each category
+
+# 2. loc (by label/name) vs. iloc (by integer position)
+high_bill_indore = df.loc[
+    (df["city"] == "Indore") &amp; (df["monthly_inr"] >= 800),
+    ["customer_id", "tenure_mo", "churned"]
+]
+
+first_two_rows_first_three_cols = df.iloc[0:2, 0:3]  # Rows 0,1 and Columns 0,1,2</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 4: DATA CLEANING FOR ML            -->
+          <!-- ========================================== -->
+          <section id="part-4-pandas-cleaning">
+            <h2>4. Data Cleaning for ML: Missing Values (NaNs), Duplicates &amp; Outliers</h2>
+
+            <p>Most Scikit-Learn and neural network models crash immediately if your table contains even a single <code>NaN</code> (missing value) or raw text string, and linear models get pulled off course by extreme outliers. Here is the exact 5-step cleaning checklist used in production ML:</p>
+
+            <ol class="steps">
+              <li><strong>Audit missing values with <code>df.isna().sum()</code>.</strong> If a column is missing $>60\%$ of its rows and carries weak signal, drop the column; if only a few rows are missing, impute them.</li>
+              <li><strong>Impute numeric columns with the <em>Median</em> (not the Mean) when data is skewed.</strong> Salaries, house prices, and transaction counts have extreme right tails—the median is resistant to billionaire outliers.</li>
+              <li><strong>Impute categorical columns with the <em>Mode</em> (most frequent value) or an explicit <code>"Unknown"</code> category.</strong> Sometimes the fact that a field is missing is itself predictive!</li>
+              <li><strong>Prevent Data Leakage: Compute imputation statistics on <code>X_train</code> ONLY!</strong> Never calculate `.median()` or `.mean()` on the entire dataset before splitting—doing so leaks test-set distribution information into training.</li>
+              <li><strong>Clip extreme outliers using the IQR rule or quantiles (<code>.clip()</code>).</strong> Cap values below $Q_1 - 1.5\text{ IQR}$ and above $Q_3 + 1.5\text{ IQR}$ so a single data-entry typo (`age = 999`) does not ruin Gradient Descent.</li>
+            </ol>
+
+            <!-- Figure 3.1: Pandas End-to-End ML Data Pipeline -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 4.1</span>
+                <span class="figure-title">The Complete Pandas-to-Machine-Learning Feature Pipeline (Leakage-Free)</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 880 190" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="880" height="190" fill="#f8fafc" rx="8"/>
+
+                  <!-- Stage 1: Raw DataFrame -->
+                  <rect x="20" y="28" width="150" height="134" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+                  <text x="95" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#991b1b">1. Raw CSV / SQL</text>
+                  <text x="95" y="76" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#b91c1c">pd.read_csv()</text>
+                  <text x="95" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Missing NaNs</text>
+                  <text x="95" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Duplicate rows</text>
+                  <text x="95" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; String categories</text>
+                  <text x="95" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Extreme outliers</text>
+
+                  <line x1="170" y1="95" x2="194" y2="95" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="199,95 191,90 191,100" fill="#64748b"/>
+
+                  <!-- Stage 2: Clean & Deduplicate -->
+                  <rect x="201" y="28" width="155" height="134" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                  <text x="278" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#92400e">2. Clean &amp; Clip</text>
+                  <text x="278" y="76" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#b45309">drop_duplicates()</text>
+                  <text x="278" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Fix dtypes / dates</text>
+                  <text x="278" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Split Train / Test</text>
+                  <text x="278" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Impute NaNs (median)</text>
+                  <text x="278" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; IQR outlier clip()</text>
+
+                  <line x1="356" y1="95" x2="380" y2="95" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="385,95 377,90 377,100" fill="#64748b"/>
+
+                  <!-- Stage 3: Feature Engineering -->
+                  <rect x="387" y="28" width="160" height="134" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                  <text x="467" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#1e40af">3. Engineer Features</text>
+                  <text x="467" y="76" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#1d4ed8">groupby() &amp; merge()</text>
+                  <text x="467" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Ratio features</text>
+                  <text x="467" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Customer aggregates</text>
+                  <text x="467" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Date parts (.dt)</text>
+                  <text x="467" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Log-transform skew</text>
+
+                  <line x1="547" y1="95" x2="571" y2="95" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="576,95 568,90 568,100" fill="#64748b"/>
+
+                  <!-- Stage 4: Encode & Scale -->
+                  <rect x="578" y="28" width="145" height="134" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+                  <text x="650" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#5b21b6">4. Encode &amp; Scale</text>
+                  <text x="650" y="76" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#6d28d9">get_dummies()</text>
+                  <text x="650" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; One-Hot Encoding</text>
+                  <text x="650" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Ordinal mapping</text>
+                  <text x="650" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; StandardScaler</text>
+                  <text x="650" y="146" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">&bull; Pure float32 grid</text>
+
+                  <line x1="723" y1="95" x2="747" y2="95" stroke="#059669" stroke-width="2"/>
+                  <polygon points="752,95 744,90 744,100" fill="#059669"/>
+
+                  <!-- Stage 5: Model Ready X, y -->
+                  <rect x="754" y="28" width="106" height="134" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+                  <text x="807" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" font-weight="700" fill="#065f46">5. ML Ready</text>
+                  <text x="807" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#047857">X_train, y</text>
+                  <text x="807" y="108" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">Scikit-Learn</text>
+                  <text x="807" y="124" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">TensorFlow</text>
+                  <text x="807" y="140" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">PyTorch</text>
+                </svg>
+              </div>
+              <figcaption class="figure-caption">From raw CSV to model-ready tensors: deduplicate, split train/test before computing imputation medians, engineer domain features, encode strings into numbers, and output a clean numeric matrix $\mathbf{X}$.</figcaption>
+            </figure>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 5: FEATURE ENGINEERING IN PANDAS   -->
+          <!-- ========================================== -->
+          <section id="part-5-pandas-ml">
+            <h2>5. Feature Engineering: <code>groupby</code>, <code>merge</code>, Dates &amp; Encoding</h2>
+
+            <p>Below is a complete, copy-pasteable Pandas ML preparation script showing every operation asked in Data Science interviews and practical take-home tests:</p>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">pandas_ml_preprocessing.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import numpy as np
+import pandas as pd
+
+# Raw customer dataset with missing values (np.nan), outliers, dates &amp; strings
+df = pd.DataFrame({
+    "user_id":     [1, 2, 3, 4, 5, 5],
+    "signup_date": ["2025-01-10", "2025-03-15", "2025-06-20", "2025-08-01", "2025-11-12", "2025-11-12"],
+    "plan":        ["Basic", "Pro", "Basic", np.nan, "Enterprise", "Enterprise"],
+    "income_k":    [45.0, 82.0, np.nan, 60.0, 9999.0, 9999.0],  # 9999.0 is an extreme outlier!
+    "bought":      [0, 1, 0, 1, 1, 1]
+})
+
+# 1. Remove exact duplicate rows
+df = df.drop_duplicates(subset=["user_id"], keep="first").copy()
+
+# 2. Handle Missing Values (Impute numeric with Median, categorical with Mode/"Unknown")
+income_median = df["income_k"].median()
+df["income_k"] = df["income_k"].fillna(income_median)
+df["plan"]     = df["plan"].fillna("Unknown")
+
+# 3. Clip extreme outliers using the Interquartile Range (IQR = Q3 - Q1)
+q1, q3 = df["income_k"].quantile([0.25, 0.75])
+iqr = q3 - q1
+df["income_k"] = df["income_k"].clip(lower=q1 - 1.5 * iqr, upper=q3 + 1.5 * iqr)
+
+# 4. Datetime Feature Extraction (.dt accessor)
+df["signup_date"]  = pd.to_datetime(df["signup_date"])
+df["signup_month"] = df["signup_date"].dt.month
+df["is_weekend"]   = (df["signup_date"].dt.dayofweek >= 5).astype(int)
+
+# 5. GroupBy Aggregation &amp; Merge (e.g., average income per subscription plan)
+plan_stats = (
+    df.groupby("plan", as_index=False)
+      .agg(plan_avg_income=("income_k", "mean"), plan_users=("user_id", "count"))
+)
+df = pd.merge(df, plan_stats, on="plan", how="left")
+
+# 6. Encode Categorical Strings -> Numbers (One-Hot Encoding via pd.get_dummies)
+df_encoded = pd.get_dummies(df, columns=["plan"], drop_first=True, dtype=int)
+
+# 7. Separate Feature Matrix X and Target Vector y for Scikit-Learn / TensorFlow
+feature_cols = [c for c in df_encoded.columns if c not in ("user_id", "signup_date", "bought")]
+X = df_encoded[feature_cols].to_numpy(dtype=np.float32)
+y = df_encoded["bought"].to_numpy(dtype=np.int64)
+print("Final ML Feature Matrix X shape:", X.shape)</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 6: MATPLOTLIB FOR ML & EDA         -->
+          <!-- ========================================== -->
+          <section id="part-6-matplotlib">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Pillar 3 &middot; Matplotlib</span>
+              <span class="badge badge-neutral">Exploratory Data Analysis</span>
+            </div>
+            <h2>6. Matplotlib: The <code>fig, ax</code> Pattern &amp; 4 Essential ML Plots</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>Always use Matplotlib's object-oriented <strong><code>fig, ax = plt.subplots()</code></strong> interface: <strong><code>fig</code></strong> is the outer picture frame (canvas size, saving to PNG/PDF), and <strong><code>ax</code></strong> is the actual chart where you draw data, titles, and axis labels.</p>
+            </div>
+
+            <!-- Figure 6.1: Matplotlib 2x2 Diagnostic Grid -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 6.1</span>
+                <span class="figure-title">Anatomy of <code>fig, axes = plt.subplots(2, 2)</code>: The 4 Charts Every ML Engineer Plots</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 880 280" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Outer Figure Frame -->
+                  <rect x="16" y="12" width="848" height="256" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="2" stroke-dasharray="6,4"/>
+                  <text x="36" y="34" font-family="JetBrains Mono, monospace" font-size="11.5" font-weight="700" fill="#1e293b">Figure (fig) — Outer Canvas: figsize=(12, 8), dpi=150, fig.savefig("eda.png")</text>
+
+                  <!-- Subplot 1: Histogram -->
+                  <rect x="36" y="48" width="190" height="198" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="131" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#1e40af">1. Histogram (ax.hist)</text>
+                  <rect x="62" y="160" width="22" height="50" fill="#93c5fd"/>
+                  <rect x="86" y="110" width="22" height="100" fill="#3b82f6"/>
+                  <rect x="110" y="95" width="22" height="115" fill="#2563eb"/>
+                  <rect x="134" y="135" width="22" height="75" fill="#60a5fa"/>
+                  <rect x="158" y="175" width="22" height="35" fill="#93c5fd"/>
+                  <rect x="182" y="192" width="22" height="18" fill="#bfdbfe"/>
+                  <line x1="54" y1="210" x2="212" y2="210" stroke="#475569" stroke-width="1.5"/>
+                  <text x="131" y="232" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#475569">Detect skew &amp; outliers</text>
+
+                  <!-- Subplot 2: Scatter -->
+                  <rect x="242" y="48" width="190" height="198" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="337" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#065f46">2. Scatter (ax.scatter)</text>
+                  <line x1="264" y1="210" x2="414" y2="210" stroke="#475569" stroke-width="1.5"/>
+                  <line x1="264" y1="85" x2="264" y2="210" stroke="#475569" stroke-width="1.5"/>
+                  <line x1="270" y1="195" x2="405" y2="95" stroke="#10b981" stroke-width="2" stroke-dasharray="4,3"/>
+                  <circle cx="282" cy="185" r="4.5" fill="#059669"/>
+                  <circle cx="305" cy="165" r="4.5" fill="#059669"/>
+                  <circle cx="328" cy="158" r="4.5" fill="#059669"/>
+                  <circle cx="352" cy="130" r="4.5" fill="#059669"/>
+                  <circle cx="378" cy="118" r="4.5" fill="#059669"/>
+                  <circle cx="396" cy="100" r="4.5" fill="#059669"/>
+                  <text x="337" y="232" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#475569">Check X vs. y correlation</text>
+
+                  <!-- Subplot 3: Loss Curve -->
+                  <rect x="448" y="48" width="190" height="198" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="543" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#5b21b6">3. Loss Curve (ax.plot)</text>
+                  <line x1="470" y1="210" x2="620" y2="210" stroke="#475569" stroke-width="1.5"/>
+                  <line x1="470" y1="85" x2="470" y2="210" stroke="#475569" stroke-width="1.5"/>
+                  <!-- Train loss -->
+                  <path d="M 476 95 Q 515 175 612 198" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+                  <!-- Val loss -->
+                  <path d="M 476 105 Q 520 165 555 168 Q 585 170 612 145" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="4,3"/>
+                  <text x="580" y="135" font-family="Inter, sans-serif" font-size="9.5" font-weight="600" fill="#dc2626">Val Loss</text>
+                  <text x="580" y="190" font-family="Inter, sans-serif" font-size="9.5" font-weight="600" fill="#2563eb">Train Loss</text>
+                  <text x="543" y="232" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#475569">Spot overfitting epoch</text>
+
+                  <!-- Subplot 4: Horizontal Bar Feature Importance -->
+                  <rect x="654" y="48" width="190" height="198" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="749" y="68" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#92400e">4. Bar Chart (ax.barh)</text>
+                  <line x1="690" y1="85" x2="690" y2="210" stroke="#475569" stroke-width="1.5"/>
+                  <rect x="690" y="96" width="130" height="20" rx="3" fill="#f59e0b"/>
+                  <rect x="690" y="128" width="95" height="20" rx="3" fill="#fbbf24"/>
+                  <rect x="690" y="160" width="55" height="20" rx="3" fill="#fcd34d"/>
+                  <text x="684" y="110" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#334155">income</text>
+                  <text x="684" y="142" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#334155">tenure</text>
+                  <text x="684" y="174" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#334155">age</text>
+                  <text x="749" y="232" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#475569">Rank feature importance</text>
+                </svg>
+              </div>
+              <figcaption class="figure-caption">The four workhorse Matplotlib plots for Machine Learning: (1) `ax.hist` to inspect feature skewness before scaling, (2) `ax.scatter` to see relationships and clusters, (3) `ax.plot` to compare training vs. validation loss across epochs, and (4) `ax.barh` to rank feature importances.</figcaption>
+            </figure>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">matplotlib_ml_plots.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import numpy as np
+import matplotlib.pyplot as plt
+
+# Create a 1-row, 2-column dashboard using the clean Object-Oriented (fig, axes) API
+fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(11, 4.2), dpi=120)
+
+# --- Left Chart (ax1): Feature Distribution Histogram ---
+rng = np.random.default_rng(42)
+incomes = rng.normal(loc=65, scale=15, size=500)
+ax1.hist(incomes, bins=25, color="#2563eb", edgecolor="white", alpha=0.85)
+ax1.axvline(np.median(incomes), color="#dc2626", linestyle="--", label="Median")
+ax1.set_title("Customer Income Distribution")
+ax1.set_xlabel("Annual Income (Lakhs INR)")
+ax1.set_ylabel("Count")
+ax1.legend()
+
+# --- Right Chart (ax2): Training vs. Validation Loss Curve ---
+epochs = np.arange(1, 11)
+train_loss = np.array([0.85, 0.58, 0.42, 0.31, 0.24, 0.19, 0.15, 0.12, 0.09, 0.07])
+val_loss   = np.array([0.88, 0.61, 0.46, 0.36, 0.30, 0.28, 0.31, 0.35, 0.40, 0.46])
+
+ax2.plot(epochs, train_loss, marker="o", color="#2563eb", label="Train Loss")
+ax2.plot(epochs, val_loss, marker="s", linestyle="--", color="#dc2626", label="Validation Loss")
+ax2.axvline(6, color="#059669", linestyle=":", label="Best Epoch (Early Stop = 6)")
+ax2.set_title("Training vs. Validation Loss")
+ax2.set_xlabel("Epoch")
+ax2.set_ylabel("Cross-Entropy Loss")
+ax2.legend()
+
+fig.tight_layout()
+fig.savefig("ml_diagnostics.png")   # Save crisp PNG for reports or Streamlit</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 7: STREAMLIT INTERACTIVE APPS      -->
+          <!-- ========================================== -->
+          <section id="part-7-streamlit">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Pillar 4 &middot; Streamlit</span>
+              <span class="badge badge-neutral">Interactive ML Deployment</span>
+            </div>
+            <h2>7. Streamlit: Turn Any ML Model into a Live Web App in Pure Python</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p><strong>Streamlit</strong> turns a plain Python script into an interactive web application—no HTML, CSS, or React required—by re-running your script from top to bottom whenever a user moves a slider or clicks a button.</p>
+            </div>
+
+            <h3>How Streamlit's Execution Model &amp; Caching Work</h3>
+            <ol class="steps">
+              <li><strong>Every widget returns a normal Python variable.</strong> Writing <code>age = st.slider("Age", 18, 80, 30)</code> renders a slider in the browser and immediately assigns the user's chosen number (`30`) to the Python variable `age`.</li>
+              <li><strong>Top-to-bottom reactive re-run.</strong> Whenever the user drags that slider to `45`, Streamlit re-executes `app.py` from line 1 to the bottom with `age = 45` and updates the UI in milliseconds.</li>
+              <li><strong>Never reload your ML model on every slider drag—use <code>@st.cache_resource</code>!</strong> Because the script re-runs on every click, loading a 500 MB neural network or training a Random Forest directly in the script would make the app freeze on every click. Decorating a loader function with <strong><code>@st.cache_resource</code></strong> tells Streamlit to load the model <strong>once</strong> in RAM and reuse it across all users and reruns. (Use <strong><code>@st.cache_data</code></strong> for caching Pandas DataFrames and CSV reads.)</li>
+            </ol>
+
+            <!-- Figure 7.1: Streamlit Architecture & Cache Lifecycle -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 7.1</span>
+                <span class="figure-title">How Streamlit Works: Reactive Script Re-Run + <code>@st.cache_resource</code> Model Singleton</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 880 185" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="880" height="185" fill="#f8fafc" rx="8"/>
+
+                  <!-- Box 1: Browser UI Widget -->
+                  <rect x="24" y="30" width="195" height="125" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                  <text x="121" y="56" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#1e40af">1. User Moves Widget</text>
+                  <text x="121" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#1d4ed8">st.sidebar.slider()</text>
+                  <text x="121" y="102" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">Sends updated value</text>
+                  <text x="121" y="118" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">over WebSocket</text>
+
+                  <line x1="219" y1="92" x2="251" y2="92" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="256,92 248,87 248,97" fill="#64748b"/>
+
+                  <!-- Box 2: Cached Model & Data -->
+                  <rect x="258" y="30" width="215" height="125" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                  <text x="365" y="56" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#92400e">2. Instant Cache Hit</text>
+                  <text x="365" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#b45309">@st.cache_resource</text>
+                  <text x="365" y="102" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">Skips disk load / training;</text>
+                  <text x="365" y="118" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">returns ML model from RAM</text>
+
+                  <line x1="473" y1="92" x2="505" y2="92" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="510,92 502,87 502,97" fill="#64748b"/>
+
+                  <!-- Box 3: Model Inference -->
+                  <rect x="512" y="30" width="165" height="125" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+                  <text x="594" y="56" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#5b21b6">3. Fast Prediction</text>
+                  <text x="594" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#6d28d9">model.predict(X)</text>
+                  <text x="594" y="102" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">Builds 1-row DataFrame</text>
+                  <text x="594" y="118" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">&amp; computes probability</text>
+
+                  <line x1="677" y1="92" x2="709" y2="92" stroke="#059669" stroke-width="2"/>
+                  <polygon points="714,92 706,87 706,97" fill="#059669"/>
+
+                  <!-- Box 4: Render UI -->
+                  <rect x="716" y="30" width="140" height="125" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+                  <text x="786" y="56" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#065f46">4. Live Output</text>
+                  <text x="786" y="80" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#047857">st.metric()</text>
+                  <text x="786" y="98" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#047857">st.pyplot(fig)</text>
+                  <text x="786" y="118" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#334155">Updates UI diff</text>
+                </svg>
+              </div>
+              <figcaption class="figure-caption">Streamlit re-runs your Python script whenever a widget changes, while `@st.cache_resource` keeps your trained ML model or LLM client pinned in memory so predictions happen in milliseconds.</figcaption>
+            </figure>
+
+            <div class="code-container" data-lang="bash">
+              <div class="code-header">
+                <span class="code-filename">terminal</span>
+                <span class="code-lang-tag">Bash</span>
+              </div>
+              <pre><code>streamlit run app.py</code></pre>
+            </div>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">app.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import streamlit as st
+from sklearn.ensemble import RandomForestClassifier
+
+st.set_page_config(page_title="Customer Churn Predictor", layout="wide")
+st.title("Customer Churn Prediction Dashboard")
+
+# 1. Cache the trained model so it only trains/loads ONCE across all user clicks
+@st.cache_resource
+def load_trained_model() -> RandomForestClassifier:
+    rng = np.random.default_rng(42)
+    X_demo = rng.uniform(low=[1, 500, 0], high=[48, 3000, 5], size=(400, 3))
+    y_demo = ((X_demo[:, 0] < 12) &amp; (X_demo[:, 1] > 1500) | (X_demo[:, 2] >= 3)).astype(int)
+    clf = RandomForestClassifier(n_estimators=100, random_state=42)
+    clf.fit(X_demo, y_demo)
+    return clf
+
+model = load_trained_model()
+
+# 2. Sidebar Input Controls
+st.sidebar.header("Customer Profile Inputs")
+tenure_mo   = st.sidebar.slider("Tenure (Months)", min_value=1, max_value=48, value=8)
+monthly_inr = st.sidebar.number_input("Monthly Bill (INR)", min_value=299, max_value=5000, value=1850)
+support_tix = st.sidebar.selectbox("Support Tickets (Last 30d)", options=[0, 1, 2, 3, 4, 5], index=2)
+
+# 3. Build 1-row DataFrame &amp; Predict Probability
+input_df = pd.DataFrame([{
+    "tenure_mo": tenure_mo,
+    "monthly_inr": monthly_inr,
+    "support_tix": support_tix
+}])
+churn_prob = float(model.predict_proba(input_df.to_numpy())[0, 1])
+
+# 4. Display KPI Metrics &amp; Feature Importance Chart in 2 Columns
+col1, col2 = st.columns([1, 1.5])
+with col1:
+    st.subheader("Prediction Result")
+    st.metric(
+        label="Churn Risk Probability",
+        value=f"{churn_prob:.1%}",
+        delta="High Risk" if churn_prob >= 0.5 else "Healthy Retention",
+        delta_color="inverse"
+    )
+    st.dataframe(input_df, use_container_width=True)
+
+with col2:
+    st.subheader("Model Feature Importances")
+    fig, ax = plt.subplots(figsize=(5.5, 2.6))
+    ax.barh(["Tenure", "Monthly Bill", "Support Tickets"], model.feature_importances_, color="#2563eb")
+    ax.set_xlabel("Relative Importance")
+    fig.tight_layout()
+    st.pyplot(fig)</code></pre>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 8: CHEAT SHEET                     -->
+          <!-- ========================================== -->
+          <section id="summary">
+            <h2>8. Data Science Toolkit Cheat Sheet</h2>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Library</th>
+                    <th>Task</th>
+                    <th>Exact Command to Remember</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>NumPy</strong></td>
+                    <td>Turn 1D array <code>(N,)</code> into 2D column <code>(N, 1)</code></td>
+                    <td><code>X_col = arr.reshape(-1, 1)</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>NumPy</strong></td>
+                    <td>Column-wise mean / std across samples</td>
+                    <td><code>X.mean(axis=0)</code> and <code>X.std(axis=0)</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Pandas</strong></td>
+                    <td>Filter by label vs. filter by integer position</td>
+                    <td><code>df.loc[mask, ["col"]]</code> vs. <code>df.iloc[0:10, 0:3]</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Pandas</strong></td>
+                    <td>Fill missing values safely</td>
+                    <td><code>df["col"] = df["col"].fillna(train_median)</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Pandas</strong></td>
+                    <td>Group &amp; compute named aggregations</td>
+                    <td><code>df.groupby("city", as_index=False).agg(avg_pay=("pay", "mean"))</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Pandas</strong></td>
+                    <td>One-hot encode string categories</td>
+                    <td><code>pd.get_dummies(df, columns=["city"], drop_first=True, dtype=int)</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Matplotlib</strong></td>
+                    <td>Create multi-panel figure cleanly</td>
+                    <td><code>fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Streamlit</strong></td>
+                    <td>Keep heavy ML model in RAM across reruns</td>
+                    <td>Decorate loader function with <code>@st.cache_resource</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Prev / Next Navigation -->
+          <nav class="page-nav" aria-label="Curriculum Pagination">
+            <a class="prev" href="story.html">
+              <span class="page-nav-label">&larr; Previous Module</span>
+              <span class="page-nav-title">0. The Story, Legends &amp; Philosophy of AI</span>
+            </a>
+            <a class="next" href="index.html">
+              <span class="page-nav-label">Next Module &rarr;</span>
+              <span class="page-nav-title">1. Machine Learning Models</span>
+            </a>
+          </nav>
+
+          <footer class="article-footer">
+            <p>AI Engineering Curriculum &bull; Data Science Toolkit: NumPy, Pandas, Matplotlib &amp; Streamlit</p>
+          </footer>
+
+        </article>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

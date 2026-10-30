@@ -6,11 +6,12 @@ Every page follows **[`WRITING_RULES.md`](WRITING_RULES.md)**: plain-English one
 
 ---
 
-## Curriculum Modules (9 Interactive Web Guides)
+## Curriculum Modules (10 Interactive Web Guides)
 
 | Module | File | Topics Covered |
 |---|---|---|
 | **0. Story, Legends & Philosophy of AI** | [`story.html`](story.html) | AI in the Modern Era (Software 1.0 → 2.0 → 3.0), 5-Act History of AI (1950–2026), **Portrait Gallery & Gratitude to the Legends of AI** (Turing, Shannon, McCarthy, Hinton, Bengio, LeCun, Fei-Fei Li, Vaswani), **AI Ethics**, **Human Psychology**, and **Metaphysics** (Chinese Room, Plato's Cave & Embeddings, Qualia & Teleology) |
+| **Data Science Toolkit** | [`ds.html`](ds.html) | **[NumPy]** Vectorization, `axis=0` vs `axis=1`, `reshape(-1, 1)` & Broadcasting; **[Pandas for ML]** `loc` vs `iloc`, missing-value imputation without leakage, IQR outlier clipping, `groupby`, `merge`, dates & One-Hot encoding; **[Matplotlib]** `fig, ax = plt.subplots()` & 4 ML diagnostic plots; **[Streamlit]** Interactive ML web apps & `@st.cache_resource` |
 | **1. Machine Learning** | [`index.html`](index.html) | Regression vs. Classification, Linear Regression, KNN, SVM, Logistic Regression, Decision Trees, Random Forest, Gradient Descent, Feature Scaling & Bias-Variance |
 | **2. Deep Learning: FNN, CNN & TensorFlow** | [`dl.html`](dl.html) | Perceptrons, Feedforward Neural Networks (FNN / MLP), Activation Functions, Backpropagation Chain Rule, **Convolutional Neural Networks (CNN) Step-by-Step**, **TensorFlow & `tf.keras` Explained**, and building both **FNN & CNN in TensorFlow** + PyTorch |
 | **3. Natural Language Processing** | [`nlp.html`](nlp.html) | Subword Tokenization (BPE), Bag-of-Words & TF-IDF, Dense Embeddings & Cosine Similarity, Scaled Dot-Product Self-Attention ($Q, K, V$) & Transformers |
