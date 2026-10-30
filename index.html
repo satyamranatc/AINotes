@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>1. Machine Learning Models — AI Engineering Curriculum</title>
+  <title>AI Engineering Curriculum — From Turing's Tape to World Models</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -18,1265 +18,440 @@
       throwOnError: false
     });"></script>
 </head>
-<body>
+<body class="aw-body">
   <!-- Top Global Navigation Bar -->
   <nav class="top-nav">
     <div class="top-nav-inner">
-      <a href="story.html" class="top-nav-brand">AI Engineering Curriculum</a>
+      <a href="index.html" class="top-nav-brand">AI Engineering</a>
       <ul class="top-nav-links">
-        <li><a href="story.html" class="nav-pill">0. Story &amp; Ethics</a></li>
-        <li><a href="ds.html" class="nav-pill">Data Science</a></li>
-        <li><a href="index.html" class="nav-pill active">1. ML</a></li>
-        <li><a href="dl.html" class="nav-pill">2. Deep Learning &amp; FNN</a></li>
-        <li><a href="nlp.html" class="nav-pill">3. NLP</a></li>
-        <li><a href="cv.html" class="nav-pill">4. OpenCV &amp; Vision</a></li>
-        <li><a href="genai.html" class="nav-pill">5. LLMs &amp; RAG</a></li>
-        <li><a href="agents.html" class="nav-pill">6. Agents &amp; MCP</a></li>
-        <li><a href="research.html" class="nav-pill">7. JEPA &amp; Research</a></li>
-        <li><a href="interview.html" class="nav-pill">8. 100 Interview Q&amp;A</a></li>
+        <li><a href="index.html" class="nav-pill active">Home</a></li>
+        <li><a href="story.html" class="nav-pill">0. Story</a></li>
+        <li><a href="ds.html" class="nav-pill">1. Data Science</a></li>
+        <li><a href="ml.html" class="nav-pill">2. ML</a></li>
+        <li><a href="dl.html" class="nav-pill">3. Deep Learning</a></li>
+        <li><a href="nlp.html" class="nav-pill">4. NLP</a></li>
+        <li><a href="cv.html" class="nav-pill">5. Vision</a></li>
+        <li><a href="genai.html" class="nav-pill">6. LLMs &amp; RAG</a></li>
+        <li><a href="agents.html" class="nav-pill">7. Agents &amp; MCP</a></li>
+        <li><a href="research.html" class="nav-pill">8. Research</a></li>
+        <li><a href="interview.html" class="nav-pill">9. 100 Q&amp;A</a></li>
       </ul>
     </div>
   </nav>
 
-  <div class="site-wrapper">
-    <div class="site-container">
-      
-      <!-- Table of Contents Sidebar -->
-      <aside class="toc-sidebar">
-        <nav class="toc-sticky">
-          <div class="toc-title">Contents</div>
-          <ul class="toc-list">
-            <li class="toc-group-label">Foundations</li>
-            <li class="toc-item"><a href="#overview">0. Regression vs. Classification</a></li>
-            <li class="toc-group-label">Core Algorithms</li>
-            <li class="toc-item"><a href="#part-1-linear-regression">1. Linear Regression</a></li>
-            <li class="toc-item"><a href="#part-2-knn">2. K-Nearest Neighbors</a></li>
-            <li class="toc-item"><a href="#part-3-svm">3. Support Vector Machine</a></li>
-            <li class="toc-item"><a href="#part-4-logistic-regression">4. Logistic Regression</a></li>
-            <li class="toc-item"><a href="#part-5-decision-tree">5. Decision Tree</a></li>
-            <li class="toc-item"><a href="#part-6-random-forest">6. Random Forest</a></li>
-            <li class="toc-group-label">Practical Mastery</li>
-            <li class="toc-item"><a href="#part-7-selection-guide">7. Model Selection &amp; Metrics</a></li>
-            <li class="toc-item"><a href="#part-8-core-principles">8. Scaling &amp; Bias-Variance</a></li>
-            <li class="toc-item"><a href="#summary">9. Cheat Sheet</a></li>
-          </ul>
-        </nav>
-      </aside>
-
-      <!-- Main Article Stream -->
-      <main class="main-content">
-        <article>
-          
-          <!-- Article Header -->
-          <header class="article-header">
-            <div class="article-category">Module 1 &middot; Supervised Machine Learning</div>
-            <h1 class="article-title">Machine Learning Models: Intuition, Math &amp; Selection</h1>
-            <p class="article-subtitle">Learn the six core supervised learning models from the ground up—what problem each one solves, how the math works in plain English, and when to pick which in production.</p>
-            <div class="article-meta">
-              <span>Level: Beginner &rarr; Intermediate</span>
-              <span class="meta-divider">&bull;</span>
-              <span>8 Visual Diagrams</span>
-              <span class="meta-divider">&bull;</span>
-              <span>Reading Time: 15 min</span>
-            </div>
-          </header>
-
-          <div class="callout callout-note">
-            <div class="callout-title">Start with the Prologue: The Story, Legends &amp; Philosophy of AI</div>
-            <p>New to the curriculum? Read <a href="story.html"><strong>Module 0: The Story of Artificial Intelligence</strong></a> for an editorial journey through how AI transformed human history, a portrait tribute to the <strong>Legends of AI</strong> (Turing, Shannon, McCarthy, Hinton, Bengio, LeCun, Fei-Fei Li, Vaswani), and a treatise on <strong>AI Ethics, Human Psychology &amp; Metaphysics</strong>.</p>
-          </div>
-
-          <!-- Page Intro: What You'll Learn & Prerequisites -->
-          <div class="learn-grid">
-            <div class="learn-box">
-              <h4>What You'll Learn</h4>
-              <ul>
-                <li>How to tell <strong>Regression</strong> and <strong>Classification</strong> apart in 5 seconds.</li>
-                <li>How Linear Regression, KNN, SVM, Logistic Regression, Decision Trees, and Random Forests work step by step.</li>
-                <li>What every loss function (MSE, Cross-Entropy, Gini, Margin) measures and why it exists.</li>
-                <li>How to avoid overfitting, unscaled-feature traps, and data leakage.</li>
-              </ul>
-            </div>
-            <div class="learn-box">
-              <h4>Before You Start</h4>
-              <ul>
-                <li>Basic high-school algebra (slope of a line $y = mx + b$).</li>
-                <li>Familiarity with Python lists and functions.</li>
-                <li>No prior machine learning jargon required—every term is defined on first use.</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Clickable Roadmap -->
-          <ol class="roadmap">
-            <li><a href="#part-1-linear-regression">
-              <span class="roadmap-step">Step 1</span>
-              <span class="roadmap-title">Linear Regression</span>
-              <span class="roadmap-desc">Predict a number with a best-fit line</span>
-            </a></li>
-            <li><a href="#part-2-knn">
-              <span class="roadmap-step">Step 2</span>
-              <span class="roadmap-title">KNN</span>
-              <span class="roadmap-desc">Vote using the K closest neighbors</span>
-            </a></li>
-            <li><a href="#part-3-svm">
-              <span class="roadmap-step">Step 3</span>
-              <span class="roadmap-title">SVM</span>
-              <span class="roadmap-desc">Draw the widest street between classes</span>
-            </a></li>
-            <li><a href="#part-4-logistic-regression">
-              <span class="roadmap-step">Step 4</span>
-              <span class="roadmap-title">Logistic Regression</span>
-              <span class="roadmap-desc">Squash scores into 0–100% probabilities</span>
-            </a></li>
-            <li><a href="#part-5-decision-tree">
-              <span class="roadmap-step">Step 5</span>
-              <span class="roadmap-title">Decision Tree</span>
-              <span class="roadmap-desc">Split data with yes/no questions</span>
-            </a></li>
-            <li><a href="#part-6-random-forest">
-              <span class="roadmap-step">Step 6</span>
-              <span class="roadmap-title">Random Forest</span>
-              <span class="roadmap-desc">Combine hundreds of trees for stability</span>
-            </a></li>
-          </ol>
-
-          <!-- ========================================== -->
-          <!-- SECTION 0: OVERVIEW                        -->
-          <!-- ========================================== -->
-          <section id="overview">
-            <div class="section-badge-container">
-              <span class="badge badge-neutral">Core Paradigm</span>
-            </div>
-            <h2>0. Regression vs. Classification</h2>
-
-            <div class="tldr">
-              <span class="tldr-label">In one line</span>
-              <p><strong>Regression</strong> predicts a number ("how much?"), while <strong>Classification</strong> predicts a category ("which group?").</p>
-            </div>
-
-            <p>
-              Supervised machine learning models learn patterns from historical examples where we already know the right answer (called the <strong>label</strong> or <strong>target</strong>, written $y$). Once trained, the model takes a new input $x$ and outputs a guess $\hat{y}$.
-            </p>
-
-            <!-- Figure 0.1: Regression vs Classification Visual -->
-            <figure class="figure-container">
-              <div class="figure-header">
-                <span class="figure-number">Figure 0.1</span>
-                <span class="figure-title">Two Jobs: Fitting a Line to Numbers vs. Drawing a Boundary Between Groups</span>
-              </div>
-              <div class="figure-svg-wrapper">
-                <svg viewBox="0 0 680 240" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Side-by-side comparison of Regression fitting a continuous line and Classification separating two colored groups">
-                  <!-- Left Panel: Regression -->
-                  <g transform="translate(20, 15)">
-                    <rect x="0" y="0" width="305" height="205" rx="8" fill="#f8fafc" stroke="#e5e5ea" />
-                    <text x="152" y="26" font-size="13" font-weight="700" fill="#1d1d1f" text-anchor="middle" font-family="-apple-system, sans-serif">Regression ("How much?")</text>
-                    <text x="152" y="43" font-size="11" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">Output is a continuous number (e.g. Price)</text>
-                    <line x1="40" y1="175" x2="275" y2="175" stroke="#64748b" stroke-width="1.5" />
-                    <line x1="40" y1="175" x2="40" y2="60" stroke="#64748b" stroke-width="1.5" />
-                    <line x1="50" y1="162" x2="260" y2="72" stroke="#0066cc" stroke-width="2.5" />
-                    <circle cx="70" cy="150" r="4.5" fill="#1d1d1f" />
-                    <circle cx="105" cy="142" r="4.5" fill="#1d1d1f" />
-                    <circle cx="145" cy="118" r="4.5" fill="#1d1d1f" />
-                    <circle cx="190" cy="108" r="4.5" fill="#1d1d1f" />
-                    <circle cx="235" cy="80" r="4.5" fill="#1d1d1f" />
-                    <text x="152" y="194" font-size="11" fill="#0066cc" font-weight="600" text-anchor="middle" font-family="-apple-system, sans-serif">Line predicts exact numeric value</text>
-                  </g>
-                  <!-- Right Panel: Classification -->
-                  <g transform="translate(355, 15)">
-                    <rect x="0" y="0" width="305" height="205" rx="8" fill="#f8fafc" stroke="#e5e5ea" />
-                    <text x="152" y="26" font-size="13" font-weight="700" fill="#1d1d1f" text-anchor="middle" font-family="-apple-system, sans-serif">Classification ("Which group?")</text>
-                    <text x="152" y="43" font-size="11" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">Output is a discrete label (Spam vs. Safe)</text>
-                    <line x1="40" y1="175" x2="275" y2="175" stroke="#64748b" stroke-width="1.5" />
-                    <line x1="40" y1="175" x2="40" y2="60" stroke="#64748b" stroke-width="1.5" />
-                    <line x1="65" y1="170" x2="245" y2="65" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="5,4" />
-                    <!-- Class A (Blue) -->
-                    <circle cx="75" cy="95" r="5" fill="#2563eb" />
-                    <circle cx="105" cy="80" r="5" fill="#2563eb" />
-                    <circle cx="115" cy="110" r="5" fill="#2563eb" />
-                    <circle cx="150" cy="85" r="5" fill="#2563eb" />
-                    <!-- Class B (Amber) -->
-                    <circle cx="165" cy="150" r="5" fill="#d97706" />
-                    <circle cx="205" cy="135" r="5" fill="#d97706" />
-                    <circle cx="225" cy="158" r="5" fill="#d97706" />
-                    <circle cx="245" cy="120" r="5" fill="#d97706" />
-                    <text x="152" y="194" font-size="11" fill="#166534" font-weight="600" text-anchor="middle" font-family="-apple-system, sans-serif">Boundary splits Blue from Amber</text>
-                  </g>
-                </svg>
-              </div>
-              <figcaption><strong>What to notice:</strong> In regression, the line goes <em>through</em> the data points to predict a number. In classification, the boundary goes <em>between</em> the groups to separate them.</figcaption>
-            </figure>
-
-            <div class="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Problem Type</th>
-                    <th>What It Predicts</th>
-                    <th>Everyday Examples</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Regression</strong></td>
-                    <td>A continuous number</td>
-                    <td>House price (₹65L), temperature (28.4°C), delivery time (24 mins)</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Classification</strong></td>
-                    <td>A category or class label</td>
-                    <td>Spam or Not Spam, Pass or Fail, Fraud or Legitimate</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <!-- ========================================== -->
-          <!-- SECTION 1: LINEAR REGRESSION               -->
-          <!-- ========================================== -->
-          <section id="part-1-linear-regression">
-            <div class="section-badge-container">
-              <span class="badge badge-regression">Regression</span>
-              <span class="badge badge-neutral">Parametric</span>
-            </div>
-            <h2>1. Linear Regression</h2>
-
-            <div class="tldr">
-              <span class="tldr-label">In one line</span>
-              <p>Linear Regression predicts a number by fitting the straight line that stays as close as possible to all training points.</p>
-            </div>
-
-            <div class="callout callout-analogy">
-              <div class="callout-title">Think of it like this</div>
-              <p>Imagine plotting a taxi fare against kilometers driven. Even if traffic causes minor bumps, there is a clear base fare (the starting point $b$) plus a fixed rate per kilometer (the slope $m$). Linear regression finds that base fare and per-km rate automatically from past trips.</p>
-            </div>
-
-            <h3>How It Works</h3>
-            <ol class="steps">
-              <li><strong>Start with a line.</strong> Pick an initial slope $m$ and starting height (intercept) $b$.</li>
-              <li><strong>Predict and measure errors.</strong> For every training point, measure the vertical gap between the real answer $y_i$ and the line's guess $\hat{y}_i$. This gap is called the <strong>residual</strong>.</li>
-              <li><strong>Square and average the errors.</strong> Square each gap so negative and positive errors don't cancel out, then average them to get the <strong>Mean Squared Error (MSE)</strong>.</li>
-              <li><strong>Adjust the line.</strong> Nudge $m$ and $b$ downhill (using Gradient Descent or a direct formula) until the MSE is as small as possible.</li>
-            </ol>
-
-            <!-- Figure 1.1: Linear Regression & Residuals -->
-            <figure class="figure-container">
-              <div class="figure-header">
-                <span class="figure-number">Figure 1.1</span>
-                <span class="figure-title">Linear Regression: Fitted Line and Residual Errors</span>
-              </div>
-              <div class="figure-svg-wrapper">
-                <svg viewBox="0 0 680 310" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Linear regression diagram with data points, fitted line, and residual error bars">
-                  <defs>
-                    <marker id="arrow-lr" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#515154"/>
-                    </marker>
-                  </defs>
-                  <g stroke="#f0f0f4" stroke-width="1">
-                    <line x1="80" y1="50" x2="620" y2="50" />
-                    <line x1="80" y1="110" x2="620" y2="110" />
-                    <line x1="80" y1="170" x2="620" y2="170" />
-                    <line x1="80" y1="230" x2="620" y2="230" />
-                  </g>
-                  <line x1="80" y1="260" x2="630" y2="260" stroke="#515154" stroke-width="1.5" marker-end="url(#arrow-lr)" />
-                  <line x1="80" y1="260" x2="80" y2="30" stroke="#515154" stroke-width="1.5" marker-end="url(#arrow-lr)" />
-                  <text x="630" y="282" font-size="12" font-family="-apple-system, sans-serif" fill="#515154" text-anchor="end">Input x (Study Hours)</text>
-                  <text x="70" y="22" font-size="12" font-family="-apple-system, sans-serif" fill="#515154" text-anchor="start">Output y (Marks)</text>
-
-                  <!-- Residual Lines -->
-                  <line x1="160" y1="195" x2="160" y2="225" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="3,3" />
-                  <line x1="230" y1="168" x2="230" y2="145" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="3,3" />
-                  <line x1="320" y1="134" x2="320" y2="165" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="3,3" />
-                  <line x1="410" y1="100" x2="410" y2="82" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="3,3" />
-                  <line x1="490" y1="69" x2="490" y2="95" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="3,3" />
-
-                  <!-- Regression Line -->
-                  <line x1="80" y1="225" x2="600" y2="28" stroke="#0066cc" stroke-width="2.5" />
-                  <circle cx="80" cy="225" r="4.5" fill="#0066cc" />
-                  <text x="92" y="222" font-size="11" font-family="-apple-system, sans-serif" fill="#0066cc" font-weight="600">Intercept b</text>
-
-                  <!-- Data Points -->
-                  <circle cx="160" cy="225" r="5" fill="#1d1d1f" />
-                  <circle cx="230" cy="145" r="5" fill="#1d1d1f" />
-                  <circle cx="320" cy="165" r="5" fill="#1d1d1f" />
-                  <circle cx="410" cy="82" r="5" fill="#1d1d1f" />
-                  <circle cx="490" cy="95" r="5" fill="#1d1d1f" />
-
-                  <!-- Legend -->
-                  <rect x="420" y="185" width="195" height="52" rx="6" fill="#ffffff" stroke="#e5e5ea" />
-                  <text x="432" y="205" font-size="11" font-weight="600" fill="#0066cc" font-family="-apple-system, sans-serif">Blue Line: Model guess (mx + b)</text>
-                  <text x="432" y="224" font-size="11" fill="#ef4444" font-family="-apple-system, sans-serif">Red Dashed: Residual error (y &minus; &ycirc;)</text>
-                </svg>
-              </div>
-              <figcaption><strong>What to notice:</strong> Each red dashed segment is a residual error. Linear regression tilts and shifts the blue line so the sum of squared red segments is minimized.</figcaption>
-            </figure>
-
-            <dl class="terms">
-              <dt>Weight / Slope ($m$ or $w$)</dt>
-              <dd>How much the prediction changes when the input increases by 1 unit.</dd>
-              <dt>Bias / Intercept ($b$)</dt>
-              <dd>The starting prediction when all input features are 0.</dd>
-              <dt>Residual ($y_i - \hat{y}_i$)</dt>
-              <dd>The vertical vertical distance between the actual value and the model's guess.</dd>
-            </dl>
-
-            <h3>The Math in Plain Words</h3>
-            <p>With one input feature $x$, the model predicts $\hat{y}$ using a straight line:</p>
-            <div class="math-card">
-              <div class="math-display">$$\boxed{\hat{y} = mx + b}$$</div>
-            </div>
-            <p><strong>In words:</strong> start at the baseline $b$, then add $m$ for every unit of $x$. When you have many features $(x_1, x_2, \dots, x_n)$, each feature gets its own weight: $\hat{y} = w_1x_1 + w_2x_2 + \dots + w_nx_n + b$.</p>
-
-            <p><strong>Worked Example:</strong> Suppose the model learned $m = 10$ marks per hour and a base score $b = 20$. If a student studies $x = 5$ hours:</p>
-            <div class="math-card">
-              <div class="math-display">$$\hat{y} = 10(5) + 20 = 70\text{ marks}$$</div>
-            </div>
-
-            <p>To judge how good the line is across $n$ students, we compute <strong>Mean Squared Error (MSE)</strong>:</p>
-            <div class="math-card">
-              <div class="math-display">$$\boxed{\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}\left(y_i - \hat{y}_i\right)^2}$$</div>
-            </div>
-            <p><strong>In words:</strong> take each error $(y_i - \hat{y}_i)$, square it so big mistakes are punished heavily, and average across all $n$ examples.</p>
-
-            <div class="decision-grid">
-              <div class="decision-box use">
-                <div class="decision-box-title">When to Use</div>
-                <ul>
-                  <li>You are predicting a continuous number (prices, revenue, demand).</li>
-                  <li>The relationship between inputs and output is roughly proportional.</li>
-                  <li>You need a fast, explainable baseline where every weight has a clear meaning.</li>
-                </ul>
-              </div>
-              <div class="decision-box avoid">
-                <div class="decision-box-title">When to Avoid</div>
-                <ul>
-                  <li>The pattern curves sharply or has complex interactions.</li>
-                  <li>Your data has extreme outliers (squaring huge errors pulls the whole line toward them).</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="callout callout-warning">
-              <div class="callout-title">Common Mistakes</div>
-              <ul>
-                <li><strong>Leaving extreme outliers uncleaned:</strong> Because MSE squares the error, a single point that is $10\times$ off creates $100\times$ the pull on the line.</li>
-                <li><strong>Assuming correlation equals causation:</strong> A positive weight shows two variables move together in the dataset, not that one causes the other.</li>
-              </ul>
-            </div>
-
-            <div class="recap">
-              <div class="recap-title">Recap</div>
-              <ul>
-                <li>Predicts a continuous number using $\hat{y} = \mathbf{w}^T\mathbf{x} + b$.</li>
-                <li>Learns weights by minimizing Mean Squared Error (MSE).</li>
-                <li>Fast and interpretable, but sensitive to outliers and unable to fit curved patterns on its own.</li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- ========================================== -->
-          <!-- SECTION 2: KNN                             -->
-          <!-- ========================================== -->
-          <section id="part-2-knn">
-            <div class="section-badge-container">
-              <span class="badge badge-classification">Classification</span>
-              <span class="badge badge-neutral">Instance-Based</span>
-            </div>
-            <h2>2. K-Nearest Neighbors (KNN)</h2>
-
-            <div class="tldr">
-              <span class="tldr-label">In one line</span>
-              <p>KNN labels a new point by looking at its $K$ closest points in the training set and taking a majority vote.</p>
-            </div>
-
-            <div class="callout callout-analogy">
-              <div class="callout-title">Think of it like this</div>
-              <p>If you want to guess the price or neighborhood vibe of a house, you look at the 5 closest houses on the same street. KNN does the exact same thing in data space: "tell me who your closest neighbors are, and I'll tell you what you are."</p>
-            </div>
-
-            <h3>How It Works</h3>
-            <ol class="steps">
-              <li><strong>Store the training data.</strong> KNN does zero math during "training"—it just remembers all labeled examples.</li>
-              <li><strong>Measure distances.</strong> When a new mystery point arrives, measure the straight-line distance from it to every stored point.</li>
-              <li><strong>Pick the $K$ closest.</strong> Sort the distances and keep the $K$ nearest neighbors.</li>
-              <li><strong>Vote.</strong> For classification, pick the most common class among those $K$ neighbors. (For regression, average their values.)</li>
-            </ol>
-
-            <!-- Figure 2.1: KNN -->
-            <figure class="figure-container">
-              <div class="figure-header">
-                <span class="figure-number">Figure 2.1</span>
-                <span class="figure-title">KNN Neighborhood Vote: K = 1 vs. K = 5</span>
-              </div>
-              <div class="figure-svg-wrapper">
-                <svg viewBox="0 0 680 300" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="K-Nearest Neighbors decision space with K=1 and K=5 circles around query point">
-                  <g stroke="#f0f0f4" stroke-width="1">
-                    <line x1="80" y1="50" x2="600" y2="50" />
-                    <line x1="80" y1="130" x2="600" y2="130" />
-                    <line x1="80" y1="210" x2="600" y2="210" />
-                    <line x1="200" y1="30" x2="200" y2="270" />
-                    <line x1="340" y1="30" x2="340" y2="270" />
-                    <line x1="480" y1="30" x2="480" y2="270" />
-                  </g>
-                  <circle cx="340" cy="150" r="105" fill="rgba(37,99,235,0.04)" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="5,4" />
-                  <text x="452" y="155" font-size="11" font-family="-apple-system, sans-serif" fill="#2563eb" font-weight="600">K = 5 Circle (4 Blue, 1 Amber)</text>
-
-                  <circle cx="340" cy="150" r="42" fill="none" stroke="#64748b" stroke-width="1.3" stroke-dasharray="2,2" />
-                  <text x="350" y="102" font-size="11" font-family="-apple-system, sans-serif" fill="#64748b">K = 1</text>
-
-                  <!-- Query Point -->
-                  <polygon points="340,138 352,150 340,162 328,150" fill="#111827" />
-                  <text x="340" y="178" font-size="11" font-family="-apple-system, sans-serif" fill="#111827" font-weight="700" text-anchor="middle">Query x</text>
-
-                  <!-- 4 Blue inside K=5 (1 inside K=1) -->
-                  <circle cx="322" cy="126" r="6" fill="#2563eb" />
-                  <circle cx="275" cy="158" r="6" fill="#2563eb" />
-                  <circle cx="355" cy="212" r="6" fill="#2563eb" />
-                  <circle cx="405" cy="122" r="6" fill="#2563eb" />
-                  <!-- 1 Amber inside K=5 -->
-                  <circle cx="385" cy="182" r="6" fill="#d97706" />
-
-                  <!-- Outside points -->
-                  <circle cx="205" cy="95" r="6" fill="#2563eb" />
-                  <circle cx="215" cy="215" r="6" fill="#2563eb" />
-                  <circle cx="495" cy="115" r="6" fill="#d97706" />
-                  <circle cx="510" cy="205" r="6" fill="#d97706" />
-
-                  <rect x="80" y="25" width="185" height="75" rx="6" fill="#ffffff" stroke="#e5e5ea" />
-                  <circle cx="96" cy="45" r="5" fill="#2563eb" />
-                  <text x="110" y="49" font-size="11" font-family="-apple-system, sans-serif" fill="#1d1d1f">Class A: Apple (4 votes)</text>
-                  <circle cx="96" cy="65" r="5" fill="#d97706" />
-                  <text x="110" y="69" font-size="11" font-family="-apple-system, sans-serif" fill="#1d1d1f">Class B: Orange (1 vote)</text>
-                  <text x="96" y="88" font-size="11" font-weight="700" font-family="-apple-system, sans-serif" fill="#2563eb">Winner: Apple (4 to 1)</text>
-                </svg>
-              </div>
-              <figcaption><strong>What to notice:</strong> Inside the dashed $K=5$ circle sit 4 blue points and 1 amber point. By majority vote (4 vs. 1), the query point is classified as Blue (Apple).</figcaption>
-            </figure>
-
-            <h3>The Math in Plain Words</h3>
-            <p>To measure how far apart two points $\mathbf{x}$ and $\mathbf{z}$ are, KNN usually uses <strong>Euclidean distance</strong> (the straight-line ruler distance):</p>
-            <div class="math-card">
-              <div class="math-display">$$\boxed{d(\mathbf{x}, \mathbf{z}) = \sqrt{(x_1 - z_1)^2 + (x_2 - z_2)^2 + \dots + (x_n - z_n)^2}}$$</div>
-            </div>
-            <p><strong>In words:</strong> find the difference along each feature, square each difference, add them up, and take the square root.</p>
-
-            <p><strong>Worked Example:</strong> How far is point $A = (2, 3)$ from point $B = (5, 7)$?</p>
-            <div class="math-card">
-              <div class="math-display">$$d = \sqrt{(5-2)^2 + (7-3)^2} = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = \sqrt{25} = 5$$</div>
-            </div>
-
-            <div class="decision-grid">
-              <div class="decision-box use">
-                <div class="decision-box-title">When to Use</div>
-                <ul>
-                  <li>Small datasets with a handful of well-scaled numeric features.</li>
-                  <li>Items of the same class naturally cluster together in space.</li>
-                  <li>You want a quick baseline with zero training wait time.</li>
-                </ul>
-              </div>
-              <div class="decision-box avoid">
-                <div class="decision-box-title">When to Avoid</div>
-                <ul>
-                  <li>Large datasets in production—comparing against millions of rows makes every prediction slow.</li>
-                  <li>High-dimensional data (hundreds of features), where all points become nearly equidistant.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="callout callout-warning">
-              <div class="callout-title">Common Mistakes</div>
-              <ul>
-                <li><strong>Forgetting to scale features:</strong> If Salary is in thousands ($50,000$) and Age is in tens ($30$), Salary completely dominates the distance formula. Always standardize features first!</li>
-                <li><strong>Picking an even $K$ in binary classification:</strong> Choose an odd $K$ (like 3, 5, or 7) so votes cannot end in a tie.</li>
-              </ul>
-            </div>
-
-            <div class="recap">
-              <div class="recap-title">Recap</div>
-              <ul>
-                <li>KNN is a <strong>lazy learner</strong>: instant training, slower prediction.</li>
-                <li>Small $K$ (e.g. $K=1$) memorizes noise (overfits); huge $K$ blurs boundaries (underfits).</li>
-                <li>Requires feature scaling because it relies directly on geometric distance.</li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- ========================================== -->
-          <!-- SECTION 3: SUPPORT VECTOR MACHINE          -->
-          <!-- ========================================== -->
-          <section id="part-3-svm">
-            <div class="section-badge-container">
-              <span class="badge badge-classification">Classification</span>
-              <span class="badge badge-neutral">Max-Margin Boundary</span>
-            </div>
-            <h2>3. Support Vector Machine (SVM)</h2>
-
-            <div class="tldr">
-              <span class="tldr-label">In one line</span>
-              <p>SVM finds the boundary between two classes that leaves the widest possible safety gap (margin) on both sides.</p>
-            </div>
-
-            <div class="callout callout-analogy">
-              <div class="callout-title">Think of it like this</div>
-              <p>Imagine painting a center line down a road between parked cars on the left and right. Any line that doesn't touch a car separates them, but the safest center line sits dead in the middle of the widest possible street corridor. The cars parked right on the curb edges are the <strong>support vectors</strong>.</p>
-            </div>
-
-            <h3>How It Works</h3>
-            <ol class="steps">
-              <li><strong>Search for a separating boundary.</strong> Look for a line (or flat hyperplane in higher dimensions) $\mathbf{w}^T\mathbf{x} + b = 0$ that puts Class $+1$ on one side and Class $-1$ on the other.</li>
-              <li><strong>Push the margins outward.</strong> Expand parallel dashed boundary lines on both sides until they touch the nearest training points (the <strong>support vectors</strong>).</li>
-              <li><strong>Maximize the gap.</strong> Pick the orientation $\mathbf{w}$ that makes the distance between those two dashed lines ($2 / \|\mathbf{w}\|$) as wide as possible.</li>
-              <li><strong>Use a Kernel if curves are needed.</strong> If a flat line cannot separate the groups, lift the points into a higher dimension using the <strong>Kernel Trick</strong> (like RBF) where a flat slice works.</li>
-            </ol>
-
-            <!-- Figure 3.1: Corrected SVM Diagram -->
-            <figure class="figure-container">
-              <div class="figure-header">
-                <span class="figure-number">Figure 3.1</span>
-                <span class="figure-title">SVM: Maximum-Margin Street and Support Vectors</span>
-              </div>
-              <div class="figure-svg-wrapper">
-                <svg viewBox="0 0 680 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Support Vector Machine diagram with parallel decision boundary and margin lines, shaded margin corridor, and support vectors lying directly on the margin lines">
-                  <defs>
-                    <marker id="arrow-svm-end" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444"/>
-                    </marker>
-                    <marker id="arrow-svm-start" viewBox="0 0 10 10" refX="4" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-                      <path d="M 10 1 L 0 5 L 10 9 z" fill="#ef4444"/>
-                    </marker>
-                  </defs>
-                  <!-- Axes -->
-                  <line x1="60" y1="285" x2="620" y2="285" stroke="#94a3b8" stroke-width="1.5" />
-                  <line x1="60" y1="285" x2="60" y2="25" stroke="#94a3b8" stroke-width="1.5" />
-
-                  <!-- Margin Corridor Polygon: exactly bounded by Upper Margin (y = -0.5x + 250) and Lower Margin (y = -0.5x + 330) for x in [100, 520] -->
-                  <polygon points="100,200 520,40 520,120 100,280" fill="#eff6ff" opacity="0.7" />
-
-                  <!-- Negative Margin Line: y = -0.5x + 200 (Wait: let's use exact linear equations:
-                       Center line: from (100, 240) to (520, 72) -> dy = -168, dx = 420 -> slope = -0.4
-                       Upper margin (-1): shifted up by 40px -> (100, 200) to (520, 32)
-                       Lower margin (+1): shifted down by 40px -> (100, 280) to (520, 112) ) -->
-                  <polygon points="100,200 520,32 520,112 100,280" fill="#eff6ff" />
-
-                  <!-- Upper Margin Line: y = 200 - 0.4*(x - 100) -->
-                  <line x1="100" y1="200" x2="520" y2="32" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5,4" />
-                  <text x="528" y="36" font-size="11" fill="#475569" font-family="-apple-system, sans-serif">Margin: w&middot;x + b = &minus;1</text>
-
-                  <!-- Center Decision Hyperplane: y = 240 - 0.4*(x - 100) -->
-                  <line x1="100" y1="240" x2="520" y2="72" stroke="#0066cc" stroke-width="2.5" />
-                  <text x="528" y="76" font-size="12" font-weight="700" fill="#0066cc" font-family="-apple-system, sans-serif">Boundary: w&middot;x + b = 0</text>
-
-                  <!-- Lower Margin Line: y = 280 - 0.4*(x - 100) -->
-                  <line x1="100" y1="280" x2="520" y2="112" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5,4" />
-                  <text x="528" y="116" font-size="11" fill="#475569" font-family="-apple-system, sans-serif">Margin: w&middot;x + b = +1</text>
-
-                  <!-- Perpendicular Margin Width Arrow: from (290, 124) on upper margin to (317.6, 193) on lower margin -->
-                  <line x1="290" y1="124" x2="318" y2="193" stroke="#ef4444" stroke-width="1.8" marker-start="url(#arrow-svm-start)" marker-end="url(#arrow-svm-end)" />
-                  <rect x="322" y="144" width="128" height="24" rx="4" fill="#ffffff" stroke="#fecaca" />
-                  <text x="386" y="160" font-size="11" font-weight="700" fill="#dc2626" text-anchor="middle" font-family="-apple-system, sans-serif">Width = 2 / ||w||</text>
-
-                  <!-- Class -1 Points (Dark Slate, above upper margin) -->
-                  <circle cx="130" cy="120" r="5.5" fill="#1e293b" />
-                  <circle cx="195" cy="95" r="5.5" fill="#1e293b" />
-                  <circle cx="280" cy="60" r="5.5" fill="#1e293b" />
-                  <!-- Support Vectors EXACTLY on Upper Margin y = 200 - 0.4*(x-100) -->
-                  <!-- x=200 => y=160; x=400 => y=80 -->
-                  <circle cx="200" cy="160" r="5.5" fill="#1e293b" />
-                  <circle cx="200" cy="160" r="10" fill="none" stroke="#ef4444" stroke-width="1.8" />
-                  <circle cx="400" cy="80" r="5.5" fill="#1e293b" />
-                  <circle cx="400" cy="80" r="10" fill="none" stroke="#ef4444" stroke-width="1.8" />
-
-                  <!-- Class +1 Points (Blue, below lower margin) -->
-                  <circle cx="320" cy="255" r="5.5" fill="#2563eb" />
-                  <circle cx="420" cy="235" r="5.5" fill="#2563eb" />
-                  <circle cx="485" cy="195" r="5.5" fill="#2563eb" />
-                  <!-- Support Vector EXACTLY on Lower Margin y = 280 - 0.4*(x-100) -->
-                  <!-- x=250 => y=220 -->
-                  <circle cx="250" cy="220" r="5.5" fill="#2563eb" />
-                  <circle cx="250" cy="220" r="10" fill="none" stroke="#ef4444" stroke-width="1.8" />
-
-                  <text x="80" y="306" font-size="11" font-weight="600" fill="#dc2626" font-family="-apple-system, sans-serif">Red Ringed Points = Support Vectors (only points that control the boundary)</text>
-                </svg>
-              </div>
-              <figcaption><strong>What to notice:</strong> The three red-ringed support vectors sit directly on the dashed margin edges. You could move or delete any other point outside the corridor and the decision boundary would not budge.</figcaption>
-            </figure>
-
-            <dl class="terms">
-              <dt>Hyperplane</dt>
-              <dd>The flat decision boundary that splits space (a line in 2D, a flat sheet in 3D).</dd>
-              <dt>Support Vectors</dt>
-              <dd>The training points closest to the boundary that sit right on the margin edges.</dd>
-              <dt>Kernel Trick</dt>
-              <dd>A math shortcut (e.g., RBF Kernel) that lets SVM separate curved or circular patterns without slow coordinate projections.</dd>
-            </dl>
-
-            <h3>The Math in Plain Words</h3>
-            <p>The width of the safety corridor between the two dashed margin lines is:</p>
-            <div class="math-card">
-              <div class="math-display">$$\boxed{\text{Margin Width} = \frac{2}{\|\mathbf{w}\|}}$$</div>
-            </div>
-            <p><strong>In words:</strong> to make the street as wide as possible, we make the weight vector length $\|\mathbf{w}\|$ as small as possible while keeping every training point outside the corridor.</p>
-
-            <details class="deep-dive">
-              <summary>Deep dive: Quadratic optimization &amp; Soft Margin ($C$) <span class="summary-hint">Optional</span></summary>
-              <div class="deep-dive-body">
-                <p>Maximizing $2/\|\mathbf{w}\|$ is equivalent to minimizing $\frac{1}{2}\|\mathbf{w}\|^2$ subject to $y_i(\mathbf{w}^T\mathbf{x}_i + b) \ge 1$. When real data has overlapping points, we allow small margin violations $\xi_i \ge 0$ controlled by parameter $C$: large $C$ enforces a strict narrow street, while small $C$ allows a wider street with a few misclassified points.</p>
-              </div>
-            </details>
-
-            <div class="decision-grid">
-              <div class="decision-box use">
-                <div class="decision-box-title">When to Use</div>
-                <ul>
-                  <li>High-dimensional datasets (like text vectors or medical gene data) with clear margins.</li>
-                  <li>Complex curved boundaries on small-to-medium datasets (using the RBF kernel).</li>
-                </ul>
-              </div>
-              <div class="decision-box avoid">
-                <div class="decision-box-title">When to Avoid</div>
-                <ul>
-                  <li>Huge datasets with hundreds of thousands of rows (kernel SVM training becomes very slow).</li>
-                  <li>When you need calibrated probability scores right out of the box.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="callout callout-warning">
-              <div class="callout-title">Common Mistakes</div>
-              <ul>
-                <li><strong>Skipping feature scaling:</strong> Margin width is measured in raw coordinate units. Unscaled features warp the street.</li>
-              </ul>
-            </div>
-
-            <div class="recap">
-              <div class="recap-title">Recap</div>
-              <ul>
-                <li>Maximizes the safety margin $2/\|\mathbf{w}\|$ between classes.</li>
-                <li>Only the <strong>support vectors</strong> matter at prediction time; all other training points are ignored.</li>
-                <li>Uses kernels (Linear, Polynomial, RBF) to handle non-linear shapes.</li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- ========================================== -->
-          <!-- SECTION 4: LOGISTIC REGRESSION             -->
-          <!-- ========================================== -->
-          <section id="part-4-logistic-regression">
-            <div class="section-badge-container">
-              <span class="badge badge-classification">Classification</span>
-              <span class="badge badge-neutral">Probabilistic</span>
-            </div>
-            <h2>4. Logistic Regression</h2>
-
-            <div class="tldr">
-              <span class="tldr-label">In one line</span>
-              <p>Despite its name, Logistic Regression is a <strong>classifier</strong>: it passes a linear score through an S-shaped curve (sigmoid) to output a probability between 0 and 1.</p>
-            </div>
-
-            <div class="callout callout-analogy">
-              <div class="callout-title">Think of it like this</div>
-              <p>Think of a dimmer switch with a click at the halfway mark. First, you add up evidence into a raw score $z$ (positive evidence pushes $z$ up, negative pushes $z$ down). Then the sigmoid curve smoothly squashes any score—even $-50$ or $+50$—onto a $0\%$ to $100\%$ probability gauge. If the gauge reads $50\%$ or higher, you predict Class 1.</p>
-            </div>
-
-            <h3>How It Works</h3>
-            <ol class="steps">
-              <li><strong>Compute a linear score ($z$).</strong> Multiply each input feature by its weight and add bias: $z = \mathbf{w}^T\mathbf{x} + b$.</li>
-              <li><strong>Squash $z$ into a probability.</strong> Pass $z$ through the <strong>sigmoid function</strong> $\sigma(z) = \frac{1}{1 + e^{-z}}$, which always lands between $0$ and $1$.</li>
-              <li><strong>Apply a threshold.</strong> By default, if $p \ge 0.5$ (which happens when $z \ge 0$), predict Class 1; otherwise predict Class 0.</li>
-              <li><strong>Learn via Log Loss.</strong> Penalize confident wrong answers heavily using <strong>Binary Cross-Entropy</strong>.</li>
-            </ol>
-
-            <!-- Figure 4.1: Sigmoid -->
-            <figure class="figure-container">
-              <div class="figure-header">
-                <span class="figure-number">Figure 4.1</span>
-                <span class="figure-title">The Sigmoid Function Squashes Any Score into (0, 1)</span>
-              </div>
-              <div class="figure-svg-wrapper">
-                <svg viewBox="0 0 680 300" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sigmoid S-curve mapping score z to probability between 0 and 1">
-                  <line x1="80" y1="250" x2="620" y2="250" stroke="#515154" stroke-width="1.5" />
-                  <line x1="340" y1="270" x2="340" y2="30" stroke="#515154" stroke-width="1.5" />
-                  <line x1="80" y1="50" x2="600" y2="50" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3" />
-                  <text x="68" y="54" font-size="11" fill="#475569" text-anchor="end" font-family="-apple-system, sans-serif">P = 1.0</text>
-                  <text x="68" y="254" font-size="11" fill="#475569" text-anchor="end" font-family="-apple-system, sans-serif">P = 0.0</text>
-
-                  <line x1="80" y1="150" x2="600" y2="150" stroke="#fca5a5" stroke-width="1.2" stroke-dasharray="4,4" />
-                  <text x="68" y="154" font-size="11" font-weight="700" fill="#dc2626" text-anchor="end" font-family="-apple-system, sans-serif">P = 0.5</text>
-
-                  <path d="M 100 248 C 220 248, 280 220, 340 150 C 400 80, 460 52, 580 52" fill="none" stroke="#0066cc" stroke-width="2.8" />
-                  <circle cx="340" cy="150" r="5" fill="#dc2626" />
-                  <text x="352" y="144" font-size="11" font-weight="600" fill="#dc2626" font-family="-apple-system, sans-serif">Cutoff (z = 0 &rarr; P = 0.5)</text>
-
-                  <circle cx="440" cy="74" r="5" fill="#1d1d1f" />
-                  <rect x="452" y="68" width="165" height="40" rx="5" fill="#ffffff" stroke="#e5e5ea" />
-                  <text x="462" y="84" font-size="11" font-weight="700" fill="#1d1d1f" font-family="-apple-system, sans-serif">Example: z = +2.0</text>
-                  <text x="462" y="100" font-size="11" fill="#0066cc" font-family="-apple-system, sans-serif">&sigma;(2) = 0.881 (88.1% Pass)</text>
-
-                  <text x="200" y="225" font-size="12" font-weight="600" fill="#64748b" font-family="-apple-system, sans-serif">Predict Class 0 (P &lt; 0.5)</text>
-                  <text x="460" y="42" font-size="12" font-weight="600" fill="#166534" font-family="-apple-system, sans-serif">Predict Class 1 (P &ge; 0.5)</text>
-                </svg>
-              </div>
-              <figcaption><strong>What to notice:</strong> When the linear score $z = 0$, the probability is exactly $0.5$. Positive $z$ pushes the probability toward $1$; negative $z$ pushes it toward $0$.</figcaption>
-            </figure>
-
-            <h3>The Math in Plain Words</h3>
-            <div class="math-card">
-              <div class="math-display">$$\boxed{p = \sigma(z) = \frac{1}{1 + e^{-z}} \quad \text{where } z = \mathbf{w}^T\mathbf{x} + b}$$</div>
-            </div>
-            <p><strong>Worked Example:</strong> If a student's hours and attendance produce $z = 2$, then $e^{-2} \approx 0.135$, so:</p>
-            <div class="math-card">
-              <div class="math-display">$$p = \frac{1}{1 + 0.135} \approx 0.881 \quad (88.1\% \text{ chance of passing})$$</div>
-            </div>
-
-            <p>To train the weights, we minimize <strong>Binary Cross-Entropy (Log Loss)</strong>:</p>
-            <div class="math-card">
-              <div class="math-display">$$\boxed{L = -\frac{1}{n}\sum_{i=1}^{n}\Big[y_i \ln(p_i) + (1 - y_i)\ln(1 - p_i)\Big]}$$</div>
-            </div>
-            <p><strong>In words:</strong> when the true label is $y_i = 1$, only $-\ln(p_i)$ survives; if the model is confident and right ($p_i \to 1$), the loss is near $0$, but if it is confident and wrong ($p_i \to 0$), the loss shoots toward infinity.</p>
-
-            <div class="decision-grid">
-              <div class="decision-box use">
-                <div class="decision-box-title">When to Use</div>
-                <ul>
-                  <li>You need calibrated probabilities (churn risk, click-through rate, credit default).</li>
-                  <li>Fast, interpretable baseline for binary classification.</li>
-                </ul>
-              </div>
-              <div class="decision-box avoid">
-                <div class="decision-box-title">When to Avoid</div>
-                <ul>
-                  <li>The boundary between classes is highly curved or depends on complex feature combinations.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="recap">
-              <div class="recap-title">Recap</div>
-              <ul>
-                <li>Linear score $z = \mathbf{w}^T\mathbf{x} + b$ followed by sigmoid $\sigma(z)$ gives a clean probability in $(0, 1)$.</li>
-                <li>Trained with Binary Cross-Entropy (Log Loss), not MSE.</li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- ========================================== -->
-          <!-- SECTION 5: DECISION TREE                   -->
-          <!-- ========================================== -->
-          <section id="part-5-decision-tree">
-            <div class="section-badge-container">
-              <span class="badge badge-classification">Classification</span>
-              <span class="badge badge-regression">Regression</span>
-              <span class="badge badge-neutral">Rule-Based</span>
-            </div>
-            <h2>5. Decision Tree</h2>
-
-            <div class="tldr">
-              <span class="tldr-label">In one line</span>
-              <p>A Decision Tree splits your data step by step using simple yes/no questions until each final group (leaf) contains mostly one class.</p>
-            </div>
-
-            <div class="callout callout-analogy">
-              <div class="callout-title">Think of it like this</div>
-              <p>It works just like the game <em>20 Questions</em>. Good players ask questions early on that cut the possibilities cleanly into pure groups ("Is it a living thing?") rather than vague questions that leave both sides mixed up.</p>
-            </div>
-
-            <h3>How It Works</h3>
-            <ol class="steps">
-              <li><strong>Start at the root with all rows.</strong> Measure how mixed the classes are using <strong>Gini Impurity</strong> or <strong>Entropy</strong>.</li>
-              <li><strong>Try every possible split.</strong> Test every feature and cutoff (e.g., $\text{Attendance} \ge 75\%$) to see how pure the two resulting child groups become.</li>
-              <li><strong>Pick the best question.</strong> Choose the split that reduces impurity the most (highest <strong>Information Gain</strong>).</li>
-              <li><strong>Repeat until stopping rules fire.</strong> Keep splitting child nodes until a node is completely pure ($\text{Gini} = 0$) or hits a limit like <code>max_depth</code>.</li>
-            </ol>
-
-            <!-- Figure 5.1: Decision Tree -->
-            <figure class="figure-container">
-              <div class="figure-header">
-                <span class="figure-number">Figure 5.1</span>
-                <span class="figure-title">Decision Tree Splitting Data into Pure Leaves</span>
-              </div>
-              <div class="figure-svg-wrapper">
-                <svg viewBox="0 0 680 310" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Decision tree splitting 100 students by Attendance and Study Hours">
-                  <defs>
-                    <marker id="arrow-dt" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
-                    </marker>
-                  </defs>
-                  <rect x="240" y="15" width="200" height="54" rx="6" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5" />
-                  <text x="340" y="37" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Attendance &ge; 75%?</text>
-                  <text x="340" y="55" font-size="11" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">N = 100 &bull; Mixed (Gini = 0.48)</text>
-
-                  <line x1="290" y1="69" x2="165" y2="125" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-dt)" />
-                  <text x="200" y="95" font-size="11" font-weight="700" fill="#dc2626" font-family="-apple-system, sans-serif">No (&lt; 75%)</text>
-
-                  <line x1="390" y1="69" x2="485" y2="125" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-dt)" />
-                  <text x="455" y="95" font-size="11" font-weight="700" fill="#166534" font-family="-apple-system, sans-serif">Yes (&ge; 75%)</text>
-
-                  <rect x="70" y="125" width="180" height="54" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
-                  <text x="160" y="147" font-size="12" font-weight="700" fill="#991b1b" text-anchor="middle" font-family="-apple-system, sans-serif">Leaf: Predict Fail</text>
-                  <text x="160" y="165" font-size="11" fill="#b91c1c" text-anchor="middle" font-family="-apple-system, sans-serif">N = 30 &bull; Pure (Gini = 0.0)</text>
-
-                  <rect x="400" y="125" width="190" height="54" rx="6" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5" />
-                  <text x="495" y="147" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Study &ge; 2 Hours/Day?</text>
-                  <text x="495" y="165" font-size="11" fill="#64748b" text-anchor="middle" font-family="-apple-system, sans-serif">N = 70 &bull; Gini = 0.36</text>
-
-                  <line x1="450" y1="179" x2="375" y2="230" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-dt)" />
-                  <text x="392" y="205" font-size="11" font-weight="700" fill="#dc2626" font-family="-apple-system, sans-serif">No</text>
-
-                  <line x1="540" y1="179" x2="590" y2="230" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-dt)" />
-                  <text x="580" y="205" font-size="11" font-weight="700" fill="#166534" font-family="-apple-system, sans-serif">Yes</text>
-
-                  <rect x="285" y="230" width="170" height="54" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
-                  <text x="370" y="252" font-size="12" font-weight="700" fill="#991b1b" text-anchor="middle" font-family="-apple-system, sans-serif">Leaf: Predict Fail</text>
-                  <text x="370" y="270" font-size="11" fill="#b91c1c" text-anchor="middle" font-family="-apple-system, sans-serif">N = 18 &bull; Gini = 0.10</text>
-
-                  <rect x="500" y="230" width="170" height="54" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" />
-                  <text x="585" y="252" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Leaf: Predict Pass</text>
-                  <text x="585" y="270" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">N = 52 &bull; Gini = 0.04</text>
-                </svg>
-              </div>
-              <figcaption><strong>What to notice:</strong> Starting with $N = 100$ mixed students at the top, each question routes students into smaller groups ($30 + 70 = 100$, then $18 + 52 = 70$) with much lower Gini impurity.</figcaption>
-            </figure>
-
-            <h3>The Math in Plain Words</h3>
-            <p><strong>Gini Impurity</strong> measures how mixed a group is (from $0.0$ for a completely pure group up to $0.5$ for a $50/50$ two-class mix):</p>
-            <div class="math-card">
-              <div class="math-display">$$\boxed{\text{Gini} = 1 - \sum_{i=1}^{C} p_i^2}$$</div>
-            </div>
-            <p><strong>Worked Example:</strong></p>
-            <ul>
-              <li><strong>50/50 Mixed Group:</strong> $\text{Gini} = 1 - (0.5^2 + 0.5^2) = 1 - 0.50 = \mathbf{0.50}$ (maximum messiness).</li>
-              <li><strong>100% Pure Group:</strong> $\text{Gini} = 1 - (1.0^2 + 0.0^2) = \mathbf{0.0}$ (completely clean).</li>
-            </ul>
-
-            <details class="deep-dive">
-              <summary>Deep dive: Shannon Entropy &amp; Information Gain <span class="summary-hint">Optional</span></summary>
-              <div class="deep-dive-body">
-                <p>Instead of Gini, you can measure disorder in bits using <strong>Entropy</strong>: $H(S) = -\sum p_i \log_2(p_i)$. A 50/50 split has $H = 1\text{ bit}$; a pure node has $H = 0$. <strong>Information Gain</strong> is simply the parent node's entropy minus the weighted average entropy of the two child nodes.</p>
-              </div>
-            </details>
-
-            <div class="decision-grid">
-              <div class="decision-box use">
-                <div class="decision-box-title">When to Use</div>
-                <ul>
-                  <li>You need white-box rules you can show to a non-technical stakeholder or regulator.</li>
-                  <li>Tabular data with mixed numeric and categorical columns (no scaling needed!).</li>
-                </ul>
-              </div>
-              <div class="decision-box avoid">
-                <div class="decision-box-title">When to Avoid</div>
-                <ul>
-                  <li>Used alone without depth limits—a deep tree will memorize every noisy quirk in the training set.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="recap">
-              <div class="recap-title">Recap</div>
-              <ul>
-                <li>Picks splits that minimize Gini Impurity or Entropy.</li>
-                <li>Requires <strong>zero feature scaling</strong>, but easily overfits unless you cap <code>max_depth</code> or <code>min_samples_leaf</code>.</li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- ========================================== -->
-          <!-- SECTION 6: RANDOM FOREST                   -->
-          <!-- ========================================== -->
-          <section id="part-6-random-forest">
-            <div class="section-badge-container">
-              <span class="badge badge-ensemble">Ensemble</span>
-              <span class="badge badge-classification">Classification</span>
-              <span class="badge badge-regression">Regression</span>
-            </div>
-            <h2>6. Random Forest</h2>
-
-            <div class="tldr">
-              <span class="tldr-label">In one line</span>
-              <p>Random Forest trains hundreds of slightly different Decision Trees and averages their answers so individual tree mistakes cancel out.</p>
-            </div>
-
-            <div class="callout callout-analogy">
-              <div class="callout-title">Think of it like this</div>
-              <p>Asking one specialist who only looked at part of a patient's chart is risky. Asking 200 doctors—each given a random sample of past cases and a random subset of lab tests—and taking the majority vote is remarkably reliable.</p>
-            </div>
-
-            <h3>How It Works</h3>
-            <ol class="steps">
-              <li><strong>Bootstrap the rows (Bagging).</strong> For each tree, draw $N$ rows at random <em>with replacement</em> from the dataset.</li>
-              <li><strong>Randomize the columns.</strong> At every split inside a tree, only allow it to pick from a random subset of features (e.g., $\sqrt{p}$ features). This stops every tree from looking identical.</li>
-              <li><strong>Grow many trees in parallel.</strong> Build $M$ independent trees ($100$ to $500+$).</li>
-              <li><strong>Combine predictions.</strong> Take a <strong>majority vote</strong> for classification, or the <strong>mean average</strong> for regression.</li>
-            </ol>
-
-            <!-- Figure 6.1: Random Forest -->
-            <figure class="figure-container">
-              <div class="figure-header">
-                <span class="figure-number">Figure 6.1</span>
-                <span class="figure-title">Random Forest: Bootstrap Samples + Feature Subsets &rarr; Majority Vote</span>
-              </div>
-              <div class="figure-svg-wrapper">
-                <svg viewBox="0 0 720 300" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Random Forest architecture showing training set split into bootstrap samples, trees, and majority vote">
-                  <defs>
-                    <marker id="arrow-rf" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b"/>
-                    </marker>
-                  </defs>
-                  <rect x="250" y="12" width="220" height="38" rx="6" fill="#1e293b" />
-                  <text x="360" y="36" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="-apple-system, sans-serif">Full Training Data (N rows, P features)</text>
-
-                  <line x1="300" y1="50" x2="120" y2="85" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
-                  <line x1="360" y1="50" x2="360" y2="85" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
-                  <line x1="420" y1="50" x2="600" y2="85" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
-
-                  <rect x="40" y="85" width="160" height="34" rx="5" fill="#f1f5f9" stroke="#94a3b8" />
-                  <text x="120" y="106" font-size="11" fill="#334155" text-anchor="middle" font-family="-apple-system, sans-serif">Bootstrap Sample 1</text>
-                  <rect x="280" y="85" width="160" height="34" rx="5" fill="#f1f5f9" stroke="#94a3b8" />
-                  <text x="360" y="106" font-size="11" fill="#334155" text-anchor="middle" font-family="-apple-system, sans-serif">Bootstrap Sample 2</text>
-                  <rect x="520" y="85" width="160" height="34" rx="5" fill="#f1f5f9" stroke="#94a3b8" />
-                  <text x="600" y="106" font-size="11" fill="#334155" text-anchor="middle" font-family="-apple-system, sans-serif">Bootstrap Sample M</text>
-
-                  <line x1="120" y1="119" x2="120" y2="145" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
-                  <line x1="360" y1="119" x2="360" y2="145" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
-                  <line x1="600" y1="119" x2="600" y2="145" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
-
-                  <rect x="45" y="145" width="150" height="46" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.4" />
-                  <text x="120" y="165" font-size="11" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Tree 1 (Random &radic;P cols)</text>
-                  <text x="120" y="182" font-size="11" font-weight="600" fill="#16a34a" text-anchor="middle" font-family="-apple-system, sans-serif">Predicts: Pass</text>
-
-                  <rect x="285" y="145" width="150" height="46" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.4" />
-                  <text x="360" y="165" font-size="11" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Tree 2 (Random &radic;P cols)</text>
-                  <text x="360" y="182" font-size="11" font-weight="600" fill="#16a34a" text-anchor="middle" font-family="-apple-system, sans-serif">Predicts: Pass</text>
-
-                  <rect x="525" y="145" width="150" height="46" rx="6" fill="#faf5ff" stroke="#a855f7" stroke-width="1.4" />
-                  <text x="600" y="165" font-size="11" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Tree M (Random &radic;P cols)</text>
-                  <text x="600" y="182" font-size="11" font-weight="600" fill="#dc2626" text-anchor="middle" font-family="-apple-system, sans-serif">Predicts: Fail</text>
-
-                  <line x1="120" y1="191" x2="310" y2="235" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
-                  <line x1="360" y1="191" x2="360" y2="235" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
-                  <line x1="600" y1="191" x2="410" y2="235" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-rf)" />
-
-                  <rect x="240" y="235" width="240" height="44" rx="6" fill="#0066cc" />
-                  <text x="360" y="255" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle" font-family="-apple-system, sans-serif">Majority Vote / Average</text>
-                  <text x="360" y="271" font-size="11" fill="#dbeafe" text-anchor="middle" font-family="-apple-system, sans-serif">Final Output: Pass (2 votes to 1)</text>
-                </svg>
-              </div>
-              <figcaption><strong>What to notice:</strong> Tree $M$ makes an error and predicts "Fail", but because the trees are decorrelated, the majority vote (Trees 1 and 2) overrides the mistake.</figcaption>
-            </figure>
-
-            <h3>The Math in Plain Words</h3>
-            <p>For <strong>regression</strong>, the forest averages the numeric guesses of all $M$ trees:</p>
-            <div class="math-card">
-              <div class="math-display">$$\boxed{\hat{y} = \frac{1}{M}\sum_{m=1}^{M} T_m(\mathbf{x})}$$</div>
-            </div>
-            <p><strong>Worked Example:</strong> If 3 trees predict house prices of $₹40\text{L}$, $₹45\text{L}$, and $₹50\text{L}$, the Random Forest outputs $(40 + 45 + 50)/3 = \mathbf{₹45\text{L}}$.</p>
-
-            <h3>Quick Code Example: Scikit-Learn Pipeline</h3>
-            <div class="code-container">
-              <div class="code-header">
-                <span class="code-filename">train_random_forest.py</span>
-                <span class="code-lang-tag">Python</span>
-              </div>
-              <pre><code>from sklearn.datasets import load_breast_cancer
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-
-# 1. Load data and split into train and test sets FIRST
-X, y = load_breast_cancer(return_X_y=True)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# 2. Train 200 decorrelated trees
-model = RandomForestClassifier(n_estimators=200, max_depth=6, random_state=42)
-model.fit(X_train, y_train)
-
-# 3. Evaluate on unseen test data
-preds = model.predict(X_test)
-print(f"Test Accuracy: {accuracy_score(y_test, preds):.3f}")</code></pre>
-            </div>
-            <p><strong>What to notice:</strong> We split `X_train` and `X_test` before calling `.fit()`, and we need zero feature scaling for a Random Forest.</p>
-
-            <div class="recap">
-              <div class="recap-title">Recap</div>
-              <ul>
-                <li>Combines <strong>Bagging</strong> (random rows) + <strong>Random Feature Subspaces</strong> (random columns) to keep trees diverse.</li>
-                <li>Slashes variance (overfitting) compared to a single Decision Tree without needing feature scaling.</li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- ========================================== -->
-          <!-- SECTION 7: SELECTION & METRICS             -->
-          <!-- ========================================== -->
-          <section id="part-7-selection-guide">
-            <h2>7. Model Selection &amp; Loss Metrics Guide</h2>
-            <p>Use these two tables to pick the right starting model and remember what each math formula actually measures.</p>
-
-            <div class="table-wrapper wide-breakout">
-              <table>
-                <thead>
-                  <tr>
-                    <th>If Your Problem Looks Like This…</th>
-                    <th>Start With</th>
-                    <th>Why It Fits</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Predicting a continuous number</strong> (e.g. house prices)</td>
-                    <td>Linear Regression &rarr; Random Forest</td>
-                    <td>Linear Regression gives an interpretable baseline; Random Forest captures non-linear jumps.</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Need a calibrated 0–100% probability</strong> (churn, risk)</td>
-                    <td>Logistic Regression</td>
-                    <td>Outputs calibrated probabilities directly via the sigmoid curve.</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Need strict human-auditable yes/no rules</strong></td>
-                    <td>Decision Tree (shallow)</td>
-                    <td>Produces a flowchart anyone can trace by hand.</td>
-                  </tr>
-                  <tr>
-                    <td><strong>General tabular dataset (winning accuracy)</strong></td>
-                    <td>Random Forest</td>
-                    <td>Handles non-linear interactions and mixed features out of the box.</td>
-                  </tr>
-                  <tr>
-                    <td><strong>High-dimensional text or curved small data</strong></td>
-                    <td>SVM (Linear or RBF)</td>
-                    <td>Max-margin boundary works well even when features outnumber rows.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Formula / Metric</th>
-                    <th>Used By</th>
-                    <th>Plain-English Job</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Mean Squared Error (MSE)</strong></td>
-                    <td>Linear Regression</td>
-                    <td>Average squared vertical gap between real numbers and line predictions.</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Binary Cross-Entropy (Log Loss)</strong></td>
-                    <td>Logistic Regression</td>
-                    <td>Heavy penalty when the model assigns a confident probability to the wrong class.</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Gini Impurity / Entropy</strong></td>
-                    <td>Decision Tree &amp; Random Forest</td>
-                    <td>Measures how mixed the classes are inside a node ($0$ = completely pure).</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Euclidean Distance</strong></td>
-                    <td>KNN</td>
-                    <td>Straight-line ruler distance between two feature vectors.</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Geometric Margin ($2/\|\mathbf{w}\|$)</strong></td>
-                    <td>SVM</td>
-                    <td>Width of the empty safety street separating the two classes.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <!-- ========================================== -->
-          <!-- SECTION 8: CORE PRINCIPLES                 -->
-          <!-- ========================================== -->
-          <section id="part-8-core-principles">
-            <h2>8. Core Concepts Every Model Shares</h2>
-
-            <h3>8.1 How Models Learn: Gradient Descent</h3>
-            <p>How do Linear Regression, Logistic Regression, and Neural Networks actually find the best weights? They start with a guess, measure the slope (gradient) of the loss curve, and take a small step downhill:</p>
-
-            <!-- Figure 8.1: Gradient Descent -->
-            <figure class="figure-container">
-              <div class="figure-header">
-                <span class="figure-number">Figure 8.1</span>
-                <span class="figure-title">Gradient Descent Stepping Down the Loss Bowl</span>
-              </div>
-              <div class="figure-svg-wrapper">
-                <svg viewBox="0 0 680 230" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="U-shaped loss curve showing weight steps descending to minimum loss">
-                  <defs>
-                    <marker id="arrow-gd" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#dc2626"/>
-                    </marker>
-                  </defs>
-                  <line x1="90" y1="195" x2="590" y2="195" stroke="#515154" stroke-width="1.5" />
-                  <line x1="90" y1="195" x2="90" y2="25" stroke="#515154" stroke-width="1.5" />
-                  <text x="585" y="214" font-size="11" fill="#515154" text-anchor="end" font-family="-apple-system, sans-serif">Weight parameter (w)</text>
-                  <text x="100" y="34" font-size="11" fill="#515154" font-family="-apple-system, sans-serif">Loss L(w)</text>
-
-                  <!-- Loss Bowl -->
-                  <path d="M 130 40 Q 340 310, 550 40" fill="none" stroke="#0066cc" stroke-width="2.5" />
-
-                  <!-- Steps -->
-                  <circle cx="165" cy="80" r="5" fill="#dc2626" />
-                  <text x="178" y="76" font-size="11" font-weight="600" fill="#dc2626" font-family="-apple-system, sans-serif">1. Start guess</text>
-                  <path d="M 168 85 Q 200 125, 222 135" fill="none" stroke="#dc2626" stroke-width="1.6" marker-end="url(#arrow-gd)" />
-
-                  <circle cx="228" cy="138" r="5" fill="#dc2626" />
-                  <path d="M 233 142 Q 265 162, 288 168" fill="none" stroke="#dc2626" stroke-width="1.6" marker-end="url(#arrow-gd)" />
-
-                  <circle cx="295" cy="170" r="5" fill="#dc2626" />
-                  <path d="M 300 172 Q 320 175, 333 175" fill="none" stroke="#dc2626" stroke-width="1.6" marker-end="url(#arrow-gd)" />
-
-                  <!-- Minimum -->
-                  <circle cx="340" cy="175" r="6" fill="#16a34a" />
-                  <text x="340" y="191" font-size="11" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Minimum Loss (Optimal w*)</text>
-                </svg>
-              </div>
-              <figcaption><strong>What to notice:</strong> Each step moves opposite the slope: $w \leftarrow w - \eta \frac{\partial L}{\partial w}$. As the curve flattens near the bottom, the steps naturally get smaller.</figcaption>
-            </figure>
-
-            <h3>8.2 Feature Scaling</h3>
-            <div class="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Models That MUST Be Scaled</th>
-                    <th>Models That Do NOT Need Scaling</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>KNN, SVM, Regularized Linear/Logistic Regression, Neural Networks</strong> (distance and gradient based)</td>
-                    <td><strong>Decision Trees, Random Forests, Gradient Boosted Trees</strong> (threshold rank based)</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <h3>8.3 Bias–Variance Tradeoff (Underfitting vs. Overfitting)</h3>
-            <figure class="figure-container">
-              <div class="figure-header">
-                <span class="figure-number">Figure 8.2</span>
-                <span class="figure-title">Underfitting (Too Simple) vs. Just Right vs. Overfitting (Memorizes Noise)</span>
-              </div>
-              <div class="figure-svg-wrapper">
-                <svg viewBox="0 0 720 205" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three panels showing Underfitting, Optimal Fit, and Overfitting">
-                  <g transform="translate(10, 10)">
-                    <rect x="0" y="0" width="220" height="180" rx="6" fill="#fbfbfd" stroke="#e5e5ea" />
-                    <text x="110" y="24" font-size="12" font-weight="700" fill="#dc2626" text-anchor="middle" font-family="-apple-system, sans-serif">Underfitting (High Bias)</text>
-                    <circle cx="30" cy="145" r="3.5" fill="#1e293b" /><circle cx="65" cy="112" r="3.5" fill="#1e293b" /><circle cx="110" cy="92" r="3.5" fill="#1e293b" /><circle cx="155" cy="115" r="3.5" fill="#1e293b" /><circle cx="190" cy="150" r="3.5" fill="#1e293b" />
-                    <line x1="25" y1="122" x2="195" y2="122" stroke="#ef4444" stroke-width="2" />
-                    <text x="110" y="168" font-size="11" fill="#b91c1c" text-anchor="middle" font-family="-apple-system, sans-serif">High Train &amp; Test Error</text>
-                  </g>
-                  <g transform="translate(250, 10)">
-                    <rect x="0" y="0" width="220" height="180" rx="6" fill="#fbfbfd" stroke="#16a34a" stroke-width="1.5" />
-                    <text x="110" y="24" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Good Fit (Generalizes)</text>
-                    <circle cx="30" cy="145" r="3.5" fill="#1e293b" /><circle cx="65" cy="112" r="3.5" fill="#1e293b" /><circle cx="110" cy="92" r="3.5" fill="#1e293b" /><circle cx="155" cy="115" r="3.5" fill="#1e293b" /><circle cx="190" cy="150" r="3.5" fill="#1e293b" />
-                    <path d="M 25 152 Q 110 42, 195 155" fill="none" stroke="#16a34a" stroke-width="2.5" />
-                    <text x="110" y="168" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">Low Train &amp; Test Error</text>
-                  </g>
-                  <g transform="translate(490, 10)">
-                    <rect x="0" y="0" width="220" height="180" rx="6" fill="#fbfbfd" stroke="#e5e5ea" />
-                    <text x="110" y="24" font-size="12" font-weight="700" fill="#d97706" text-anchor="middle" font-family="-apple-system, sans-serif">Overfitting (High Variance)</text>
-                    <circle cx="30" cy="145" r="3.5" fill="#1e293b" /><circle cx="65" cy="112" r="3.5" fill="#1e293b" /><circle cx="110" cy="92" r="3.5" fill="#1e293b" /><circle cx="155" cy="115" r="3.5" fill="#1e293b" /><circle cx="190" cy="150" r="3.5" fill="#1e293b" />
-                    <path d="M 25 150 L 30 145 L 48 75 L 65 112 L 88 135 L 110 92 L 135 65 L 155 115 L 175 158 L 190 150" fill="none" stroke="#d97706" stroke-width="2" />
-                    <text x="110" y="168" font-size="11" fill="#b45309" text-anchor="middle" font-family="-apple-system, sans-serif">0 Train Error &bull; Bad Test Error</text>
-                  </g>
-                </svg>
-              </div>
-              <figcaption><strong>What to notice:</strong> Always judge your model on a held-out <strong>test set</strong>. Zero training error often means the model memorized noise.</figcaption>
-            </figure>
-          </section>
-
-          <!-- ========================================== -->
-          <!-- SECTION 9: CHEAT SHEET                     -->
-          <!-- ========================================== -->
-          <section id="summary">
-            <h2>9. Cheat Sheet</h2>
-            <div class="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Model</th>
-                    <th>Job</th>
-                    <th>Core Formula</th>
-                    <th>Scale Features?</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Linear Regression</strong></td>
-                    <td>Regression</td>
-                    <td>$\hat{y} = \mathbf{w}^T\mathbf{x} + b$ (MSE)</td>
-                    <td>Yes (if regularized)</td>
-                  </tr>
-                  <tr>
-                    <td><strong>KNN</strong></td>
-                    <td>Both</td>
-                    <td>$d = \sqrt{\sum (x_j - z_j)^2}$</td>
-                    <td><strong>Mandatory</strong></td>
-                  </tr>
-                  <tr>
-                    <td><strong>SVM</strong></td>
-                    <td>Both</td>
-                    <td>$\text{Margin} = 2/\|\mathbf{w}\|$</td>
-                    <td><strong>Mandatory</strong></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Logistic Regression</strong></td>
-                    <td>Classification</td>
-                    <td>$p = 1/(1 + e^{-z})$ (Log Loss)</td>
-                    <td>Yes (if regularized)</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Decision Tree</strong></td>
-                    <td>Both</td>
-                    <td>$\text{Gini} = 1 - \sum p_i^2$</td>
-                    <td>No</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Random Forest</strong></td>
-                    <td>Both</td>
-                    <td>Vote / Average over $M$ trees</td>
-                    <td>No</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="callout callout-tip">
-              <div class="callout-title">Pro Tip</div>
-              <p>Do not memorize formulas in isolation—remember the job each formula was invented to do: MSE measures vertical line errors, Sigmoid squashes scores into probabilities, Gini scores how pure a split is, and $2/\|\mathbf{w}\|$ measures the safety margin.</p>
-            </div>
-          </section>
-
-          <!-- Prev / Next Navigation -->
-          <nav class="page-nav" aria-label="Curriculum Pagination">
-            <a class="prev" href="ds.html">
-              <span class="page-nav-label">&larr; Previous Module</span>
-              <span class="page-nav-title">Data Science Toolkit: Pandas, NumPy, Matplotlib &amp; Streamlit</span>
-            </a>
-            <a class="next" href="dl.html">
-              <span class="page-nav-label">Next Module &rarr;</span>
-              <span class="page-nav-title">2. Deep Learning &amp; Feedforward Neural Networks (FNN)</span>
-            </a>
-          </nav>
-
-          <footer class="article-footer">
-            <p>AI Engineering Curriculum &bull; Module 1: Machine Learning Models</p>
-          </footer>
-
-        </article>
-      </main>
-
+  <!-- ===================================================================== -->
+  <!-- 1. OBSIDIAN ARCHITECTURAL HERO STAGE                                  -->
+  <!-- ===================================================================== -->
+  <header class="aw-hero">
+    <div class="aw-hero-grid-bg"></div>
+    <div class="aw-hero-glow"></div>
+    <canvas id="latent-canvas" class="aw-hero-canvas"></canvas>
+
+    <!-- Top Technical Index Bar -->
+    <div class="aw-meta-bar">
+      <span class="aw-meta-status">
+        <span class="aw-status-dot"></span>
+        EDITION 2026 // COMPLETE 10-MODULE MONOGRAPH
+      </span>
+      <span>MATHEMATICAL INTUITION &middot; VISUAL GEOMETRY &middot; PRODUCTION CODE</span>
+      <span>[ 1950 TURING &rarr; 2026 JEPA ]</span>
     </div>
-  </div>
+
+    <!-- Centerpiece Grid -->
+    <div class="aw-hero-main">
+      <div>
+        <a href="story.html" class="aw-eyebrow-pill">
+          <span>PROLOGUE 00 // THE STORY, LEGENDS &amp; PHILOSOPHY OF AI</span>
+          <span>&rarr;</span>
+        </a>
+        <h1 class="aw-hero-title">
+          From Turing's Tape to <span class="aw-serif">World Models</span> &mdash; The Architecture of Intelligence.
+        </h1>
+        <p class="aw-hero-lead">
+          An interactive engineering monograph crafted for clarity. Begin with the human story of the pioneers who taught silicon to reason, examine the ethics, psychology, and metaphysics of mind, and master every mathematical pillar from Data Science and Classical ML to Transformers, RAG, MCP Agents, and JEPA.
+        </p>
+        <div class="aw-cta-group">
+          <a href="story.html" class="aw-btn-primary">
+            <span>Enter Chapter 00: The Story of AI</span>
+            <span>&rarr;</span>
+          </a>
+          <a href="#curriculum-bento" class="aw-btn-secondary">
+            <span>Explore All 10 Modules</span>
+            <span>&darr;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Architectural Latent Manifold Card -->
+      <div class="aw-manifold-card">
+        <div class="aw-manifold-header">
+          <span>FIG 0.0 // LATENT MANIFOLD PROJECTION</span>
+          <span>$\mathbb{R}^d \to \mathcal{Z}$</span>
+        </div>
+        <svg class="aw-manifold-svg" viewBox="0 0 420 290" xmlns="http://www.w3.org/2000/svg">
+          <rect width="420" height="290" rx="10" fill="#090d16"/>
+          <!-- Perspective Grid Lines -->
+          <g stroke="#1e293b" stroke-width="1">
+            <line x1="20" y1="245" x2="400" y2="245"/>
+            <line x1="45" y1="210" x2="375" y2="210"/>
+            <line x1="70" y1="175" x2="350" y2="175"/>
+            <line x1="95" y1="140" x2="325" y2="140"/>
+            <line x1="210" y1="30" x2="210" y2="265" stroke-dasharray="3,3"/>
+          </g>
+          <!-- Glowing Latent Curve -->
+          <path d="M 38 225 C 115 215, 145 105, 215 115 C 285 125, 315 55, 382 48" fill="none" stroke="#3b82f6" stroke-width="3"/>
+          <path d="M 38 225 C 115 215, 145 105, 215 115 C 285 125, 315 55, 382 48 L 382 245 L 38 245 Z" fill="#2563eb" fill-opacity="0.1"/>
+
+          <!-- Node 1: 1950 Symbolic Logic -->
+          <circle cx="62" cy="218" r="6" fill="#60a5fa" stroke="#090d16" stroke-width="2"/>
+          <rect x="24" y="168" width="112" height="36" rx="5" fill="#0f172a" stroke="#334155"/>
+          <text x="80" y="183" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#93c5fd">1950 // TURING</text>
+          <text x="80" y="196" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" font-weight="600" fill="#f8fafc">Symbolic Logic</text>
+
+          <!-- Node 2: 2012-2017 Deep Learning & Attention -->
+          <circle cx="215" cy="115" r="7" fill="#a78bfa" stroke="#090d16" stroke-width="2"/>
+          <rect x="150" y="60" width="130" height="38" rx="5" fill="#0f172a" stroke="#6d28d9"/>
+          <text x="215" y="75" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#c4b5fd">2017 // VASWANI</text>
+          <text x="215" y="89" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" font-weight="600" fill="#f8fafc">Self-Attention $Q,K,V$</text>
+
+          <!-- Node 3: 2026 World Models & Agency -->
+          <circle cx="368" cy="52" r="8" fill="#34d399" stroke="#090d16" stroke-width="2"/>
+          <rect x="262" y="82" width="138" height="40" rx="5" fill="#0f172a" stroke="#059669"/>
+          <text x="331" y="98" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#6ee7b7">2026 // FRONTIER</text>
+          <text x="331" y="113" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" font-weight="600" fill="#f8fafc">Agents, MCP &amp; JEPA</text>
+
+          <!-- Bottom Formula Caption inside SVG -->
+          <text x="210" y="272" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#94a3b8">Software 1.0 (Rules) &rarr; Software 2.0 (Weights) &rarr; Software 3.0 (World Models)</text>
+        </svg>
+        <div class="aw-manifold-caption">
+          <span>Start with the historical &amp; philosophical narrative</span>
+          <a href="story.html" class="aw-manifold-link">Open Story &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Architectural Metric Bar -->
+    <div class="aw-hero-metrics">
+      <div class="aw-hero-metrics-inner">
+        <div class="aw-metric-cell">
+          <div class="aw-metric-num">00 &mdash; 09</div>
+          <div class="aw-metric-label">10 Complete Interactive Modules from Story to Frontier Research</div>
+        </div>
+        <div class="aw-metric-cell">
+          <div class="aw-metric-num">8 Legends</div>
+          <div class="aw-metric-label">Archival Portraits, Historical Tributes &amp; Notes of Gratitude</div>
+        </div>
+        <div class="aw-metric-cell">
+          <div class="aw-metric-num">65+ SVGs</div>
+          <div class="aw-metric-label">Bespoke Geometric &amp; Architectural Diagrams with Worked Math</div>
+        </div>
+        <div class="aw-metric-cell">
+          <div class="aw-metric-num">100 Q&amp;As</div>
+          <div class="aw-metric-label">2026 Data Science, ML &amp; GenAI Interview Bank with Live Search</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- 2. EDITORIAL STORY PORTAL (LEADS DIRECTLY TO STORY.HTML)              -->
+  <!-- ===================================================================== -->
+  <section id="story-portal" class="aw-section">
+    <div class="aw-section-header">
+      <div>
+        <span class="aw-index-tag">[ CHAPTER 00 // THE PROLOGUE ]</span>
+        <h2 class="aw-section-title">Begin Where Intelligence Began.</h2>
+      </div>
+      <p class="aw-section-desc">
+        Before diving into loss functions and tensor shapes, step inside our flagship editorial essay on how AI transformed human history, the pioneers who built it, and the deep questions of ethics, psychology, and metaphysics.
+      </p>
+    </div>
+
+    <div class="aw-story-monograph">
+      <!-- Left Dark Narrative Column -->
+      <div class="aw-story-left">
+        <div>
+          <div class="aw-story-kicker">FEATURED ESSAY &middot; MODULE 00</div>
+          <h3 class="aw-story-heading">
+            The Story of Artificial Intelligence: History, Legends, Ethics &amp; <span class="aw-serif">Metaphysics</span>
+          </h3>
+          <p class="aw-story-excerpt">
+            How did humanity travel from Alan Turing's 1950 paper notebook and Claude Shannon's mechanical mouse to trillion-parameter Transformers, Model Context Protocol (MCP) agents, and Yann LeCun's Joint-Embedding Predictive Architectures (JEPA)?
+          </p>
+          <div class="aw-story-quote-mini">
+            "We can only see a short distance ahead, but we can see plenty there that needs to be done." &mdash; Alan M. Turing (1950)
+          </div>
+        </div>
+        <div>
+          <a href="story.html" class="aw-btn-primary">
+            <span>Read Module 00: The Story &amp; Legends of AI</span>
+            <span>&rarr;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right 4-Chapter Interactive Index into story.html -->
+      <div class="aw-story-right">
+        <a href="story.html#part-2-history" class="aw-chapter-link">
+          <div class="aw-chapter-meta">
+            <span>ACT I &mdash; ACT V // 1950 &ndash; 2026</span>
+            <span>READ &rarr;</span>
+          </div>
+          <div class="aw-chapter-title">1. How AI Started &amp; Transformed History</div>
+          <div class="aw-chapter-sub">Dartmouth 1956, the two AI Winters, Backpropagation's survival, AlexNet 2012, the 2017 Transformer, and 2026 World Models.</div>
+        </a>
+
+        <a href="story.html#part-3-legends" class="aw-chapter-link">
+          <div class="aw-chapter-meta">
+            <span>PORTRAIT GALLERY &amp; GRATITUDE</span>
+            <span>READ &rarr;</span>
+          </div>
+          <div class="aw-chapter-title">2. The Legends Who Shaped AI</div>
+          <div class="aw-chapter-sub">Archival portraits and gratitude notes for Turing, Shannon, McCarthy, Hinton, Bengio, LeCun, Fei-Fei Li, and Vaswani.</div>
+        </a>
+
+        <a href="story.html#part-4-ethics" class="aw-chapter-link">
+          <div class="aw-chapter-meta">
+            <span>ALIGNMENT &amp; THE HUMAN MIND</span>
+            <span>READ &rarr;</span>
+          </div>
+          <div class="aw-chapter-title">3. AI Ethics &amp; Human Psychology</div>
+          <div class="aw-chapter-sub">Algorithmic bias, Goodhart's Law ($R_{\text{proxy}} \neq R_{\text{true}}$), the ELIZA effect, and cognitive offloading vs. atrophy.</div>
+        </a>
+
+        <a href="story.html#part-6-metaphysics" class="aw-chapter-link">
+          <div class="aw-chapter-meta">
+            <span>PHILOSOPHY OF MIND</span>
+            <span>READ &rarr;</span>
+          </div>
+          <div class="aw-chapter-title">4. Metaphysics: Chinese Room, Plato's Cave &amp; Qualia</div>
+          <div class="aw-chapter-sub">Syntax vs. semantics, high-dimensional shadows in $\mathbb{R}^d$, Chalmers' Hard Problem of Consciousness, and human teleology.</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- 3. THE 10-MODULE ARCHITECTURAL BENTO GRID                             -->
+  <!-- ===================================================================== -->
+  <section id="curriculum-bento" class="aw-section">
+    <div class="aw-section-header">
+      <div>
+        <span class="aw-index-tag">[ COMPLETE SYLLABUS // 10 MODULES ]</span>
+        <h2 class="aw-section-title">The Engineering Curriculum.</h2>
+      </div>
+      <p class="aw-section-desc">
+        Every module follows the same strict standard: plain-English intuition first, real-life analogy, numbered steps, custom SVG diagrams, worked numbers, and runnable code.
+      </p>
+    </div>
+
+    <div class="aw-bento-grid">
+      <!-- Module 0: Story & Ethics (Featured Dark Card) -->
+      <a href="story.html" class="aw-bento-card aw-bento-span-6 aw-bento-featured">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Module 00 &middot; Prologue</span>
+            <span class="aw-bento-formula">1950 &rarr; 2026 &middot; 18 min</span>
+          </div>
+          <h3 class="aw-bento-title">0. The Story, Legends, Ethics, Psychology &amp; Metaphysics of AI</h3>
+          <p class="aw-bento-desc">
+            The narrative foundation of the curriculum: Software 1.0 &rarr; 2.0 &rarr; 3.0, the 5-Act history of AI, portrait tributes to 8 pioneers, AI alignment, cognitive psychology, and the metaphysics of consciousness.
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Start Here &mdash; Read the Story</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Data Science Toolkit -->
+      <a href="ds.html" class="aw-bento-card aw-bento-span-6">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Data Science Toolkit</span>
+            <span class="aw-bento-formula">NumPy &middot; Pandas &middot; Matplotlib &middot; Streamlit</span>
+          </div>
+          <h3 class="aw-bento-title">Data Science: Pandas for ML, NumPy, Matplotlib &amp; Streamlit</h3>
+          <p class="aw-bento-desc">
+            Everything you need before fitting a model: vectorized NumPy arrays, broadcasting, `loc` vs `iloc`, leakage-free missing value imputation, IQR outlier clipping, `groupby`, `fig, ax` plots, and live Streamlit apps.
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Open Data Science Toolkit</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Module 1: Classical ML -->
+      <a href="ml.html" class="aw-bento-card aw-bento-span-4">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Module 01 &middot; Classical ML</span>
+            <span class="aw-bento-formula">$\hat{y} = \mathbf{w}^\top\mathbf{x} + b$</span>
+          </div>
+          <h3 class="aw-bento-title">1. Machine Learning Models</h3>
+          <p class="aw-bento-desc">
+            Regression vs. Classification, Linear &amp; Logistic Regression, KNN, SVM margins, Decision Trees (Gini), Random Forests, Gradient Descent, Feature Scaling, and Bias-Variance.
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Explore Classical ML</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Module 2: Deep Learning, FNN, CNN & TensorFlow -->
+      <a href="dl.html" class="aw-bento-card aw-bento-span-4">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Module 02 &middot; Deep Learning</span>
+            <span class="aw-bento-formula">FNN &middot; CNN &middot; TensorFlow &amp; PyTorch</span>
+          </div>
+          <h3 class="aw-bento-title">2. Deep Learning: FNNs, CNNs &amp; TensorFlow</h3>
+          <p class="aw-bento-desc">
+            Perceptrons, Multi-Layer Perceptrons (FNN), ReLU/GELU/Softmax, Backpropagation chain rule, step-by-step CNNs (`Conv2D`, `MaxPool2D`), and full TensorFlow (`tf.keras`) + PyTorch code.
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Explore FNN, CNN &amp; TensorFlow</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Module 3: NLP -->
+      <a href="nlp.html" class="aw-bento-card aw-bento-span-4">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Module 03 &middot; Language</span>
+            <span class="aw-bento-formula">$\text{Attention}(Q,K,V)$</span>
+          </div>
+          <h3 class="aw-bento-title">3. Natural Language Processing (NLP)</h3>
+          <p class="aw-bento-desc">
+            Subword BPE Tokenization, TF-IDF, Dense Vector Embeddings &amp; Cosine Similarity, Scaled Dot-Product Self-Attention ($Q, K, V$), and the Transformer architecture.
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Explore NLP &amp; Transformers</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Module 4: OpenCV & Vision -->
+      <a href="cv.html" class="aw-bento-card aw-bento-span-4">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Module 04 &middot; Vision</span>
+            <span class="aw-bento-formula">$(H, W, C)$ &middot; OpenCV &middot; ViT</span>
+          </div>
+          <h3 class="aw-bento-title">4. OpenCV &amp; Computer Vision</h3>
+          <p class="aw-bento-desc">
+            Image tensors, BGR vs. RGB vs. HSV color spaces, 2D convolution kernels, Gaussian blur, Canny edge detection, contours, bounding boxes, ResNet, and Vision Transformers (ViT).
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Explore OpenCV &amp; Vision</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Module 5: LLMs, Vector Storage & RAG -->
+      <a href="genai.html" class="aw-bento-card aw-bento-span-4">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Module 05 &middot; GenAI Part 1</span>
+            <span class="aw-bento-formula">[LLM &middot; Vector DB &middot; RAG]</span>
+          </div>
+          <h3 class="aw-bento-title">5. LLMs, Vector Storage &amp; RAG</h3>
+          <p class="aw-bento-desc">
+            Autoregressive token decoding, Temperature &amp; Top-P, Gemini &amp; Groq APIs, ChromaDB &amp; HNSW vector indexing, and two-phase Retrieval-Augmented Generation (RAG).
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Explore LLMs &amp; RAG</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Module 6: Agents & MCP -->
+      <a href="agents.html" class="aw-bento-card aw-bento-span-4">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Module 06 &middot; GenAI Part 2</span>
+            <span class="aw-bento-formula">[LCEL &middot; Tools &middot; Agents &middot; MCP]</span>
+          </div>
+          <h3 class="aw-bento-title">6. Autonomous Agents &amp; MCP</h3>
+          <p class="aw-bento-desc">
+            LangChain LCEL pipelines (`prompt | model | parser`), 4-step Tool Calling, ReAct Autonomous Agents (`Thought -> Action -> Observation`), and FastMCP servers.
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Explore Agents &amp; MCP</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Module 7: Frontier Research & JEPA -->
+      <a href="research.html" class="aw-bento-card aw-bento-span-6">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Module 07 &middot; Frontier Research</span>
+            <span class="aw-bento-formula">JEPA &middot; Mamba SSM &middot; Sparse MoE</span>
+          </div>
+          <h3 class="aw-bento-title">7. Frontier Architectures: JEPA, Mamba &amp; Sparse MoE</h3>
+          <p class="aw-bento-desc">
+            Why Yann LeCun's Joint-Embedding Predictive Architecture (I-JEPA &amp; V-JEPA) predicts in abstract representation space instead of pixel/token space, plus Mamba Selective State Space Models, Mixture of Experts, and Test-Time Compute.
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Explore JEPA &amp; Frontier Research</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+
+      <!-- Module 8: Top 100 Interview Q&A -->
+      <a href="interview.html" class="aw-bento-card aw-bento-span-6 aw-bento-featured">
+        <div>
+          <div class="aw-bento-top">
+            <span class="aw-bento-num">Module 08 &middot; 2026 Interview Bank</span>
+            <span class="aw-bento-formula">100 Verified Q&amp;As &middot; Live Filter</span>
+          </div>
+          <h3 class="aw-bento-title">8. Top 100 Data Science, ML &amp; GenAI Interview Questions</h3>
+          <p class="aw-bento-desc">
+            Curated from 2026 technical loops across Indore's IT corridor (Persistent, Impetus, Yash, InfoBeans, TCS, Infosys) and global AI teams—with instant keyword search and 8 topic filter pills.
+          </p>
+        </div>
+        <div class="aw-bento-footer">
+          <span>Practice All 100 Interview Questions</span>
+          <span>&rarr;</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- 4. MONUMENTAL FINALE BANNER LEADING TO STORY.HTML                     -->
+  <!-- ===================================================================== -->
+  <footer class="aw-finale">
+    <div class="aw-finale-inner">
+      <span class="aw-index-tag">[ READY TO BEGIN? ]</span>
+      <h2 class="aw-finale-title">
+        Every Great Engineer Starts with the <span class="aw-serif">Story</span>.
+      </h2>
+      <p class="aw-finale-sub">
+        Step into Chapter 00 to trace the 75-year arc of Artificial Intelligence, meet the pioneers who built the field, and explore the ethics, psychology, and metaphysics of machine intelligence.
+      </p>
+      <div class="aw-cta-group aw-cta-center">
+        <a href="story.html" class="aw-btn-primary">
+          <span>Start Reading: 0. The Story &amp; Legends of AI</span>
+          <span>&rarr;</span>
+        </a>
+        <a href="ds.html" class="aw-btn-secondary">
+          <span>Jump to Data Science Toolkit</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>

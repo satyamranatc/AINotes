@@ -318,4 +318,86 @@ document.addEventListener('DOMContentLoaded', () => {
   backToTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+
+  // 7. Interactive Latent Manifold Canvas on Landing Page (index.html)
+  const canvas = document.getElementById('latent-canvas');
+  if (canvas && canvas.getContext) {
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let nodes = [];
+    const mouse = { x: -1000, y: -1000 };
+
+    const initCanvas = () => {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      width = canvas.width = rect.width;
+      height = canvas.height = rect.height;
+      const count = Math.min(52, Math.max(24, Math.floor((width * height) / 24000)));
+      nodes = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        r: Math.random() * 1.6 + 1.1
+      }));
+    };
+
+    initCanvas();
+    window.addEventListener('resize', initCanvas, { passive: true });
+
+    canvas.parentElement.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    }, { passive: true });
+
+    canvas.parentElement.addEventListener('mouseleave', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    }, { passive: true });
+
+    const drawManifold = () => {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > width) n.vx *= -1;
+        if (n.y < 0 || n.y > height) n.vy *= -1;
+
+        // Subtle attraction toward cursor
+        const dxMouse = mouse.x - n.x;
+        const dyMouse = mouse.y - n.y;
+        const distMouse = Math.hypot(dxMouse, dyMouse);
+        if (distMouse < 200 && distMouse > 1) {
+          n.x += (dxMouse / distMouse) * 0.25;
+          n.y += (dyMouse / distMouse) * 0.25;
+        }
+
+        // Draw edges between nearby latent nodes
+        for (let j = i + 1; j < nodes.length; j++) {
+          const m = nodes[j];
+          const d = Math.hypot(n.x - m.x, n.y - m.y);
+          if (d < 145) {
+            const alpha = (1 - d / 145) * 0.22;
+            ctx.strokeStyle = `rgba(147, 197, 253, ${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y);
+            ctx.lineTo(m.x, m.y);
+            ctx.stroke();
+          }
+        }
+
+        // Draw node dot
+        ctx.fillStyle = distMouse < 180 ? 'rgba(147, 197, 253, 0.85)' : 'rgba(226, 232, 240, 0.45)';
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(drawManifold);
+    };
+
+    requestAnimationFrame(drawManifold);
+  }
 });

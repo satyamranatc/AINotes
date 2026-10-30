@@ -22,18 +22,19 @@
   <!-- Top Global Navigation Bar -->
   <nav class="top-nav">
     <div class="top-nav-inner">
-      <a href="story.html" class="top-nav-brand">AI Engineering Curriculum</a>
+      <a href="index.html" class="top-nav-brand">AI Engineering</a>
       <ul class="top-nav-links">
-        <li><a href="story.html" class="nav-pill">0. Story &amp; Ethics</a></li>
-        <li><a href="ds.html" class="nav-pill active">Data Science</a></li>
-        <li><a href="index.html" class="nav-pill">1. ML</a></li>
-        <li><a href="dl.html" class="nav-pill">2. Deep Learning &amp; FNN</a></li>
-        <li><a href="nlp.html" class="nav-pill">3. NLP</a></li>
-        <li><a href="cv.html" class="nav-pill">4. OpenCV &amp; Vision</a></li>
-        <li><a href="genai.html" class="nav-pill">5. LLMs &amp; RAG</a></li>
-        <li><a href="agents.html" class="nav-pill">6. Agents &amp; MCP</a></li>
-        <li><a href="research.html" class="nav-pill">7. JEPA &amp; Research</a></li>
-        <li><a href="interview.html" class="nav-pill">8. 100 Interview Q&amp;A</a></li>
+        <li><a href="index.html" class="nav-pill">Home</a></li>
+        <li><a href="story.html" class="nav-pill">0. Story</a></li>
+        <li><a href="ds.html" class="nav-pill active">1. Data Science</a></li>
+        <li><a href="ml.html" class="nav-pill">2. ML</a></li>
+        <li><a href="dl.html" class="nav-pill">3. Deep Learning</a></li>
+        <li><a href="nlp.html" class="nav-pill">4. NLP</a></li>
+        <li><a href="cv.html" class="nav-pill">5. Vision</a></li>
+        <li><a href="genai.html" class="nav-pill">6. LLMs &amp; RAG</a></li>
+        <li><a href="agents.html" class="nav-pill">7. Agents &amp; MCP</a></li>
+        <li><a href="research.html" class="nav-pill">8. Research</a></li>
+        <li><a href="interview.html" class="nav-pill">9. 100 Q&amp;A</a></li>
       </ul>
     </div>
   </nav>
@@ -52,9 +53,9 @@
             <li class="toc-group-label">[Pandas] Complete ML Tutorial</li>
             <li class="toc-item"><a href="#part-3-pandas-core">3. DataFrames, Selection &amp; loc vs. iloc</a></li>
             <li class="toc-item"><a href="#part-4-pandas-cleaning">4. Cleaning: NaNs, Outliers &amp; Leakage</a></li>
-            <li class="toc-item"><a href="#part-5-pandas-ml">5. Feature Engineering: GroupBy, Merge &amp; Encoding</a></li>
+            <li class="toc-item"><a href="#part-5-pandas-ml">5. Feature Engineering &amp; Full Pandas Table</a></li>
             <li class="toc-group-label">[Matplotlib] Visual EDA</li>
-            <li class="toc-item"><a href="#part-6-matplotlib">6. Matplotlib: Subplots &amp; 4 Core ML Charts</a></li>
+            <li class="toc-item"><a href="#part-6-matplotlib">6. Matplotlib: Subplots, Charts &amp; Function Table</a></li>
             <li class="toc-group-label">[Streamlit] Interactive AI Apps</li>
             <li class="toc-item"><a href="#part-7-streamlit">7. Streamlit: Ship ML Apps in Pure Python</a></li>
             <li class="toc-group-label">Reference</li>
@@ -465,6 +466,192 @@ X = df_encoded[feature_cols].to_numpy(dtype=np.float32)
 y = df_encoded["bought"].to_numpy(dtype=np.int64)
 print("Final ML Feature Matrix X shape:", X.shape)</code></pre>
             </div>
+
+            <h3 id="pandas-functions-table">Complete Pandas Functions Reference Table for Machine Learning</h3>
+            <p>Use this single table as your complete dictionary of every Pandas method needed from raw CSV ingestion to model-ready NumPy arrays:</p>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Stage</th>
+                    <th>Pandas Function / Syntax</th>
+                    <th>What It Does Simply</th>
+                    <th>When You Use It in ML</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>1. Load &amp; Save</strong></td>
+                    <td><code>pd.read_csv("data.csv")</code></td>
+                    <td>Loads a CSV file into a 2D <code>DataFrame</code>.</td>
+                    <td>First line of almost every tabular ML notebook.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>1. Load &amp; Save</strong></td>
+                    <td><code>pd.read_parquet("data.parquet")</code></td>
+                    <td>Loads columnar Parquet files $10\times$ faster than CSV while preserving exact dtypes.</td>
+                    <td>Production feature stores and large datasets ($>1\text{ GB}$).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>1. Load &amp; Save</strong></td>
+                    <td><code>df.to_csv("clean.csv", index=False)</code></td>
+                    <td>Writes the cleaned table to disk without adding an extra unnamed index column.</td>
+                    <td>Saving processed training splits or Kaggle submissions.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Inspect &amp; EDA</strong></td>
+                    <td><code>df.head(5)</code> / <code>df.tail(5)</code> / <code>df.sample(5)</code></td>
+                    <td>Shows the first 5, last 5, or 5 random rows of the table.</td>
+                    <td>Sanity-checking column names and formatting right after loading.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Inspect &amp; EDA</strong></td>
+                    <td><code>df.shape</code> &amp; <code>df.dtypes</code></td>
+                    <td>Returns <code>(n_rows, n_cols)</code> and the data type (<code>int64</code>, <code>float64</code>, <code>object</code>) of each column.</td>
+                    <td>Checking sample count and spotting numeric columns accidentally stored as text strings.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Inspect &amp; EDA</strong></td>
+                    <td><code>df.info()</code></td>
+                    <td>Prints column names, non-null counts, data types, and total RAM usage.</td>
+                    <td>Fastest overview of missing values and memory footprint.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Inspect &amp; EDA</strong></td>
+                    <td><code>df.describe()</code></td>
+                    <td>Computes count, mean, std, min, $25\%$, $50\%$ (median), $75\%$, and max for all numeric columns.</td>
+                    <td>Spotting skewed features (where mean $\gg$ median) or impossible min/max values.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Inspect &amp; EDA</strong></td>
+                    <td><code>df["col"].value_counts(normalize=True)</code></td>
+                    <td>Counts how often each category appears (or their percentages when <code>normalize=True</code>).</td>
+                    <td>Checking class imbalance in your target label $\mathbf{y}$ (e.g., $98\%$ non-fraud vs. $2\%$ fraud).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Inspect &amp; EDA</strong></td>
+                    <td><code>df["col"].nunique()</code> &amp; <code>df["col"].unique()</code></td>
+                    <td>Returns the count of distinct values and the array of unique values.</td>
+                    <td>Deciding between One-Hot Encoding (low cardinality, $<15$ unique values) vs. Target/Hash Encoding.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Inspect &amp; EDA</strong></td>
+                    <td><code>df.corr(numeric_only=True)</code></td>
+                    <td>Computes the pairwise Pearson correlation matrix $(-1\text{ to }+1)$ across all numeric columns.</td>
+                    <td>Finding features strongly correlated with the target $y$ or redundant collinear features.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. Select &amp; Filter</strong></td>
+                    <td><code>df.loc[row_mask, ["colA", "colB"]]</code></td>
+                    <td>Selects rows and columns by <strong>label/boolean mask</strong> (slice endpoints are inclusive).</td>
+                    <td>Filtering subsets (e.g., <code>df.loc[df["age"] &gt; 21, ["income", "churn"]]</code>).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. Select &amp; Filter</strong></td>
+                    <td><code>df.iloc[0:100, 0:5]</code></td>
+                    <td>Selects rows and columns by <strong>$0$-based integer position</strong> (half-open, stops before end).</td>
+                    <td>Splitting rows or columns by position index regardless of index labels.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. Select &amp; Filter</strong></td>
+                    <td><code>df[df["city"].isin(["Indore", "Pune"])]</code></td>
+                    <td>Filters rows where a column matches any value in a list.</td>
+                    <td>Keeping only specific cohorts, regions, or valid status codes.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. Select &amp; Filter</strong></td>
+                    <td><code>df.query("age &gt;= 25 and plan == 'Pro'")</code></td>
+                    <td>Filters rows using a clean SQL-like string expression.</td>
+                    <td>Readable multi-condition filtering in exploratory notebooks.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Clean &amp; Impute</strong></td>
+                    <td><code>df.isna().sum()</code></td>
+                    <td>Counts how many missing (<code>NaN</code>) values exist in every column.</td>
+                    <td>Mandatory check before passing data to Scikit-Learn.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Clean &amp; Impute</strong></td>
+                    <td><code>df["col"] = df["col"].fillna(val)</code></td>
+                    <td>Replaces <code>NaN</code> entries with <code>val</code> (such as the training median or <code>"Unknown"</code>).</td>
+                    <td>Imputing missing numeric or categorical features without dropping rows.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Clean &amp; Impute</strong></td>
+                    <td><code>df.dropna(subset=["target"])</code></td>
+                    <td>Drops any row where the specified column(s) contain <code>NaN</code>.</td>
+                    <td>Removing rows that are missing the ground-truth label $y$.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Clean &amp; Impute</strong></td>
+                    <td><code>df.drop_duplicates(subset=["id"], keep="first")</code></td>
+                    <td>Removes duplicate rows based on a key column, keeping the first occurrence.</td>
+                    <td>Preventing duplicate records from leaking across train and test splits.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Clean &amp; Impute</strong></td>
+                    <td><code>df["col"].clip(lower=lo, upper=hi)</code></td>
+                    <td>Caps values below <code>lo</code> to <code>lo</code> and above <code>hi</code> to <code>hi</code>.</td>
+                    <td>Winsorizing/clipping extreme IQR outliers so they don't break Linear Regression or Neural Nets.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>5. Transform &amp; Encode</strong></td>
+                    <td><code>df["col"].astype("float32")</code></td>
+                    <td>Converts a column to a specific data type (<code>int64</code>, <code>float32</code>, <code>category</code>).</td>
+                    <td>Casting booleans to <code>0/1</code> integers or halving RAM usage with <code>float32</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>5. Transform &amp; Encode</strong></td>
+                    <td><code>df["tier"].map({"Low": 0, "Mid": 1, "High": 2})</code></td>
+                    <td>Maps each value in a Series using a dictionary lookup.</td>
+                    <td><strong>Ordinal Encoding</strong> when categories have a natural rank order.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>5. Transform &amp; Encode</strong></td>
+                    <td><code>pd.get_dummies(df, columns=["city"], drop_first=True)</code></td>
+                    <td>Converts categorical string columns into binary <code>0/1</code> One-Hot columns.</td>
+                    <td><strong>One-Hot Encoding</strong> nominal categories (like city or payment method) for ML models.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>5. Transform &amp; Encode</strong></td>
+                    <td><code>pd.to_datetime(df["date"])</code> &amp; <code>.dt.dayofweek</code></td>
+                    <td>Parses strings into timestamps and extracts year, month, hour, or day-of-week via <code>.dt</code>.</td>
+                    <td>Turning raw timestamps into seasonality and weekend indicator features.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>5. Transform &amp; Encode</strong></td>
+                    <td><code>pd.cut(df["age"], bins=[0, 18, 60, 100])</code></td>
+                    <td>Buckets a continuous number into discrete age/price intervals (<code>pd.qcut</code> buckets by equal quantiles).</td>
+                    <td>Creating non-linear age brackets or income deciles for linear models.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>6. Group, Join &amp; Export</strong></td>
+                    <td><code>df.groupby("user_id").agg(avg=("spend", "mean"))</code></td>
+                    <td>Splits data by group key and computes summary statistics (<code>mean</code>, <code>sum</code>, <code>count</code>, <code>std</code>).</td>
+                    <td>Building customer-level historical features from raw transaction logs.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>6. Group, Join &amp; Export</strong></td>
+                    <td><code>pd.merge(df1, df2, on="user_id", how="left")</code></td>
+                    <td>Joins two DataFrames SQL-style (<code>left</code>, <code>inner</code>, <code>outer</code>) on a shared key.</td>
+                    <td>Enriching your main training table with aggregated lookup tables.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>6. Group, Join &amp; Export</strong></td>
+                    <td><code>pd.concat([df_a, df_b], axis=0, ignore_index=True)</code></td>
+                    <td>Stacks DataFrames vertically (<code>axis=0</code>, adding rows) or side-by-side (<code>axis=1</code>, adding columns).</td>
+                    <td>Combining monthly log partitions into a single training dataset.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>6. Group, Join &amp; Export</strong></td>
+                    <td><code>df.drop(columns=["id", "target"]).to_numpy()</code></td>
+                    <td>Drops non-feature columns and converts the DataFrame into a pure NumPy array $\mathbf{X}$.</td>
+                    <td>Final step before calling <code>model.fit(X, y)</code> in Scikit-Learn, TensorFlow, or PyTorch.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </section>
 
           <!-- ========================================== -->
@@ -585,6 +772,132 @@ ax2.legend()
 
 fig.tight_layout()
 fig.savefig("ml_diagnostics.png")   # Save crisp PNG for reports or Streamlit</code></pre>
+            </div>
+
+            <h3 id="matplotlib-functions-table">Complete Matplotlib Functions Reference Table (Simple <code>fig, ax</code> Guide)</h3>
+            <p>You only need these 18 Matplotlib commands to create any chart in Data Science and Machine Learning:</p>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Matplotlib Function / Syntax</th>
+                    <th>What It Does Simply</th>
+                    <th>ML Use Case</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>1. Canvas Setup</strong></td>
+                    <td><code>fig, ax = plt.subplots(figsize=(8, 4), dpi=120)</code></td>
+                    <td>Creates one outer figure frame (<code>fig</code>) and one plotting area (<code>ax</code>).</td>
+                    <td>Starting point for any single chart.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>1. Canvas Setup</strong></td>
+                    <td><code>fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(10, 8))</code></td>
+                    <td>Creates a $2 \times 2$ grid of subplots (use <code>axes[0, 1]</code> or <code>axes.flat</code> to index).</td>
+                    <td>Comparing multiple features or model metrics side by side.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Core Plots</strong></td>
+                    <td><code>ax.plot(x, y, color="#2563eb", linestyle="--", marker="o", label="...")</code></td>
+                    <td>Draws a connected line chart (with optional markers and dashed/solid styles).</td>
+                    <td>Training vs. Validation Loss curves, ROC curves, and time series.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Core Plots</strong></td>
+                    <td><code>ax.scatter(x, y, c=labels, cmap="viridis", alpha=0.7, s=30)</code></td>
+                    <td>Plots $(x, y)$ points colored by class/cluster label <code>c</code> with transparency <code>alpha</code>.</td>
+                    <td>Visualizing 2D embeddings (PCA/t-SNE), KNN/SVM decision clusters, or residuals.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Core Plots</strong></td>
+                    <td><code>ax.hist(data, bins=30, density=False, edgecolor="white")</code></td>
+                    <td>Splits continuous numbers into <code>bins</code> and draws frequency bars.</td>
+                    <td>Checking whether a feature is bell-shaped (Gaussian) or heavily skewed before scaling.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Core Plots</strong></td>
+                    <td><code>ax.bar(categories, heights)</code> &amp; <code>ax.barh(names, scores)</code></td>
+                    <td>Draws vertical (<code>bar</code>) or horizontal (<code>barh</code>) bar charts.</td>
+                    <td>Comparing class counts or ranking Random Forest / XGBoost feature importances.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Core Plots</strong></td>
+                    <td><code>ax.boxplot(data_list, vert=False)</code></td>
+                    <td>Draws the median, $25\%\text{–}75\%$ IQR box, whiskers, and outlier dots.</td>
+                    <td>Spotting extreme outliers across features at a glance.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Core Plots</strong></td>
+                    <td><code>im = ax.imshow(matrix, cmap="Blues")</code> + <code>fig.colorbar(im)</code></td>
+                    <td>Renders a 2D matrix or image tensor as a color-coded heatmap.</td>
+                    <td>Plotting a Confusion Matrix, Correlation Heatmap, or CNN image tensor.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. Reference &amp; Bands</strong></td>
+                    <td><code>ax.axvline(x=6, color="red", linestyle=":")</code></td>
+                    <td>Draws a vertical reference line across the chart at position $x$.</td>
+                    <td>Marking the median on a histogram or the Early Stopping epoch on a loss curve.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. Reference &amp; Bands</strong></td>
+                    <td><code>ax.axhline(y=0.0, color="black", linestyle="--")</code></td>
+                    <td>Draws a horizontal reference line across the chart at height $y$.</td>
+                    <td>Drawing the zero-error baseline on a regression residual plot.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. Reference &amp; Bands</strong></td>
+                    <td><code>ax.fill_between(x, y_mean - std, y_mean + std, alpha=0.2)</code></td>
+                    <td>Shades the vertical band between two curves.</td>
+                    <td>Showing $\pm 1\sigma$ confidence intervals around cross-validation learning curves.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. Reference &amp; Bands</strong></td>
+                    <td><code>ax.annotate("Text", xy=(x, y), xytext=(x+1, y+1))</code></td>
+                    <td>Places a text callout at a specific $(x, y)$ data coordinate.</td>
+                    <td>Labeling a specific outlier point or peak accuracy on a chart.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Labels &amp; Styling</strong></td>
+                    <td><code>ax.set_title("...")</code>, <code>ax.set_xlabel("...")</code>, <code>ax.set_ylabel("...")</code></td>
+                    <td>Sets the title and axis labels for that specific subplot <code>ax</code>.</td>
+                    <td>Always label axes and units (e.g., <code>"Epoch"</code>, <code>"MSE Loss"</code>).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Labels &amp; Styling</strong></td>
+                    <td><code>ax.set_xlim(min_x, max_x)</code> &amp; <code>ax.set_ylim(0, 1.0)</code></td>
+                    <td>Locks the visible range of the X or Y axis.</td>
+                    <td>Fixing probability/accuracy plots strictly to $[0.0, 1.0]$.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Labels &amp; Styling</strong></td>
+                    <td><code>ax.set_yscale("log")</code> / <code>ax.set_xscale("log")</code></td>
+                    <td>Switches an axis from linear spacing to logarithmic ($10^{-4}, 10^{-3}, 10^{-2}$).</td>
+                    <td>Plotting learning-rate sweeps or power-law scaling laws.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Labels &amp; Styling</strong></td>
+                    <td><code>ax.legend(loc="best")</code> &amp; <code>ax.grid(True, alpha=0.3)</code></td>
+                    <td>Displays the legend box (using each plot's <code>label="..."</code>) and a subtle grid.</td>
+                    <td>Distinguishing Train vs. Validation curves and reading exact values easily.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>5. Layout &amp; Export</strong></td>
+                    <td><code>fig.tight_layout()</code></td>
+                    <td>Automatically adjusts spacing between subplots so titles and tick labels never overlap.</td>
+                    <td>Call right before <code>savefig()</code> or <code>plt.show()</code> on multi-panel figures.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>5. Layout &amp; Export</strong></td>
+                    <td><code>fig.savefig("chart.png", dpi=150, bbox_inches="tight")</code></td>
+                    <td>Saves the figure as a crisp PNG, SVG, or PDF with zero clipped margins.</td>
+                    <td>Exporting publication-quality charts or passing <code>st.pyplot(fig)</code> to Streamlit.</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </section>
 
@@ -798,7 +1111,7 @@ with col2:
               <span class="page-nav-label">&larr; Previous Module</span>
               <span class="page-nav-title">0. The Story, Legends &amp; Philosophy of AI</span>
             </a>
-            <a class="next" href="index.html">
+            <a class="next" href="ml.html">
               <span class="page-nav-label">Next Module &rarr;</span>
               <span class="page-nav-title">1. Machine Learning Models</span>
             </a>
