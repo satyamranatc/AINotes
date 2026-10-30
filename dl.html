@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2. Deep Learning &amp; Feedforward Neural Networks (FNN) — AI Engineering Curriculum</title>
+  <title>2. Deep Learning: FNN, CNN &amp; TensorFlow / PyTorch — AI Engineering Curriculum</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -22,8 +22,9 @@
   <!-- Top Global Navigation Bar -->
   <nav class="top-nav">
     <div class="top-nav-inner">
-      <a href="index.html" class="top-nav-brand">AI Engineering Curriculum</a>
+      <a href="story.html" class="top-nav-brand">AI Engineering Curriculum</a>
       <ul class="top-nav-links">
+        <li><a href="story.html" class="nav-pill">0. Story &amp; Ethics</a></li>
         <li><a href="index.html" class="nav-pill">1. ML</a></li>
         <li><a href="dl.html" class="nav-pill active">2. Deep Learning &amp; FNN</a></li>
         <li><a href="nlp.html" class="nav-pill">3. NLP</a></li>
@@ -31,6 +32,7 @@
         <li><a href="genai.html" class="nav-pill">5. LLMs &amp; RAG</a></li>
         <li><a href="agents.html" class="nav-pill">6. Agents &amp; MCP</a></li>
         <li><a href="research.html" class="nav-pill">7. JEPA &amp; Research</a></li>
+        <li><a href="interview.html" class="nav-pill">8. 100 Interview Q&amp;A</a></li>
       </ul>
     </div>
   </nav>
@@ -50,9 +52,13 @@
             <li class="toc-group-label">How Networks Learn</li>
             <li class="toc-item"><a href="#backpropagation">4. Forward Pass &amp; Backpropagation</a></li>
             <li class="toc-item"><a href="#optimizers-regularization">5. Optimizers, Dropout &amp; BatchNorm</a></li>
-            <li class="toc-group-label">Hands-On Code</li>
-            <li class="toc-item"><a href="#pytorch-fnn">6. Build an FNN in PyTorch</a></li>
-            <li class="toc-item"><a href="#summary">7. Cheat Sheet</a></li>
+            <li class="toc-group-label">Convolutional Neural Networks</li>
+            <li class="toc-item"><a href="#cnn-deep-dive">6. CNNs Explained Step-by-Step</a></li>
+            <li class="toc-group-label">TensorFlow &amp; PyTorch Code</li>
+            <li class="toc-item"><a href="#tensorflow-explained">7. TensorFlow &amp; Keras Explained</a></li>
+            <li class="toc-item"><a href="#tensorflow-fnn-cnn">8. Build FNN &amp; CNN in TensorFlow</a></li>
+            <li class="toc-item"><a href="#pytorch-fnn">9. Build an FNN in PyTorch</a></li>
+            <li class="toc-item"><a href="#summary">10. Cheat Sheet</a></li>
           </ul>
         </nav>
       </aside>
@@ -64,14 +70,14 @@
           <!-- Article Header -->
           <header class="article-header">
             <div class="article-category">Module 2 &middot; Deep Learning Foundations</div>
-            <h1 class="article-title">Deep Learning &amp; Feedforward Neural Networks (FNN)</h1>
-            <p class="article-subtitle">Understand how artificial neurons stack into Feedforward Neural Networks (Multi-Layer Perceptrons), why non-linear activations matter, how backpropagation updates millions of weights, and how to train an FNN in PyTorch.</p>
+            <h1 class="article-title">Deep Learning: FNNs, CNNs &amp; TensorFlow / PyTorch</h1>
+            <p class="article-subtitle">Understand how artificial neurons stack into Feedforward Neural Networks (FNNs), how Convolutional Neural Networks (CNNs) see images step by step, and how to build and train both FNNs and CNNs using TensorFlow (<code>tf.keras</code>) and PyTorch.</p>
             <div class="article-meta">
               <span>Level: Beginner &rarr; Intermediate</span>
               <span class="meta-divider">&bull;</span>
-              <span>4 Visual Diagrams</span>
+              <span>6 Visual Diagrams</span>
               <span class="meta-divider">&bull;</span>
-              <span>Reading Time: 14 min</span>
+              <span>Reading Time: 22 min</span>
             </div>
           </header>
 
@@ -79,10 +85,10 @@
             <div class="learn-box">
               <h4>What You'll Learn</h4>
               <ul>
-                <li>How a single artificial neuron connects directly to Logistic Regression.</li>
-                <li>How stacking hidden layers creates a <strong>Feedforward Neural Network (FNN / MLP)</strong>.</li>
-                <li>Why neural networks collapse into a flat line without <strong>Activation Functions</strong> (ReLU, GELU, Sigmoid, Softmax).</li>
-                <li>How <strong>Backpropagation</strong> sends error signals backward using the chain rule.</li>
+                <li>How a single artificial neuron and stacked layers form a <strong>Feedforward Neural Network (FNN / MLP)</strong>.</li>
+                <li>Why neural networks collapse into a flat line without <strong>Activation Functions</strong> (ReLU, GELU, Sigmoid, Softmax) and how <strong>Backpropagation</strong> updates weights.</li>
+                <li>How a <strong>Convolutional Neural Network (CNN)</strong> works step by step: sliding filters (<code>Conv2D</code>), feature maps, <code>MaxPooling2D</code>, spatial shape math, and parameter sharing.</li>
+                <li>How <strong>TensorFlow &amp; <code>tf.keras</code></strong> work under the hood, plus complete runnable code to build both an <strong>FNN</strong> and a <strong>CNN</strong> in TensorFlow and PyTorch.</li>
               </ul>
             </div>
             <div class="learn-box">
@@ -90,6 +96,7 @@
               <ul>
                 <li>Linear and Logistic Regression from <a href="index.html">Module 1</a>.</li>
                 <li>Basic matrix multiplication ($\mathbf{W}\mathbf{x} + \mathbf{b}$).</li>
+                <li>No prior TensorFlow or PyTorch experience required—every API call is explained line by line.</li>
               </ul>
             </div>
           </div>
@@ -97,28 +104,28 @@
           <ol class="roadmap">
             <li><a href="#perceptron">
               <span class="roadmap-step">Step 1</span>
-              <span class="roadmap-title">The Neuron</span>
-              <span class="roadmap-desc">Multiply inputs by weights, add bias, activate</span>
-            </a></li>
-            <li><a href="#fnn-architecture">
-              <span class="roadmap-step">Step 2</span>
-              <span class="roadmap-title">FNN Architecture</span>
-              <span class="roadmap-desc">Input layer &rarr; Hidden layers &rarr; Output layer</span>
-            </a></li>
-            <li><a href="#activations">
-              <span class="roadmap-step">Step 3</span>
-              <span class="roadmap-title">Activations</span>
-              <span class="roadmap-desc">Bend space with ReLU, GELU &amp; Softmax</span>
+              <span class="roadmap-title">The Neuron &amp; FNN</span>
+              <span class="roadmap-desc">Weights, biases, hidden layers &amp; activations</span>
             </a></li>
             <li><a href="#backpropagation">
-              <span class="roadmap-step">Step 4</span>
+              <span class="roadmap-step">Step 2</span>
               <span class="roadmap-title">Backpropagation</span>
-              <span class="roadmap-desc">Pass gradients backward to fix weights</span>
+              <span class="roadmap-desc">Pass gradients backward via the chain rule</span>
             </a></li>
-            <li><a href="#pytorch-fnn">
+            <li><a href="#cnn-deep-dive">
+              <span class="roadmap-step">Step 3</span>
+              <span class="roadmap-title">CNNs Step-by-Step</span>
+              <span class="roadmap-desc">Sliding 3x3 filters, feature maps &amp; pooling</span>
+            </a></li>
+            <li><a href="#tensorflow-explained">
+              <span class="roadmap-step">Step 4</span>
+              <span class="roadmap-title">TensorFlow &amp; Keras</span>
+              <span class="roadmap-desc">Tensors, Sequential/Functional API &amp; GradientTape</span>
+            </a></li>
+            <li><a href="#tensorflow-fnn-cnn">
               <span class="roadmap-step">Step 5</span>
-              <span class="roadmap-title">PyTorch Code</span>
-              <span class="roadmap-desc">Complete 5-step training loop</span>
+              <span class="roadmap-title">FNN &amp; CNN in Code</span>
+              <span class="roadmap-desc">Complete TensorFlow &amp; PyTorch implementations</span>
             </a></li>
           </ol>
 
@@ -510,15 +517,524 @@
           </section>
 
           <!-- ========================================== -->
-          <!-- SECTION 6: PYTORCH CODE                    -->
+          <!-- SECTION 6: CNNs EXPLAINED STEP-BY-STEP     -->
+          <!-- ========================================== -->
+          <section id="cnn-deep-dive">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Spatial Deep Learning</span>
+              <span class="badge badge-neutral">Convolutional Neural Networks (CNN)</span>
+            </div>
+            <h2>6. Convolutional Neural Networks (CNN) Explained Simply Step-by-Step</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>A <strong>Convolutional Neural Network (CNN)</strong> is a neural network built for images and grid data that slides small learnable <strong>filters (kernels)</strong> across a 2D picture to detect edges, textures, parts, and whole objects—without flattening the image first.</p>
+            </div>
+
+            <h3>Why Not Just Use a Standard FNN on Images?</h3>
+            <p>Suppose you feed a standard $224 \times 224$ color photo ($224 \times 224 \times 3 = 150,528$ pixel values) into a regular Feedforward Neural Network (FNN). Two serious problems happen immediately:</p>
+            <ol class="steps">
+              <li><strong>Flattening destroys 2D spatial structure.</strong> An FNN requires a flat 1D vector of numbers. Unrolling a 2D grid into a single long line throws away the crucial fact that pixel $(10, 10)$ sits right above pixel $(11, 10)$ to form an edge or an eye.</li>
+              <li><strong>Parameter explosion &amp; instant overfitting.</strong> If your very first hidden layer has just $1,000$ neurons, connecting all $150,528$ pixels to $1,000$ neurons requires $150,528 \times 1,000 = \mathbf{150.5\text{ million weights}}$ in a single layer! And if the cat in the photo shifts two pixels to the right, the FNN has to re-learn those weights from scratch.</li>
+            </ol>
+
+            <div class="callout callout-analogy">
+              <div class="callout-title">Think of it like this: The Sliding Flashlight</div>
+              <p>Imagine looking for a cat on a mural in a dark room. Instead of trying to photograph every square inch at once with $150\text{ million}$ separate sensors (an FNN), you shine a small <strong>$3 \times 3$ flashlight beam (a filter)</strong> and slide it across the wall row by row. One flashlight detector only lights up when it sees a <em>vertical edge</em>; another lights up on <em>pointed ears</em>; a third lights up on <em>whiskers</em>. Because the <strong>exact same $3 \times 3$ detector</strong> slides over the entire picture (<strong>parameter sharing</strong>), it only needs $9$ weights to find a vertical edge anywhere in the image—top-left, center, or bottom-right!</p>
+            </div>
+
+            <h3>How a CNN Works in 5 Simple Steps</h3>
+            <ol class="steps">
+              <li><strong>Step 1 — Convolution (<code>Conv2D</code>): Slide a small filter and multiply-and-add.</strong> Take a small $3 \times 3$ grid of learnable weights called a <strong>filter (or kernel)</strong>. Place it on the top-left $3 \times 3$ patch of the image, multiply each filter weight by the overlapping pixel underneath it, sum all $9$ products, and add a bias $b$. Write that single total into a new grid called a <strong>Feature Map</strong>, then slide the filter 1 pixel over and repeat.</li>
+              <li><strong>Step 2 — Activation (<code>ReLU</code>): Keep only positive pattern matches.</strong> Pass every number in the feature map through $\text{ReLU}(z) = \max(0, z)$. Negative numbers (where the pattern did not match) become $0$, while positive numbers (where the edge or texture strongly matched) stay bright.</li>
+              <li><strong>Step 3 — Pooling (<code>MaxPooling2D</code>): Shrink the map by keeping the strongest signal.</strong> Slide a $2 \times 2$ window across the feature map with a step size (stride) of $2$, and keep only the <strong>single largest number</strong> in each $2 \times 2$ box. This cuts the height and width in half (reducing data size by $75\%$) and makes the network <strong>translation-invariant</strong>—if an edge shifts by 1 pixel inside that $2 \times 2$ box, the maximum value stays the same.</li>
+              <li><strong>Step 4 — Stack Conv + Pool Blocks to build a hierarchy of vision.</strong> Repeat `Conv2D -> ReLU -> MaxPool2D` two or three times:
+                <ul>
+                  <li><strong>Layer 1</strong> learns simple <em>horizontal, vertical, and diagonal edges</em>.</li>
+                  <li><strong>Layer 2</strong> combines edges into <em>corners, circles, stripes, and textures</em>.</li>
+                  <li><strong>Layer 3</strong> combines textures into <em>object parts</em> (eyes, wheels, bird beaks).</li>
+                </ul>
+              </li>
+              <li><strong>Step 5 — Flatten &amp; Classify (<code>Flatten &rarr; Dense &rarr; Softmax</code>).</strong> Once the feature maps are small and rich in high-level meaning (for example, $5 \times 5 \times 64$), unroll them into a 1D vector (`Flatten`) and pass them into a small FNN (`Dense` layer + `Softmax`) to output final class probabilities.</li>
+            </ol>
+
+            <!-- Figure 6.1: CNN Step-by-Step Visual Architecture & Sliding Window -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 6.1</span>
+                <span class="figure-title">Inside a CNN: Sliding 3&times;3 Convolution Math (Top) &amp; Complete 5-Stage Pipeline (Bottom)</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 880 430" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="880" height="430" fill="#f8fafc" rx="8"/>
+
+                  <!-- TOP PANEL: SLIDING 3x3 DOT PRODUCT -->
+                  <rect x="20" y="16" width="840" height="185" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="40" y="38" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#1e293b">HOW ONE CONV2D STEP WORKS: ELEMENT-WISE MULTIPLY + SUM (DOT PRODUCT)</text>
+
+                  <!-- 4x4 Input Image Patch -->
+                  <text x="105" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#334155">Input Patch (4&times;4)</text>
+                  <!-- Highlighted 3x3 region -->
+                  <rect x="45" y="70" width="90" height="90" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+                  <!-- Grid lines for 4x4 (cell = 30x30) -->
+                  <g stroke="#94a3b8" stroke-width="1" fill="none">
+                    <rect x="45" y="70" width="120" height="120"/>
+                    <line x1="75" y1="70" x2="75" y2="190"/>
+                    <line x1="105" y1="70" x2="105" y2="190"/>
+                    <line x1="135" y1="70" x2="135" y2="190"/>
+                    <line x1="45" y1="100" x2="165" y2="100"/>
+                    <line x1="45" y1="130" x2="165" y2="130"/>
+                    <line x1="45" y1="160" x2="165" y2="160"/>
+                  </g>
+                  <!-- Re-draw blue 3x3 border on top -->
+                  <rect x="45" y="70" width="90" height="90" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+                  <!-- Numbers in 4x4 -->
+                  <g font-family="JetBrains Mono, monospace" font-size="11" font-weight="600" fill="#0f172a" text-anchor="middle">
+                    <text x="60" y="90">1</text><text x="90" y="90">0</text><text x="120" y="90">2</text><text x="150" y="90" fill="#64748b">1</text>
+                    <text x="60" y="120">2</text><text x="90" y="120">1</text><text x="120" y="120">0</text><text x="150" y="120" fill="#64748b">0</text>
+                    <text x="60" y="150">1</text><text x="90" y="150">0</text><text x="120" y="150">3</text><text x="150" y="150" fill="#64748b">2</text>
+                    <text x="60" y="180" fill="#64748b">0</text><text x="90" y="180" fill="#64748b">2</text><text x="120" y="180" fill="#64748b">1</text><text x="150" y="180" fill="#64748b">1</text>
+                  </g>
+
+                  <!-- Multiply symbol -->
+                  <text x="195" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#2563eb">&otimes;</text>
+
+                  <!-- 3x3 Filter -->
+                  <text x="270" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#4338ca">3&times;3 Filter (Kernel)</text>
+                  <rect x="225" y="75" width="90" height="90" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+                  <g stroke="#818cf8" stroke-width="1">
+                    <line x1="255" y1="75" x2="255" y2="165"/>
+                    <line x1="285" y1="75" x2="285" y2="165"/>
+                    <line x1="225" y1="105" x2="315" y2="105"/>
+                    <line x1="225" y1="135" x2="315" y2="135"/>
+                  </g>
+                  <g font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#312e81" text-anchor="middle">
+                    <text x="240" y="95">1</text><text x="270" y="95">0</text><text x="300" y="95">-1</text>
+                    <text x="240" y="125">1</text><text x="270" y="125">0</text><text x="300" y="125">-1</text>
+                    <text x="240" y="155">1</text><text x="270" y="155">0</text><text x="300" y="155">-1</text>
+                  </g>
+                  <text x="270" y="183" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#4338ca">(Vertical Edge Detector)</text>
+
+                  <!-- Equals symbol -->
+                  <text x="345" y="130" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#0f172a">=</text>
+
+                  <!-- Calculation Breakdown Box -->
+                  <rect x="370" y="72" width="295" height="96" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="517" y="93" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#334155">Multiply Matching Cells &amp; Add:</text>
+                  <text x="517" y="114" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#0f172a">Row 1: (1&times;1) + (0&times;0) + (2&times;-1) = -1</text>
+                  <text x="517" y="133" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#0f172a">Row 2: (2&times;1) + (1&times;0) + (0&times;-1) = +2</text>
+                  <text x="517" y="152" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#0f172a">Row 3: (1&times;1) + (0&times;0) + (3&times;-1) = -2</text>
+
+                  <!-- Arrow to Feature Map -->
+                  <line x1="665" y1="120" x2="705" y2="120" stroke="#059669" stroke-width="2"/>
+                  <polygon points="710,120 701,115 701,125" fill="#059669"/>
+
+                  <!-- 2x2 Output Feature Map -->
+                  <text x="775" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#065f46">Feature Map (2&times;2)</text>
+                  <rect x="735" y="80" width="80" height="80" fill="#ffffff" stroke="#059669" stroke-width="2"/>
+                  <rect x="735" y="80" width="40" height="40" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+                  <line x1="775" y1="80" x2="775" y2="160" stroke="#059669" stroke-width="1"/>
+                  <line x1="735" y1="120" x2="815" y2="120" stroke="#059669" stroke-width="1"/>
+                  <g font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" fill="#065f46" text-anchor="middle">
+                    <text x="755" y="105">-1</text>
+                    <text x="795" y="105">1</text>
+                    <text x="755" y="145">0</text>
+                    <text x="795" y="145">2</text>
+                  </g>
+                  <text x="775" y="178" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#065f46">Sum = -1 + 2 - 2 = -1</text>
+
+                  <!-- BOTTOM PANEL: FULL 5-STAGE CNN ARCHITECTURE PIPELINE -->
+                  <rect x="20" y="215" width="840" height="198" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                  <text x="40" y="238" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#1e293b">COMPLETE 5-STAGE CNN PIPELINE: FROM RAW PIXELS TO CLASS PROBABILITIES</text>
+
+                  <!-- Stage 1: Input Image -->
+                  <rect x="38" y="268" width="95" height="95" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                  <text x="85" y="308" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#1e40af">Input Image</text>
+                  <text x="85" y="326" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#2563eb">(28, 28, 1)</text>
+                  <text x="85" y="382" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#475569">Raw Pixel Grid</text>
+
+                  <line x1="133" y1="315" x2="165" y2="315" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="170,315 162,310 162,320" fill="#64748b"/>
+
+                  <!-- Stage 2: Conv2D + ReLU -->
+                  <rect x="178" y="260" width="122" height="95" rx="6" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/>
+                  <rect x="172" y="268" width="122" height="95" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+                  <text x="233" y="302" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#5b21b6">1. Conv2D + ReLU</text>
+                  <text x="233" y="320" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#6d28d9">(26, 26, 32)</text>
+                  <text x="233" y="338" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b21b6">32 filters of 3&times;3</text>
+                  <text x="233" y="382" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#475569">Detects Edges</text>
+
+                  <line x1="300" y1="315" x2="332" y2="315" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="337,315 329,310 329,320" fill="#64748b"/>
+
+                  <!-- Stage 3: MaxPooling2D -->
+                  <rect x="345" y="275" width="115" height="80" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                  <text x="402" y="307" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#92400e">2. MaxPool2D</text>
+                  <text x="402" y="325" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#b45309">(13, 13, 32)</text>
+                  <text x="402" y="342" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#92400e">2&times;2 Window</text>
+                  <text x="402" y="382" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#475569">Halves H &amp; W</text>
+
+                  <line x1="460" y1="315" x2="492" y2="315" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="497,315 489,310 489,320" fill="#64748b"/>
+
+                  <!-- Stage 4: Second Conv + Pool -->
+                  <rect x="502" y="275" width="125" height="80" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+                  <text x="564" y="304" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#5b21b6">3. Conv2D + Pool</text>
+                  <text x="564" y="322" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#6d28d9">(5, 5, 64)</text>
+                  <text x="564" y="339" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#5b21b6">64 filters of 3&times;3</text>
+                  <text x="564" y="382" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#475569">Detects Shapes/Parts</text>
+
+                  <line x1="627" y1="315" x2="659" y2="315" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="664,315 656,310 656,320" fill="#64748b"/>
+
+                  <!-- Stage 5: Flatten + Dense Softmax -->
+                  <rect x="669" y="268" width="170" height="95" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+                  <text x="754" y="298" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#065f46">4. Flatten &rarr; Dense</text>
+                  <text x="754" y="317" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#047857">1600 &rarr; 128 &rarr; 10</text>
+                  <text x="754" y="336" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#065f46">Softmax Probabilities</text>
+                  <text x="754" y="382" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#475569">Final Classification</text>
+                </svg>
+              </div>
+              <figcaption class="figure-caption">Top: A $3 \times 3$ filter slides over a $4 \times 4$ input patch, multiplying overlapping cells and summing them into a single cell of the output Feature Map. Bottom: Stacking `Conv2D + ReLU` and `MaxPool2D` shrinks spatial dimensions $(H, W)$ while expanding feature depth $(C)$, before `Flatten` hands a compact vector to the `Dense` classifier head.</figcaption>
+            </figure>
+
+            <h3>The 4 Knobs of Every <code>Conv2D</code> Layer</h3>
+            <dl class="terms">
+              <dt>1. Filters / Kernels ($F$)</dt>
+              <dd>How many distinct pattern detectors the layer learns in parallel (typically $32$, $64$, or $128$). Each filter produces its own 2D slice, so $F$ becomes the number of output channels.</dd>
+              <dt>2. Kernel Size ($K \times K$)</dt>
+              <dd>The height and width of the sliding window—almost universally $3 \times 3$ in modern CNNs. Two stacked $3 \times 3$ layers see the same $5 \times 5$ neighborhood with fewer weights and an extra non-linear ReLU in between.</dd>
+              <dt>3. Padding ($P$)</dt>
+              <dd><code>padding='valid'</code> ($P=0$) uses no border, so a $3 \times 3$ filter shrinks height and width by $2$ pixels (`28 -> 26`). <code>padding='same'</code> ($P=1$ for a $3 \times 3$ kernel) pads a 1-pixel ring of zeros around the image so the output height and width stay identical (`28 -> 28`).</dd>
+              <dt>4. Stride ($S$)</dt>
+              <dd>How many pixels the filter jumps after each step. $S=1$ scans every single position; $S=2$ skips every other pixel, cutting the output height and width in half.</dd>
+            </dl>
+
+            <h3>The Formula: How Spatial Shapes Change Across Layers</h3>
+            <div class="math-block">
+              $$H_{\text{out}} = \left\lfloor \frac{H_{\text{in}} - K + 2P}{S} \right\rfloor + 1, \qquad \text{Params}_{\text{Conv2D}} = \big(K \times K \times C_{\text{in}} + 1\big) \times F$$
+            </div>
+            <p><strong>Worked Example with Real Numbers:</strong> Let's trace a grayscale digit image of shape <strong>$(28, 28, 1)$</strong> ($H_{\text{in}}=28, W_{\text{in}}=28, C_{\text{in}}=1$) through our first block:</p>
+            <ul>
+              <li><strong>Pass through <code>Conv2D(filters=32, kernel_size=3, padding='valid', strides=1)</code>:</strong>
+                <ul>
+                  <li>Output height/width: $H_{\text{out}} = \lfloor \frac{28 - 3 + 2(0)}{1} \rfloor + 1 = \mathbf{26}$.</li>
+                  <li>Output tensor shape: <strong><code>(26, 26, 32)</code></strong>.</li>
+                  <li>Trainable parameters: $(3 \times 3 \times 1 + 1\text{ bias}) \times 32 = 10 \times 32 = \mathbf{320\text{ parameters}}$! (An FNN connecting $28 \times 28 = 784$ inputs to $32$ neurons would need $784 \times 32 + 32 = 25,120$ parameters—nearly $80\times$ more).</li>
+                </ul>
+              </li>
+              <li><strong>Pass through <code>MaxPooling2D(pool_size=2, strides=2)</code>:</strong>
+                <ul>
+                  <li>Output height/width: $H_{\text{out}} = \lfloor \frac{26 - 2}{2} \rfloor + 1 = \mathbf{13}$.</li>
+                  <li>Output tensor shape: <strong><code>(13, 13, 32)</code></strong> with <strong>$0$ trainable parameters</strong> (pooling just picks the maximum value in each $2 \times 2$ square).</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 7: TENSORFLOW & KERAS EXPLAINED    -->
+          <!-- ========================================== -->
+          <section id="tensorflow-explained">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Deep Learning Framework</span>
+              <span class="badge badge-neutral">TensorFlow 2.x &amp; tf.keras</span>
+            </div>
+            <h2>7. TensorFlow &amp; <code>tf.keras</code> Explained Simply</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p><strong>TensorFlow</strong> is Google's industrial deep learning engine that runs tensor math on CPUs, GPUs, and TPUs, while <strong><code>tf.keras</code></strong> is its clean high-level API that lets you assemble, compile, and train neural networks in just a few lines of Python.</p>
+            </div>
+
+            <h3>The 4 Core Building Blocks of TensorFlow</h3>
+            <dl class="terms">
+              <dt>1. <code>tf.Tensor</code> (Multi-Dimensional Arrays on Accelerators)</dt>
+              <dd>Just like a NumPy array, a <code>tf.Tensor</code> holds a grid of numbers (e.g., shape <code>(64, 28, 28, 1)</code> for a batch of 64 images), except TensorFlow can automatically move it onto a GPU or TPU and track derivatives through every math operation.</dd>
+              <dt>2. <code>tf.keras.Sequential</code> (The Straight-Line LEGO Stack)</dt>
+              <dd>When your neural network flows in a single line from Input &rarr; Hidden Layers &rarr; Output (which covers $90\%$ of FNNs and standard CNNs), <code>tf.keras.Sequential([...])</code> lets you pass a simple Python list of layers.</dd>
+              <dt>3. The <code>tf.keras</code> Functional API (Multi-Branch &amp; Residual Graphs)</dt>
+              <dd>When you need multiple inputs (e.g., an image + tabular metadata) or skip connections like ResNet (<code>out = layers.Add()([x, shortcut])</code>), you call layers like Python functions: <code>x = layers.Dense(64, activation='relu')(inputs)</code>.</dd>
+              <dt>4. <code>tf.GradientTape</code> (Automatic Differentiation Recorder)</dt>
+              <dd>Under the hood of <code>model.fit()</code>, TensorFlow uses a context manager called <code>with tf.GradientTape() as tape:</code> to record every forward-pass operation on a "tape" and then play the tape backward via <code>tape.gradient(loss, model.trainable_variables)</code> to compute exact gradients.</dd>
+            </dl>
+
+            <!-- Figure 7.1: TensorFlow / Keras 4-Stage Workflow -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 7.1</span>
+                <span class="figure-title">The 4-Step TensorFlow (<code>tf.keras</code>) Engineering Workflow</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 880 185" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="880" height="185" fill="#f8fafc" rx="8"/>
+
+                  <!-- Step 1: Define -->
+                  <rect x="24" y="28" width="188" height="128" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+                  <text x="118" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#1e40af">1. Define Architecture</text>
+                  <text x="118" y="78" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#1d4ed8">tf.keras.Sequential</text>
+                  <text x="118" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">Stack Dense, Conv2D,</text>
+                  <text x="118" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">MaxPool2D &amp; Dropout</text>
+                  <text x="118" y="138" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#64748b">model.summary()</text>
+
+                  <line x1="212" y1="92" x2="236" y2="92" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="241,92 233,87 233,97" fill="#64748b"/>
+
+                  <!-- Step 2: Compile -->
+                  <rect x="243" y="28" width="188" height="128" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+                  <text x="337" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#5b21b6">2. Compile Model</text>
+                  <text x="337" y="78" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#6d28d9">model.compile(...)</text>
+                  <text x="337" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">Attach Optimizer (Adam),</text>
+                  <text x="337" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">Loss Function &amp; Metrics</text>
+                  <text x="337" y="138" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#64748b">from_logits=True</text>
+
+                  <line x1="431" y1="92" x2="455" y2="92" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="460,92 452,87 452,97" fill="#64748b"/>
+
+                  <!-- Step 3: Fit -->
+                  <rect x="462" y="28" width="188" height="128" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                  <text x="556" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#92400e">3. Train (Fit Loop)</text>
+                  <text x="556" y="78" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#b45309">model.fit(X, y, ...)</text>
+                  <text x="556" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">Runs batches, forward</text>
+                  <text x="556" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">pass &amp; GradientTape</text>
+                  <text x="556" y="138" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#64748b">validation_split=0.2</text>
+
+                  <line x1="650" y1="92" x2="674" y2="92" stroke="#64748b" stroke-width="2"/>
+                  <polygon points="679,92 671,87 671,97" fill="#64748b"/>
+
+                  <!-- Step 4: Evaluate & Predict -->
+                  <rect x="681" y="28" width="175" height="128" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+                  <text x="768" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#065f46">4. Evaluate &amp; Export</text>
+                  <text x="768" y="78" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#047857">model.evaluate(X_test)</text>
+                  <text x="768" y="98" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">Test unseen data &amp;</text>
+                  <text x="768" y="114" text-anchor="middle" font-family="Inter, sans-serif" font-size="10.5" fill="#334155">predict probabilities</text>
+                  <text x="768" y="138" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#64748b">model.save("m.keras")</text>
+                </svg>
+              </div>
+              <figcaption class="figure-caption">Every TensorFlow / Keras project follows four clean stages: Define layers, Compile with an optimizer and loss function, Fit on training batches with validation monitoring, and Evaluate/Save for production.</figcaption>
+            </figure>
+
+            <h3>Which TensorFlow Output Layer &amp; Loss Function Should You Pick?</h3>
+            <p>One of the most common beginner bugs in TensorFlow is mismatching the final <code>Dense</code> layer and the loss function in <code>model.compile()</code>. Use this exact lookup table:</p>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Task Type</th>
+                    <th>Target Label Format <code>y</code></th>
+                    <th>Final <code>layers.Dense</code> Layer</th>
+                    <th>TensorFlow Loss in <code>model.compile()</code></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Regression</strong> (Predict a price/score)</td>
+                    <td>Continuous float (e.g., <code>245.5</code>)</td>
+                    <td><code>Dense(1)</code> (no activation)</td>
+                    <td><code>'mse'</code> or <code>tf.keras.losses.MeanSquaredError()</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Binary Classification</strong> (2 classes)</td>
+                    <td><code>0</code> or <code>1</code></td>
+                    <td><code>Dense(1, activation='sigmoid')</code></td>
+                    <td><code>'binary_crossentropy'</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Multi-Class</strong> (Integer IDs)</td>
+                    <td>Integer class ID: <code>0, 1, ..., 9</code></td>
+                    <td><code>Dense(10, activation='softmax')</code></td>
+                    <td><code>'sparse_categorical_crossentropy'</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Multi-Class</strong> (One-Hot Vectors)</td>
+                    <td>One-hot array: <code>[0, 0, 1, 0]</code></td>
+                    <td><code>Dense(4, activation='softmax')</code></td>
+                    <td><code>'categorical_crossentropy'</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 8: BUILD FNN & CNN IN TENSORFLOW   -->
+          <!-- ========================================== -->
+          <section id="tensorflow-fnn-cnn">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Hands-On TensorFlow</span>
+              <span class="badge badge-neutral">FNN &amp; CNN in tf.keras</span>
+            </div>
+            <h2>8. Step-by-Step: How to Build an FNN and a CNN in TensorFlow</h2>
+            <p>Below are two complete, runnable TensorFlow 2.x scripts: first a <strong>Feedforward Neural Network (FNN)</strong>, and second a <strong>Convolutional Neural Network (CNN)</strong>. Compare them side by side to see how a CNN replaces the upfront <code>Flatten</code> + huge <code>Dense</code> layer with spatial <code>Conv2D</code> and <code>MaxPooling2D</code> blocks.</p>
+
+            <div class="code-container" data-lang="bash">
+              <div class="code-header">
+                <span class="code-filename">terminal</span>
+                <span class="code-lang-tag">Bash</span>
+              </div>
+              <pre><code>pip install tensorflow</code></pre>
+            </div>
+
+            <h3>Part A: How to Make a Feedforward Neural Network (FNN / MLP) in TensorFlow</h3>
+            <p>To build an FNN in TensorFlow, we stack <code>layers.Dense</code> blocks with <code>activation='relu'</code>, add <code>BatchNormalization</code> and <code>Dropout</code> so the network generalizes well, and finish with a <code>Dense</code> output layer.</p>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">fnn_tensorflow_keras.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import tensorflow as tf
+from tensorflow.keras import layers, models, callbacks
+
+# 1. Load &amp; normalize dataset (MNIST 28x28 grayscale digits: 0 to 9)
+(X_train, y_train), (X_test, y_test) = tf.keras.datasets.mnist.load_data()
+X_train = X_train.astype("float32") / 255.0   # Scale pixels from [0, 255] -> [0.0, 1.0]
+X_test  = X_test.astype("float32") / 255.0
+
+# 2. Define the Feedforward Neural Network (FNN / MLP)
+fnn_model = models.Sequential([
+    layers.Input(shape=(28, 28)),             # Input: 28x28 grid
+    layers.Flatten(),                         # Unroll 28x28 -> 784 flat features (1D vector)
+    
+    # Hidden Layer 1: 128 neurons + BatchNorm + ReLU + Dropout
+    layers.Dense(128, activation="relu"),     # 784 * 128 + 128 = 100,480 parameters
+    layers.BatchNormalization(),
+    layers.Dropout(0.2),                      # Randomly drop 20% of neurons during training
+    
+    # Hidden Layer 2: 64 neurons + ReLU
+    layers.Dense(64, activation="relu"),      # 128 * 64 + 64 = 8,256 parameters
+    
+    # Output Layer: 10 classes (digits 0-9) with Softmax probabilities
+    layers.Dense(10, activation="softmax")    # 64 * 10 + 10 = 650 parameters
+], name="Feedforward_FNN")
+
+fnn_model.summary()
+
+# 3. Compile the FNN (Optimizer + Loss + Evaluation Metric)
+fnn_model.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3),
+    loss="sparse_categorical_crossentropy",   # Use 'sparse_' because y_train has integer IDs (0..9)
+    metrics=["accuracy"]
+)
+
+# 4. Train with EarlyStopping so we automatically stop if validation loss stops improving
+early_stop = callbacks.EarlyStopping(
+    monitor="val_loss", patience=3, restore_best_weights=True
+)
+
+history = fnn_model.fit(
+    X_train, y_train,
+    epochs=10,
+    batch_size=64,
+    validation_split=0.1,
+    callbacks=[early_stop]
+)
+
+# 5. Evaluate on unseen test set
+test_loss, test_acc = fnn_model.evaluate(X_test, y_test, verbose=0)
+print(f"FNN Test Accuracy: {test_acc:.4f} | Test Loss: {test_loss:.4f}")</code></pre>
+            </div>
+
+            <h3>Part B: How to Make a Convolutional Neural Network (CNN) in TensorFlow</h3>
+            <p>Notice the difference below: instead of flattening the image at the start, a CNN keeps the 3D image shape <code>(Height, Width, Channels) = (28, 28, 1)</code> and passes it through two <strong><code>Conv2D &rarr; BatchNormalization &rarr; MaxPooling2D</code></strong> blocks before flattening at the very end.</p>
+
+            <div class="code-container">
+              <div class="code-header">
+                <span class="code-filename">cnn_tensorflow_keras.py</span>
+                <span class="code-lang-tag">Python</span>
+              </div>
+              <pre><code>import tensorflow as tf
+from tensorflow.keras import layers, models
+
+# 1. Load &amp; reshape images to 4D tensor: (Batch, Height, Width, Channels)
+(X_train, y_train), (X_test, y_test) = tf.keras.datasets.mnist.load_data()
+X_train = (X_train.astype("float32") / 255.0)[..., tf.newaxis]  # Shape: (60000, 28, 28, 1)
+X_test  = (X_test.astype("float32") / 255.0)[..., tf.newaxis]   # Shape: (10000, 28, 28, 1)
+
+# 2. Define the Convolutional Neural Network (CNN) Step-by-Step
+cnn_model = models.Sequential([
+    layers.Input(shape=(28, 28, 1)),                            # Tensor: (28, 28, 1)
+
+    # --- CONV BLOCK 1: Learn 32 low-level edge filters ---
+    layers.Conv2D(filters=32, kernel_size=(3, 3),
+                  padding="valid", activation="relu"),          # Tensor: (26, 26, 32) | 320 params
+    layers.BatchNormalization(),
+    layers.MaxPooling2D(pool_size=(2, 2)),                      # Tensor: (13, 13, 32) | Halves H &amp; W
+
+    # --- CONV BLOCK 2: Learn 64 mid-level shape/part filters ---
+    layers.Conv2D(filters=64, kernel_size=(3, 3),
+                  padding="valid", activation="relu"),          # Tensor: (11, 11, 64) | 18,496 params
+    layers.BatchNormalization(),
+    layers.MaxPooling2D(pool_size=(2, 2)),                      # Tensor: (5, 5, 64)   | Halves H &amp; W
+
+    # --- CLASSIFIER HEAD: Flatten 3D maps -> FNN Dense layers ---
+    layers.Flatten(),                                           # Tensor: (1600,) because 5*5*64 = 1600
+    layers.Dense(128, activation="relu"),                       # Tensor: (128,)
+    layers.Dropout(0.3),                                        # Prevent overfitting in the Dense head
+    layers.Dense(10, activation="softmax")                      # Tensor: (10,) probabilities
+], name="Vision_CNN")
+
+cnn_model.summary()
+
+# 3. Compile &amp; Train the CNN
+cnn_model.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3),
+    loss="sparse_categorical_crossentropy",
+    metrics=["accuracy"]
+)
+
+cnn_model.fit(X_train, y_train, epochs=5, batch_size=64, validation_split=0.1)
+
+# 4. Evaluate &amp; Predict on a single image
+test_loss, test_acc = cnn_model.evaluate(X_test, y_test, verbose=0)
+print(f"CNN Test Accuracy: {test_acc:.4f}")
+
+# Predict class for the first test image
+probs = cnn_model.predict(X_test[:1], verbose=0)                # Shape: (1, 10)
+predicted_digit = int(tf.argmax(probs[0]))
+print(f"Predicted Digit: {predicted_digit} (Confidence: {probs[0][predicted_digit]:.2%})")</code></pre>
+            </div>
+
+            <details class="deep-dive">
+              <summary>Deep Dive: Writing a Custom Training Loop in TensorFlow with <code>tf.GradientTape</code></summary>
+              <p>While <code>model.fit()</code> handles $95\%$ of standard training jobs, research models (like GANs, Reinforcement Learning, or custom physics losses) need explicit control over every gradient step. TensorFlow gives you that with <code>tf.GradientTape</code> and <code>@tf.function</code> (which JIT-compiles Python into a fast C++/XLA computation graph):</p>
+              <div class="code-container">
+                <div class="code-header">
+                  <span class="code-filename">custom_gradient_tape_loop.py</span>
+                  <span class="code-lang-tag">Python</span>
+                </div>
+                <pre><code>import tensorflow as tf
+
+loss_fn = tf.keras.losses.SparseCategoricalCrossentropy()
+optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
+
+@tf.function  # Compiles this function into a high-speed TensorFlow graph
+def train_step(x_batch: tf.Tensor, y_batch: tf.Tensor) -> tf.Tensor:
+    # 1. Record all forward-pass operations on the GradientTape
+    with tf.GradientTape() as tape:
+        probs = cnn_model(x_batch, training=True)
+        loss = loss_fn(y_batch, probs)
+
+    # 2. Compute gradients d(loss)/d(weights) automatically
+     grads = tape.gradient(loss, cnn_model.trainable_variables)
+
+    # 3. Update weights using the optimizer
+    optimizer.apply_gradients(zip(grads, cnn_model.trainable_variables))
+    return loss</code></pre>
+              </div>
+            </details>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- SECTION 9: PYTORCH CODE                    -->
           <!-- ========================================== -->
           <section id="pytorch-fnn">
             <div class="section-badge-container">
-              <span class="badge badge-classification">Hands-On Code</span>
-              <span class="badge badge-neutral">PyTorch</span>
+              <span class="badge badge-classification">Hands-On PyTorch</span>
+              <span class="badge badge-neutral">PyTorch Comparison</span>
             </div>
-            <h2>6. Step-by-Step: Build &amp; Train an FNN in PyTorch</h2>
-            <p>Every PyTorch training loop follows the exact same 5-step rhythm inside the loop: <strong>Forward pass &rarr; Compute loss &rarr; Zero old gradients &rarr; Backpropagate &rarr; Optimizer step</strong>.</p>
+            <h2>9. Step-by-Step: Build &amp; Train an FNN in PyTorch</h2>
+            <p>To compare TensorFlow with PyTorch: where TensorFlow's <code>model.fit()</code> automates the loop (or uses <code>tf.GradientTape</code>), every PyTorch training loop writes the 5-step rhythm explicitly: <strong>Forward pass &rarr; Compute loss &rarr; Zero old gradients &rarr; Backpropagate &rarr; Optimizer step</strong>.</p>
 
             <div class="code-container" data-lang="bash">
               <div class="code-header">
@@ -575,44 +1091,49 @@ for epoch in range(1, 51):
           </section>
 
           <!-- ========================================== -->
-          <!-- SECTION 7: CHEAT SHEET                     -->
+          <!-- SECTION 10: CHEAT SHEET                    -->
           <!-- ========================================== -->
           <section id="summary">
-            <h2>7. Cheat Sheet</h2>
+            <h2>10. FNN, CNN &amp; TensorFlow Cheat Sheet</h2>
             <div class="table-wrapper">
               <table>
                 <thead>
                   <tr>
-                    <th>Component</th>
-                    <th>Standard Choice</th>
-                    <th>Why</th>
+                    <th>Component / Layer</th>
+                    <th>TensorFlow (<code>tf.keras</code>)</th>
+                    <th>What It Does &amp; Why You Need It</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td><strong>Hidden Activation</strong></td>
-                    <td>ReLU or GELU</td>
-                    <td>Prevents vanishing gradients and is fast to compute.</td>
+                    <td><strong>Fully Connected Layer (FNN)</strong></td>
+                    <td><code>layers.Dense(128, activation='relu')</code></td>
+                    <td>Connects every input feature to every neuron; standard building block for tabular data and classifier heads.</td>
                   </tr>
                   <tr>
-                    <td><strong>Output Layer (Regression)</strong></td>
-                    <td>Linear (1 node) + MSE Loss</td>
-                    <td>Allows any unbounded real number as output.</td>
+                    <td><strong>2D Convolution (CNN)</strong></td>
+                    <td><code>layers.Conv2D(32, (3, 3), activation='relu')</code></td>
+                    <td>Slides $32$ learnable $3 \times 3$ filters across a 2D image to detect local spatial features (edges, textures, parts).</td>
                   </tr>
                   <tr>
-                    <td><strong>Output Layer (Binary Class)</strong></td>
-                    <td>1 node + `BCEWithLogitsLoss`</td>
-                    <td>Outputs calibrated probability for Class 1.</td>
+                    <td><strong>Spatial Downsampling</strong></td>
+                    <td><code>layers.MaxPooling2D(pool_size=(2, 2))</code></td>
+                    <td>Keeps the maximum value in each $2 \times 2$ patch, cutting height &amp; width in half and adding translation invariance.</td>
                   </tr>
                   <tr>
-                    <td><strong>Output Layer (Multi-Class)</strong></td>
-                    <td>$C$ nodes + `CrossEntropyLoss`</td>
-                    <td>Produces probability distribution across $C$ classes.</td>
+                    <td><strong>Bridge 3D Maps &rarr; 1D Vector</strong></td>
+                    <td><code>layers.Flatten()</code></td>
+                    <td>Unrolls 3D feature maps $(H, W, C)$ into a flat 1D vector so final <code>Dense</code> layers can classify the image.</td>
                   </tr>
                   <tr>
-                    <td><strong>Optimizer</strong></td>
-                    <td>Adam / AdamW (`lr=1e-3`)</td>
-                    <td>Adapts step sizes per weight automatically.</td>
+                    <td><strong>Regularization &amp; Stability</strong></td>
+                    <td><code>BatchNormalization()</code> + <code>Dropout(0.2)</code></td>
+                    <td>Normalizes internal layer activations and randomly drops $20\%$ of neurons during training to stop overfitting.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Multi-Class Loss (Integer IDs)</strong></td>
+                    <td><code>loss='sparse_categorical_crossentropy'</code></td>
+                    <td>Computes cross-entropy loss directly against integer class labels (<code>0, 1, ..., C-1</code>) without needing one-hot encoding.</td>
                   </tr>
                 </tbody>
               </table>

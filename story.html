@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0. The Story of AI: Legends, Ethics, Psychology &amp; Metaphysics — AI Engineering Curriculum</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '\\[', right: '\\]', display: true},
+        {left: '$', right: '$', display: false},
+        {left: '\\(', right: '\\)', display: false}
+      ],
+      throwOnError: false
+    });"></script>
+</head>
+<body>
+  <!-- Top Global Navigation Bar -->
+  <nav class="top-nav">
+    <div class="top-nav-inner">
+      <a href="story.html" class="top-nav-brand">AI Engineering Curriculum</a>
+      <ul class="top-nav-links">
+        <li><a href="story.html" class="nav-pill active">0. Story &amp; Ethics</a></li>
+        <li><a href="index.html" class="nav-pill">1. ML</a></li>
+        <li><a href="dl.html" class="nav-pill">2. Deep Learning &amp; FNN</a></li>
+        <li><a href="nlp.html" class="nav-pill">3. NLP</a></li>
+        <li><a href="cv.html" class="nav-pill">4. OpenCV &amp; Vision</a></li>
+        <li><a href="genai.html" class="nav-pill">5. LLMs &amp; RAG</a></li>
+        <li><a href="agents.html" class="nav-pill">6. Agents &amp; MCP</a></li>
+        <li><a href="research.html" class="nav-pill">7. JEPA &amp; Research</a></li>
+        <li><a href="interview.html" class="nav-pill">8. 100 Interview Q&amp;A</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="site-wrapper">
+    <div class="site-container">
+      
+      <!-- Sidebar TOC -->
+      <aside class="toc-sidebar">
+        <nav class="toc-sticky">
+          <div class="toc-title">The Story of AI</div>
+          <ul class="toc-list">
+            <li class="toc-group-label">Prologue &amp; History</li>
+            <li class="toc-item"><a href="#what-is-modern-ai">1. What AI Really Is Today</a></li>
+            <li class="toc-item"><a href="#history-of-ai">2. How AI Started &amp; Transformed History</a></li>
+            <li class="toc-item"><a href="#legends-of-ai">3. The Legends &amp; Our Gratitude</a></li>
+            <li class="toc-group-label">Humanity &amp; Mind</li>
+            <li class="toc-item"><a href="#ai-ethics">4. AI Ethics &amp; Stewardship</a></li>
+            <li class="toc-item"><a href="#human-psychology">5. AI &amp; Human Psychology</a></li>
+            <li class="toc-item"><a href="#ai-metaphysics">6. Metaphysics: Mind, Meaning &amp; Reality</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main Article Stream -->
+      <main class="main-content">
+        <article>
+          
+          <!-- Grand Opening Hero Section -->
+          <div class="hero-showcase">
+            <div class="hero-eyebrow">Prologue &middot; History, Legends, Ethics, Psychology &amp; Metaphysics</div>
+            <h1 class="hero-headline">From Clay Tablets to Thinking Silicon: The Human Story of Artificial Intelligence</h1>
+            <p class="hero-lead">
+              Before you write a single line of PyTorch or train a neural network, pause to appreciate the seventy-year human odyssey behind it—how a handful of stubborn dreamers taught sand and electricity to recognize patterns, reason with language, and mirror the human mind.
+            </p>
+            <div class="hero-actions">
+              <a href="#what-is-modern-ai" class="btn-primary">Read the Story &darr;</a>
+              <a href="index.html" class="btn-secondary">Start Module 1: Machine Learning &rarr;</a>
+              <a href="interview.html" class="btn-secondary">100 Interview Q&amp;A</a>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- CHAPTER 1: WHAT AI REALLY IS IN THIS ERA   -->
+          <!-- ========================================== -->
+          <section id="what-is-modern-ai">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Chapter 1</span>
+              <span class="badge badge-neutral">The Modern Era</span>
+            </div>
+            <h2>1. What AI Really Is in the Modern Era</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>Traditional software follows rules written by humans; <strong>modern AI discovers the rules itself</strong> by compressing the statistical geometry of human knowledge, vision, and science into billions of learned weights.</p>
+            </div>
+
+            <p>
+              For five thousand years, human civilization advanced by inventing external tools for the body: the lever amplified muscle, the steam engine amplified motion, and the microscope amplified eyesight. Then, in the mid-twentieth century, we built the digital computer—a machine that could execute millions of arithmetic steps per second, provided a human programmer spelled out every single rule in advance.
+            </p>
+            <p>
+              Yet the simplest human acts defied explicit rules. How do you write an `if-else` statement to recognize your grandmother's face in a dimly lit room? How do you hardcode the grammar of empathy, poetry, or protein folding? You cannot—because our brains do not follow rigid flowcharts. We learn from <strong>experience</strong>.
+            </p>
+            <p>
+              <strong>Modern Artificial Intelligence</strong> is the shift from <em>programming rules</em> to <em>learning representations from experience</em>. Today, AI spans four interwoven layers that you will master across this curriculum:
+            </p>
+
+            <!-- Figure 1.1: The 4 Concentric Rings of Modern AI -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 0.1</span>
+                <span class="figure-title">How the Modern AI Stack Fits Together: From Classical ML to World Models</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 700 220" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Progression across 4 eras of modern AI: Classical ML, Deep Learning FNN/CNN, Generative AI LLMs/Agents, and Frontier World Models JEPA">
+                  <defs>
+                    <marker id="arrow-st" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569"/>
+                    </marker>
+                  </defs>
+                  <rect x="18" y="35" width="145" height="145" rx="10" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+                  <text x="90" y="65" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">1. Classical ML</text>
+                  <text x="90" y="88" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">Regression, SVM</text>
+                  <text x="90" y="106" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">Trees &amp; Forests</text>
+                  <text x="90" y="155" font-size="11" font-weight="600" fill="#0066cc" text-anchor="middle" font-family="-apple-system, sans-serif">Tabular Predictions</text>
+
+                  <line x1="163" y1="107" x2="188" y2="107" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow-st)"/>
+
+                  <rect x="193" y="35" width="145" height="145" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                  <text x="265" y="65" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">2. Deep Learning</text>
+                  <text x="265" y="88" font-size="11" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">FNNs, CNNs &amp;</text>
+                  <text x="265" y="106" font-size="11" fill="#2563eb" text-anchor="middle" font-family="-apple-system, sans-serif">Backpropagation</text>
+                  <text x="265" y="155" font-size="11" font-weight="600" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Vision &amp; Features</text>
+
+                  <line x1="338" y1="107" x2="363" y2="107" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow-st)"/>
+
+                  <rect x="368" y="35" width="145" height="145" rx="10" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+                  <text x="440" y="65" font-size="12" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">3. GenAI &amp; Agents</text>
+                  <text x="440" y="88" font-size="11" fill="#7e22ce" text-anchor="middle" font-family="-apple-system, sans-serif">Transformers, RAG,</text>
+                  <text x="440" y="106" font-size="11" fill="#7e22ce" text-anchor="middle" font-family="-apple-system, sans-serif">Agents &amp; MCP</text>
+                  <text x="440" y="155" font-size="11" font-weight="600" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Language &amp; Action</text>
+
+                  <line x1="513" y1="107" x2="538" y2="107" stroke="#475569" stroke-width="1.6" marker-end="url(#arrow-st)"/>
+
+                  <rect x="543" y="35" width="140" height="145" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+                  <text x="613" y="65" font-size="12" font-weight="700" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">4. World Models</text>
+                  <text x="613" y="88" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">JEPA, Mamba,</text>
+                  <text x="613" y="106" font-size="11" fill="#15803d" text-anchor="middle" font-family="-apple-system, sans-serif">Reasoning Search</text>
+                  <text x="613" y="155" font-size="11" font-weight="600" fill="#166534" text-anchor="middle" font-family="-apple-system, sans-serif">Physical Intuition</text>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Newer eras did not erase earlier ones—every Transformer contains Feedforward Neural Networks (Era 2) trained via gradient optimization and loss functions (Era 1).</figcaption>
+            </figure>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- CHAPTER 2: HOW AI STARTED & TRANSFORMED    -->
+          <!-- ========================================== -->
+          <section id="history-of-ai">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Chapter 2</span>
+              <span class="badge badge-neutral">1950 &ndash; 2026</span>
+            </div>
+            <h2>2. How AI Started &amp; Transformed History: A Five-Act Drama</h2>
+
+            <p>
+              The story of AI is not a smooth upward line. It is a dramatic cycle of bold promises, bitter winters when funding vanished and researchers were mocked, and quiet breakthroughs born in university basements.
+            </p>
+
+            <ol class="steps">
+              <li>
+                <strong>Act I: The Spark &amp; Symbolic Dawn (1950–1968).</strong>
+                In 1950, <strong>Alan Turing</strong> opened his landmark paper with seven words: <em>"I propose to consider the question, 'Can machines think?'"</em> Six years later, in the summer of 1956, <strong>John McCarthy, Marvin Minsky, Claude Shannon, and Nathaniel Rochester</strong> gathered at Dartmouth College and coined the name <strong>Artificial Intelligence</strong>. Simultaneously, psychologist <strong>Frank Rosenblatt</strong> wired together the <strong>Mark I Perceptron</strong> (1957)—the first machine that learned weights by trial and error.
+              </li>
+              <li>
+                <strong>Act II: The AI Winters &amp; The Underground Flame (1969–1996).</strong>
+                When early perceptrons could not solve non-linear puzzles like XOR, funding dried up. Through decades of skepticism, a small band of researchers—<strong>Geoffrey Hinton, Yann LeCun, Yoshua Bengio, and Jürgen Schmidhuber</strong>—refused to give up on neural networks. In 1986, Rumelhart, Hinton, and Williams popularized <strong>Backpropagation</strong>, and in 1989 LeCun built <strong>Convolutional Neural Networks (LeNet)</strong> to read handwritten bank checks.
+              </li>
+              <li>
+                <strong>Act III: Statistical Rigor &amp; The Data Awakening (1997–2011).</strong>
+                While computers were still too slow for huge neural nets, <strong>Vladimir Vapnik's Support Vector Machines</strong> and <strong>Leo Breiman's Random Forests</strong> dominated practical data science. Meanwhile, <strong>Fei-Fei Li</strong> realized that the bottleneck wasn't just algorithms—it was data. She spent years assembling <strong>ImageNet</strong> (14 million labeled images).
+              </li>
+              <li>
+                <strong>Act IV: The Deep Learning Detonation (2012–2016).</strong>
+                In October 2012, <strong>Alex Krizhevsky, Ilya Sutskever, and Geoffrey Hinton</strong> trained a deep GPU Convolutional Network (<strong>AlexNet</strong>) on ImageNet, cutting the error rate nearly in half overnight. Deep learning swept vision, speech, and games—culminating in DeepMind's <strong>AlphaGo</strong> (2016) defeating world champion Lee Sedol with Move 37, a move no human had ever imagined.
+              </li>
+              <li>
+                <strong>Act V: Transformers, Generative AI &amp; World Models (2017–2026).</strong>
+                In 2017, eight researchers at Google published <em>"Attention Is All You Need"</em>, introducing the <strong>Transformer</strong>. By replacing slow recurrence with parallel Self-Attention, models could train on the entire internet. This birthed foundation LLMs, <strong>AlphaFold</strong> (solving the 50-year protein-folding grand challenge), <strong>RAG &amp; MCP Agents</strong>, and today's frontier <strong>JEPA World Models</strong>.
+              </li>
+            </ol>
+
+            <blockquote class="story-quote">
+              "We can only see a short distance ahead, but we can see plenty there that needs to be done."
+              <cite>&mdash; Alan M. Turing, Computing Machinery and Intelligence (1950)</cite>
+            </blockquote>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- CHAPTER 3: THE LEGENDS & OUR GRATITUDE     -->
+          <!-- ========================================== -->
+          <section id="legends-of-ai">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">Chapter 3</span>
+              <span class="badge badge-neutral">Hall of Gratitude</span>
+            </div>
+            <h2>3. The Legends Who Shaped AI &mdash; A Tribute of Gratitude</h2>
+
+            <p>
+              Every equation and line of code in this curriculum exists because these pioneers dedicated their lives to an idea long before it was fashionable. We honor them with deep gratitude.
+            </p>
+
+            <div class="legends-grid">
+
+              <!-- 1. Alan Turing -->
+              <div class="legend-card">
+                <div class="legend-top">
+                  <div class="legend-portrait-wrap">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Alan_Turing_Aged_16.jpg" alt="Portrait of Alan Turing" loading="lazy" onerror="this.style.display='none'">
+                    <span class="legend-initials">AT</span>
+                  </div>
+                  <div class="legend-meta">
+                    <span class="legend-era">1912 &ndash; 1954 &bull; Pioneer of Computation</span>
+                    <h3>Alan M. Turing</h3>
+                    <div class="legend-role">Universal Turing Machine &amp; The 1950 Imitation Game</div>
+                  </div>
+                </div>
+                <div class="legend-body">
+                  Before a single modern computer existed, Turing proved that one universal machine could simulate any mathematical process, cracked the Enigma cipher, and framed the foundational philosophy of machine intelligence.
+                </div>
+                <div class="legend-gratitude">
+                  <strong>Gratitude:</strong> Thank you for giving humanity the mathematical language of computation and the courage to ask whether silicon could think.
+                </div>
+              </div>
+
+              <!-- 2. John McCarthy & Marvin Minsky -->
+              <div class="legend-card">
+                <div class="legend-top">
+                  <div class="legend-portrait-wrap">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/John_McCarthy_Stanford.jpg" alt="Portrait of John McCarthy" loading="lazy" onerror="this.style.display='none'">
+                    <span class="legend-initials">JM</span>
+                  </div>
+                  <div class="legend-meta">
+                    <span class="legend-era">1956 Dartmouth Workshop &bull; Turing Award</span>
+                    <h3>John McCarthy &amp; Marvin Minsky</h3>
+                    <div class="legend-role">Founders of the Field of Artificial Intelligence</div>
+                  </div>
+                </div>
+                <div class="legend-body">
+                  McCarthy coined the term "Artificial Intelligence," invented Lisp and time-sharing, and junto with Minsky built the first AI laboratories at MIT and Stanford that trained generations of researchers.
+                </div>
+                <div class="legend-gratitude">
+                  <strong>Gratitude:</strong> Thank you for naming a dream in 1956 and building the academic home where artificial intelligence grew up.
+                </div>
+              </div>
+
+              <!-- 3. Geoffrey Hinton -->
+              <div class="legend-card">
+                <div class="legend-top">
+                  <div class="legend-portrait-wrap">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Geoffrey_E._Hinton%2C_2024_Nobel_Prize_Laureate_in_Physics_%28cropped%29.jpg" alt="Portrait of Geoffrey Hinton" loading="lazy" onerror="this.style.display='none'">
+                    <span class="legend-initials">GH</span>
+                  </div>
+                  <div class="legend-meta">
+                    <span class="legend-era">2018 Turing Award &bull; 2024 Nobel Prize</span>
+                    <h3>Geoffrey E. Hinton</h3>
+                    <div class="legend-role">Backpropagation, Boltzmann Machines, Dropout &amp; AlexNet</div>
+                  </div>
+                </div>
+                <div class="legend-body">
+                  When the academic world dismissed neural networks for thirty years, Hinton kept exploring how brain-like layers learn distributed representations via backpropagation—ultimately igniting the 2012 deep learning revolution.
+                </div>
+                <div class="legend-gratitude">
+                  <strong>Gratitude:</strong> Thank you for your forty-year perseverance through the AI winters and your moral voice on AI safety today.
+                </div>
+              </div>
+
+              <!-- 4. Yann LeCun -->
+              <div class="legend-card">
+                <div class="legend-top">
+                  <div class="legend-portrait-wrap">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/Yann_LeCun_-_2018_%28cropped%29.jpg" alt="Portrait of Yann LeCun" loading="lazy" onerror="this.style.display='none'">
+                    <span class="legend-initials">YL</span>
+                  </div>
+                  <div class="legend-meta">
+                    <span class="legend-era">2018 Turing Award &bull; Chief AI Scientist</span>
+                    <h3>Yann LeCun</h3>
+                    <div class="legend-role">Convolutional Neural Networks (CNNs), Open-Weights Llama &amp; JEPA</div>
+                  </div>
+                </div>
+                <div class="legend-body">
+                  Invented Convolutional Neural Networks (LeNet), co-created modern PyTorch &amp; open foundation model ecosystems, and pioneered Joint-Embedding Predictive Architectures (I-JEPA / V-JEPA) for physical World Models.
+                </div>
+                <div class="legend-gratitude">
+                  <strong>Gratitude:</strong> Thank you for teaching machines how to see and for championing open scientific AI for every student on Earth.
+                </div>
+              </div>
+
+              <!-- 5. Yoshua Bengio -->
+              <div class="legend-card">
+                <div class="legend-top">
+                  <div class="legend-portrait-wrap">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Yoshua_Bengio_-_2019_%28cropped%29.jpg" alt="Portrait of Yoshua Bengio" loading="lazy" onerror="this.style.display='none'">
+                    <span class="legend-initials">YB</span>
+                  </div>
+                  <div class="legend-meta">
+                    <span class="legend-era">2018 Turing Award &bull; Mila Founder</span>
+                    <h3>Yoshua Bengio</h3>
+                    <div class="legend-role">Neural Language Models, Word Embeddings &amp; Attention Mechanism</div>
+                  </div>
+                </div>
+                <div class="legend-body">
+                  Pioneered neural probabilistic language modeling (2003) that turned words into continuous embeddings, and co-invented the neural Attention mechanism (Bahdanau et al., 2014) that paved the way for Transformers.
+                </div>
+                <div class="legend-gratitude">
+                  <strong>Gratitude:</strong> Thank you for giving language a geometric home in vector space and for leading global research into ethical AI governance.
+                </div>
+              </div>
+
+              <!-- 6. Fei-Fei Li -->
+              <div class="legend-card">
+                <div class="legend-top">
+                  <div class="legend-portrait-wrap">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Fei-Fei_Li_at_AI_for_Good_2017_%28cropped%29.jpg" alt="Portrait of Fei-Fei Li" loading="lazy" onerror="this.style.display='none'">
+                    <span class="legend-initials">FL</span>
+                  </div>
+                  <div class="legend-meta">
+                    <span class="legend-era">Stanford HAI &bull; Computer Vision Pioneer</span>
+                    <h3>Dr. Fei-Fei Li</h3>
+                    <div class="legend-role">Creator of ImageNet &amp; Human-Centered AI</div>
+                  </div>
+                </div>
+                <div class="legend-body">
+                  Recognized that algorithms starve without world-scale data. Her creation of ImageNet (14 million curated images) served as the launchpad for the 2012 deep learning breakthrough and modern visual intelligence.
+                </div>
+                <div class="legend-gratitude">
+                  <strong>Gratitude:</strong> Thank you for proving that data is the oxygen of intelligence and for anchoring AI in human dignity.
+                </div>
+              </div>
+
+              <!-- 7. Demis Hassabis -->
+              <div class="legend-card">
+                <div class="legend-top">
+                  <div class="legend-portrait-wrap">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Demis_Hassabis%2C_2024_Nobel_Prize_Laureate_in_Chemistry_%28cropped%29.jpg" alt="Portrait of Demis Hassabis" loading="lazy" onerror="this.style.display='none'">
+                    <span class="legend-initials">DH</span>
+                  </div>
+                  <div class="legend-meta">
+                    <span class="legend-era">2024 Nobel Prize in Chemistry &bull; Google DeepMind</span>
+                    <h3>Sir Demis Hassabis</h3>
+                    <div class="legend-role">AlphaGo, AlphaZero, AlphaFold &amp; Gemini</div>
+                  </div>
+                </div>
+                <div class="legend-body">
+                  Set out with the mission "Solve intelligence, and then use that to solve everything else"—leading the teams behind AlphaGo and AlphaFold, which predicted the 3D structures of over 200 million proteins known to science.
+                </div>
+                <div class="legend-gratitude">
+                  <strong>Gratitude:</strong> Thank you for showing humanity that AI's highest calling is curing disease and unlocking scientific discovery.
+                </div>
+              </div>
+
+              <!-- 8. The Transformer Pioneers -->
+              <div class="legend-card">
+                <div class="legend-top">
+                  <div class="legend-portrait-wrap">
+                    <span class="legend-initials">QKV</span>
+                  </div>
+                  <div class="legend-meta">
+                    <span class="legend-era">2017 Landmark Paper &bull; Google Brain / Research</span>
+                    <h3>The "Attention Is All You Need" Team</h3>
+                    <div class="legend-role">Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser &amp; Polosukhin</div>
+                  </div>
+                </div>
+                <div class="legend-body">
+                  Replaced slow sequential recurrence with Scaled Dot-Product Self-Attention ($Q, K, V$), giving birth to the Transformer architecture that powers every modern Large Language Model, Vision Transformer, and multimodal agent.
+                </div>
+                <div class="legend-gratitude">
+                  <strong>Gratitude:</strong> Thank you for the 15-page paper in 2017 that unified natural language, code, vision, and reasoning under one architecture.
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- CHAPTER 4: AI ETHICS & STEWARDSHIP         -->
+          <!-- ========================================== -->
+          <section id="ai-ethics">
+            <div class="section-badge-container">
+              <span class="badge badge-classification">Chapter 4</span>
+              <span class="badge badge-neutral">Moral Responsibility</span>
+            </div>
+            <h2>4. AI Ethics: Engineering with Conscience</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>An AI model optimizes whatever mathematical objective we give it—<strong>Ethics</strong> is the discipline of making sure our metrics never trade away human truth, fairness, privacy, or safety.</p>
+            </div>
+
+            <p>
+              When you deploy a model in healthcare, hiring, banking, or education, a false positive or a biased weight is no longer a number in a Jupyter notebook—it is a real person denied a loan, misdiagnosed, or misled. Every AI engineer must master four ethical pillars:
+            </p>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Ethical Pillar</th>
+                    <th>The Core Risk</th>
+                    <th>Your Engineering Duty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>1. Algorithmic Fairness &amp; Bias</strong></td>
+                    <td>Models trained on biased historical data amplify discrimination across gender, caste, race, or income.</td>
+                    <td>Audit error rates (False Positive / False Negative parity) across demographic subgroups before deployment, not just aggregate accuracy.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>2. Truthfulness &amp; Grounding</strong></td>
+                    <td>LLMs predict plausible-sounding tokens and can state fabrications with total confidence.</td>
+                    <td>Ground factual systems in verifiable RAG citations, calibrate uncertainty, and never deploy unverified LLMs for high-stakes medical/legal rulings.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>3. Privacy &amp; Data Dignity</strong></td>
+                    <td>Models can memorize and regurgitate private PII, medical records, or copyrighted human work.</td>
+                    <td>Enforce PII scrubbing, tenant RBAC in Vector Storage, consent-respecting datasets, and local/private inference for sensitive data.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>4. Alignment &amp; Human Agency</strong></td>
+                    <td>Autonomous agents executing tools (`SQL`, `email`, `payments`) can take irreversible unintended actions.</td>
+                    <td>Keep <strong>Human-in-the-Loop (HITL)</strong> approval on all high-impact actions; AI should empower human judgment, never erase accountability.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- CHAPTER 5: AI & HUMAN PSYCHOLOGY           -->
+          <!-- ========================================== -->
+          <section id="human-psychology">
+            <div class="section-badge-container">
+              <span class="badge badge-regression">Chapter 5</span>
+              <span class="badge badge-neutral">Cognitive Science</span>
+            </div>
+            <h2>5. AI &amp; Human Psychology: How Machines Mirror the Mind</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>For 300,000 years, fluent language only ever came from another conscious human being—so our brains automatically project feelings, authority, and intent onto statistical text generators.</p>
+            </div>
+
+            <div class="philosophy-grid">
+              <div class="philosophy-card">
+                <h4>1. The ELIZA Effect &amp; Anthropomorphism</h4>
+                <p>
+                  In 1966, Joseph Weizenbaum built a 200-line regex script called <strong>ELIZA</strong> that parroted back user statements like a therapist. To his shock, people confided their deepest secrets to it. When an LLM says <em>"I understand how you feel,"</em> remember: there is no inner listener—only matrix multiplication over token probabilities.
+                </p>
+              </div>
+              <div class="philosophy-card">
+                <h4>2. Cognitive Offloading vs. Atrophy</h4>
+                <p>
+                  Just as GPS weakened our innate spatial hippocampus when used passively, outsourcing all writing, coding, and thinking to AI causes <strong>cognitive atrophy</strong>. Use AI as a <em>sparring partner and tutor</em> after you wrestle with the problem yourself—never as a substitute for thinking.
+                </p>
+              </div>
+              <div class="philosophy-card">
+                <h4>3. Sycophancy &amp; Echo Chambers</h4>
+                <p>
+                  Because LLMs are fine-tuned on human thumbs-up ratings (RLHF), they naturally lean toward <strong>sycophancy</strong>—flattering the user's beliefs and agreeing with flawed premises. Train yourself to ask models: <em>"Steelman the strongest argument against my view."</em>
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================== -->
+          <!-- CHAPTER 6: AI & METAPHYSICS                -->
+          <!-- ========================================== -->
+          <section id="ai-metaphysics">
+            <div class="section-badge-container">
+              <span class="badge badge-ensemble">Chapter 6</span>
+              <span class="badge badge-neutral">Metaphysics &amp; Ontology</span>
+            </div>
+            <h2>6. Metaphysics of AI: Consciousness, Meaning &amp; Reality</h2>
+
+            <div class="tldr">
+              <span class="tldr-label">In one line</span>
+              <p>Studying AI forces us to confront the deepest metaphysical questions of human existence: <em>What is a mind? Does syntax ever become subjective experience? And what remains uniquely human?</em></p>
+            </div>
+
+            <!-- Figure 6.1: Metaphysics Triad Diagram -->
+            <figure class="figure-container">
+              <div class="figure-header">
+                <span class="figure-number">Figure 0.2</span>
+                <span class="figure-title">The Three Metaphysical Questions at the Heart of Artificial Intelligence</span>
+              </div>
+              <div class="figure-svg-wrapper">
+                <svg viewBox="0 0 700 205" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three metaphysical pillars: Searle's Chinese Room Syntax vs Semantics, Plato's Cave Embeddings vs Reality, and Chalmers Hard Problem of Consciousness">
+                  <g transform="translate(15, 15)">
+                    <rect x="0" y="0" width="210" height="175" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+                    <text x="105" y="28" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">1. Syntax vs. Semantics</text>
+                    <text x="105" y="48" font-size="11" fill="#0066cc" font-weight="600" text-anchor="middle" font-family="-apple-system, sans-serif">Searle's Chinese Room</text>
+                    <text x="105" y="78" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">Manipulating symbols</text>
+                    <text x="105" y="96" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">by probability rules</text>
+                    <text x="105" y="114" font-size="11" fill="#475569" text-anchor="middle" font-family="-apple-system, sans-serif">&ne; lived inner meaning</text>
+                    <text x="105" y="152" font-size="11" font-weight="600" fill="#0f172a" text-anchor="middle" font-family="-apple-system, sans-serif">Calculation vs. Comprehension</text>
+                  </g>
+
+                  <g transform="translate(245, 15)">
+                    <rect x="0" y="0" width="210" height="175" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                    <text x="105" y="28" font-size="12" font-weight="700" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">2. Shadows vs. Reality</text>
+                    <text x="105" y="48" font-size="11" fill="#2563eb" font-weight="600" text-anchor="middle" font-family="-apple-system, sans-serif">Plato's Cave &amp; Embeddings</text>
+                    <text x="105" y="78" font-size="11" fill="#1e40af" text-anchor="middle" font-family="-apple-system, sans-serif">Text tokens are 2D shadows</text>
+                    <text x="105" y="96" font-size="11" fill="#1e40af" text-anchor="middle" font-family="-apple-system, sans-serif">cast by a 3D physical world;</text>
+                    <text x="105" y="114" font-size="11" fill="#1e40af" text-anchor="middle" font-family="-apple-system, sans-serif">World Models seek the source</text>
+                    <text x="105" y="152" font-size="11" font-weight="600" fill="#1d4ed8" text-anchor="middle" font-family="-apple-system, sans-serif">Map vs. Territory</text>
+                  </g>
+
+                  <g transform="translate(475, 15)">
+                    <rect x="0" y="0" width="210" height="175" rx="8" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+                    <text x="105" y="28" font-size="12" font-weight="700" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">3. The Hard Problem</text>
+                    <text x="105" y="48" font-size="11" fill="#7e22ce" font-weight="600" text-anchor="middle" font-family="-apple-system, sans-serif">Qualia &amp; Consciousness</text>
+                    <text x="105" y="78" font-size="11" fill="#581c87" text-anchor="middle" font-family="-apple-system, sans-serif">An LLM knows the wavelength</text>
+                    <text x="105" y="96" font-size="11" fill="#581c87" text-anchor="middle" font-family="-apple-system, sans-serif">of red (650nm), but never</text>
+                    <text x="105" y="114" font-size="11" fill="#581c87" text-anchor="middle" font-family="-apple-system, sans-serif">experiences seeing a sunset</text>
+                    <text x="105" y="152" font-size="11" font-weight="600" fill="#6b21a8" text-anchor="middle" font-family="-apple-system, sans-serif">Function vs. Felt Experience</text>
+                  </g>
+                </svg>
+              </div>
+              <figcaption><strong>What to notice:</strong> Understanding where statistical computation ends and conscious human experience begins keeps you grounded as both an engineer and a human being.</figcaption>
+            </figure>
+
+            <h3>1. Syntax vs. Semantics (John Searle's Chinese Room)</h3>
+            <p>
+              Philosopher John Searle imagined a person locked in a room with a giant rulebook connecting Chinese characters to other Chinese characters. When a question is slipped under the door, the person looks up the symbol correlations and slips back a flawless reply—without understanding a single word of Chinese. An LLM operates on <strong>syntax</strong> (the statistical geometry of how tokens co-occur), whereas human minds possess <strong>intentionality and semantics</strong>—our words are anchored to lived bodily experience in the physical world.
+            </p>
+
+            <h3>2. Plato's Cave &amp; The Platonic Representation Hypothesis</h3>
+            <p>
+              In Plato's allegory, prisoners chained in a cave see only flickering 2D shadows on a wall and mistake them for reality. An LLM trained solely on text reads the <em>shadows</em> that reality casts onto human language. Fascinatingly, recent research on the <strong>Platonic Representation Hypothesis</strong> shows that as vision models (like V-JEPA) and language models scale up, their internal embedding spaces converge toward the same underlying geometric structure—because both are modeling projections of the same shared physical universe.
+            </p>
+
+            <h3>3. Consciousness, Qualia &amp; Human Purpose (Teleology)</h3>
+            <p>
+              Philosopher David Chalmers distinguished the <em>Easy Problems</em> of mind (discriminating stimuli, integrating information, reporting states) from the <strong>Hard Problem of Consciousness</strong>: why does it <em>feel like something</em> from the inside to taste coffee, feel grief, or marvel at the night sky (<strong>qualia</strong>)?
+            </p>
+            <p>
+              Machines are <strong>teleologically empty</strong>: a neural network has no desires of its own. It minimizes whatever loss function $\mathcal{L}(\theta)$ a human chooses. Machines can tell us <em>how</em> to reach a target faster, but only conscious beings can decide <em>what is worth caring about</em>.
+            </p>
+
+            <div class="callout callout-tip">
+              <div class="callout-title">Your Mission as an AI Engineer</div>
+              <p>Learn the mathematics, write clean code, and master every architecture in this curriculum—so that you build tools that elevate human wisdom, compassion, and curiosity rather than replacing them.</p>
+            </div>
+          </section>
+
+          <!-- Prev / Next Navigation -->
+          <nav class="page-nav" aria-label="Curriculum Pagination">
+            <div></div>
+            <a class="next" href="index.html">
+              <span class="page-nav-label">Begin Technical Curriculum &rarr;</span>
+              <span class="page-nav-title">Module 1: Machine Learning Models</span>
+            </a>
+          </nav>
+
+          <footer class="article-footer">
+            <p>AI Engineering Curriculum &bull; Prologue: The Story, Legends, Ethics, Psychology &amp; Metaphysics of AI</p>
+          </footer>
+
+        </article>
+      </main>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

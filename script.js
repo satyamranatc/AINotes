@@ -238,6 +238,71 @@ document.addEventListener('DOMContentLoaded', () => {
     header.appendChild(copyBtn);
   });
 
+
+  // 7. Interactive Interview Question Bank (Search, Category Filter, Expand/Collapse All)
+  const qaSearch = document.getElementById('qa-search');
+  const qaToggleAll = document.getElementById('qa-toggle-all');
+  const qaCount = document.getElementById('qa-count');
+  const filterPills = document.querySelectorAll('.filter-pill');
+  const sidebarFilterLinks = document.querySelectorAll('[data-filter-trigger]');
+  const qaCards = document.querySelectorAll('details.qa-card');
+
+  if (qaCards.length > 0) {
+    let activeCategory = 'all';
+    let allExpanded = false;
+
+    const filterQuestions = () => {
+      const query = (qaSearch ? qaSearch.value : '').trim().toLowerCase();
+      let visible = 0;
+      qaCards.forEach((card) => {
+        const cat = card.dataset.category;
+        const text = card.innerText.toLowerCase();
+        const matchesCat = activeCategory === 'all' || cat === activeCategory;
+        const matchesQuery = !query || text.includes(query);
+        const show = matchesCat && matchesQuery;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      if (qaCount) {
+        qaCount.textContent = `Showing ${visible} / ${qaCards.length}`;
+      }
+    };
+
+    const setCategory = (cat) => {
+      activeCategory = cat;
+      filterPills.forEach((p) => p.classList.toggle('active', p.dataset.cat === cat));
+      sidebarFilterLinks.forEach((a) => a.classList.toggle('active', a.dataset.filterTrigger === cat));
+      filterQuestions();
+    };
+
+    filterPills.forEach((pill) => {
+      pill.addEventListener('click', () => setCategory(pill.dataset.cat));
+    });
+
+    sidebarFilterLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        setCategory(link.dataset.filterTrigger);
+      });
+    });
+
+    if (qaSearch) {
+      qaSearch.addEventListener('input', filterQuestions);
+    }
+
+    if (qaToggleAll) {
+      qaToggleAll.addEventListener('click', () => {
+        allExpanded = !allExpanded;
+        qaCards.forEach((card) => {
+          if (card.style.display !== 'none') {
+            card.open = allExpanded;
+          }
+        });
+        qaToggleAll.textContent = allExpanded ? 'Collapse All' : 'Expand All';
+      });
+    }
+  }
+
   // 6. Back to Top Floating Pill
   const backToTopBtn = document.createElement('button');
   backToTopBtn.className = 'back-to-top-btn';
